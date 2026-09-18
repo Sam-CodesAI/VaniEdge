@@ -1,0 +1,30 @@
+{
+  "name": "vaniedge-ai",
+  "version": "1.0.0",
+  "description": "Sub-Second Edge-Native Voice AI Telephony & Multi-Lingual Dispatcher for Small Businesses with SutraDB RAG",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "keywords": [
+    "voice-ai",
+    "telephony",
+    "twilio",
+    "cloudflare-workers",
+    "rag",
+    "vector-database",
+    "sutradb",
+    "elevenlabs"
+  ],
+  "author": "Samarth Nimangre <samarthknimangre@gmail.com>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}
