@@ -41,4 +41,40 @@ describe("Telephony Watchdog Sub-Second Failover", () => {
     expect(failoverSpy).not.toHaveBeenCalled();
     vi.useRealTimers();
   });
+
+  it("triggers failover if TTFT deadline is breached after connection succeeds", async () => {
+    vi.useFakeTimers();
+    const failoverSpy = vi.fn();
+
+    const watchdog = new TelephonyWatchdog("CA_TEST_789", failoverSpy, {
+      connectionTimeoutMs: 1200,
+      ttftTimeoutMs: 1500,
+    });
+
+    watchdog.armConnectionWatchdog();
+    vi.advanceTimersByTime(200);
+    watchdog.markConnected();
+    expect(watchdog.getState()).toBe("PENDING");
+
+    // Advance beyond 1500ms total
+    vi.advanceTimersByTime(1400);
+
+    expect(watchdog.getState()).toBe("FAILED_OVER");
+    expect(failoverSpy).toHaveBeenCalledWith("TTFT_DEADLINE_EXCEEDED", expect.any(Number));
+    vi.useRealTimers();
+  });
+
+  it("cleans up timers and transitions to TERMINATED upon terminate() call", () => {
+    vi.useFakeTimers();
+    const failoverSpy = vi.fn();
+
+    const watchdog = new TelephonyWatchdog("CA_TEST_CLEANUP", failoverSpy);
+    watchdog.armConnectionWatchdog();
+    watchdog.terminate();
+
+    expect(watchdog.getState()).toBe("TERMINATED");
+    vi.advanceTimersByTime(2000);
+    expect(failoverSpy).not.toHaveBeenCalled();
+    vi.useRealTimers();
+  });
 });

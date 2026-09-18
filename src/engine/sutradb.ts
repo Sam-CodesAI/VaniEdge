@@ -149,6 +149,27 @@ export class SutraHybridEngine {
     return fused.slice(0, topK);
   }
 
+  public delete(id: string): boolean {
+    if (!this.docs.has(id)) return false;
+    this.docs.delete(id);
+    this.docLengths.delete(id);
+
+    this.docFreqs.clear();
+    for (const doc of this.docs.values()) {
+      const tokens = doc.tokens || [];
+      const unique = new Set(tokens);
+      for (const t of unique) {
+        this.docFreqs.set(t, (this.docFreqs.get(t) || 0) + 1);
+      }
+    }
+
+    this.totalDocs = this.docs.size;
+    let sum = 0;
+    for (const len of this.docLengths.values()) sum += len;
+    this.avgLength = this.totalDocs > 0 ? sum / this.totalDocs : 0;
+    return true;
+  }
+
   public size(): number {
     return this.totalDocs;
   }

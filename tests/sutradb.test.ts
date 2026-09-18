@@ -69,4 +69,45 @@ describe("SutraDB Edge Hybrid Engine", () => {
     const results = engine.query("Sunday dental camp", 1);
     expect(results[0].document.id).toBe("doc-4");
   });
+
+  it("handles empty or whitespace queries gracefully without throwing", () => {
+    expect(engine.query("")).toEqual([]);
+    expect(engine.query("   ")).toEqual([]);
+    expect(engine.query("!@#$%^&*()")).toEqual([]);
+  });
+
+  it("handles multi-lingual Indian script documents and queries (Hindi & Kannada)", () => {
+    engine.insert({
+      id: "doc-hi",
+      title: "डॉक्टर शर्मा क्लिनिक",
+      content: "अपॉइंटमेंट बुकिंग सुबह 9 बजे से शुरू होती है। फीस 500 रुपये है।",
+      category: "clinic",
+    });
+
+    const resultsHi = engine.query("डॉक्टर शर्मा फीस", 1);
+    expect(resultsHi.length).toBe(1);
+    expect(resultsHi[0].document.id).toBe("doc-hi");
+    expect(resultsHi[0].matchedTerms).toContain("शर्मा");
+
+    engine.insert({
+      id: "doc-kn",
+      title: "ವೈದ್ಯರ ಕ್ಲಿನಿಕ್",
+      content: "ಬೆಳಗ್ಗೆ 9 ಗಂಟೆಯಿಂದ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಲಭ್ಯವಿದೆ.",
+      category: "clinic",
+    });
+
+    const resultsKn = engine.query("ವೈದ್ಯರ ಕ್ಲಿನಿಕ್", 1);
+    expect(resultsKn.length).toBe(1);
+    expect(resultsKn[0].document.id).toBe("doc-kn");
+  });
+
+  it("supports dynamic deletion of documents from index", () => {
+    expect(engine.size()).toBe(3);
+    const deleted = engine.delete("doc-2");
+    expect(deleted).toBe(true);
+    expect(engine.size()).toBe(2);
+
+    const deleteNonExistent = engine.delete("doc-999");
+    expect(deleteNonExistent).toBe(false);
+  });
 });
