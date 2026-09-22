@@ -1,17 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { Check, Sparkles, Phone, ArrowRight, ShieldCheck, Zap } from "lucide-react";
+import { Check, Sparkles, Phone, ArrowRight, ShieldCheck, Zap, CreditCard } from "lucide-react";
 
 export default function PricingSection() {
   const [isAnnual, setIsAnnual] = useState<boolean>(true);
+  const [currency, setCurrency] = useState<"INR" | "USD">("INR");
 
   const plans = [
     {
       name: "Local Starter",
       badge: "Single Location",
-      monthlyPrice: 49,
-      annualPrice: 39,
+      monthlyPriceUSD: 49,
+      annualPriceUSD: 39,
+      monthlyPriceINR: 2999,
+      annualPriceINR: 2499,
       description: "Ideal for clinics, cloud kitchens, and local service providers replacing voicemail.",
       features: [
         "1 Dedicated Inbound Telephony Number",
@@ -20,6 +23,7 @@ export default function PricingSection() {
         "All 8 Turnkey Industry Personas",
         "Automated Multi-Lingual SMS Dispatch",
         "Web Telephony Studio & Voice Orb Access",
+        "UPI & Instant QR Payment Ready",
         "Standard Community Support",
       ],
       ctaText: "Deploy Starter Line",
@@ -29,8 +33,10 @@ export default function PricingSection() {
     {
       name: "Growth Business",
       badge: "Most Popular",
-      monthlyPrice: 149,
-      annualPrice: 119,
+      monthlyPriceUSD: 149,
+      annualPriceUSD: 119,
+      monthlyPriceINR: 8999,
+      annualPriceINR: 7199,
       description: "For busy clinics, automotive rescue dispatchers, and growing restaurant chains.",
       features: [
         "3 Dedicated Inbound Telephony Numbers",
@@ -40,6 +46,7 @@ export default function PricingSection() {
         "Custom SutraDB Domain Knowledge Ingestion",
         "Full Indic Regional Multi-Lingual Engine",
         "Custom ElevenLabs Voice Model Cloning",
+        "Exotel & Airtel IQ SIP Trunk Interconnect",
         "Direct Priority Telegram Channel Support",
       ],
       ctaText: "Claim Growth Suite",
@@ -49,8 +56,10 @@ export default function PricingSection() {
     {
       name: "Enterprise Carrier",
       badge: "High Availability",
-      monthlyPrice: 499,
-      annualPrice: 399,
+      monthlyPriceUSD: 499,
+      annualPriceUSD: 399,
+      monthlyPriceINR: 29999,
+      annualPriceINR: 23999,
       description: "For high-volume contact centers, hotel chains, and multi-state enterprise dispatch.",
       features: [
         "Unlimited SIP Trunking & Phone Numbers",
@@ -59,6 +68,7 @@ export default function PricingSection() {
         "Dedicated Carrier Interconnect Bridge",
         "Custom CRM & POS Two-Way Webhook Integration",
         "99.99% Guaranteed SLA Uptime Contract",
+        "GST Invoicing & Priority Billing Support",
         "Dedicated Solutions Engineer & Custom Models",
       ],
       ctaText: "Contact Enterprise Desk",
@@ -83,38 +93,77 @@ export default function PricingSection() {
             Every plan includes our sub-second telephony runtime, embedded SutraDB vector memory, and multi-lingual dispatch.
           </p>
 
-          {/* Billing Switcher Toggle */}
-          <div className="mt-6 inline-flex items-center gap-3 p-1 rounded-xl bg-slate-900 border border-slate-700">
-            <button
-              type="button"
-              onClick={() => setIsAnnual(false)}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                !isAnnual ? "bg-slate-800 text-white shadow-sm" : "text-slate-300 hover:text-white"
-              }`}
-            >
-              Monthly Billing
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsAnnual(true)}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
-                isAnnual
-                  ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 shadow-md font-bold"
-                  : "text-slate-300 hover:text-white"
-              }`}
-            >
-              <span>Annual Billing</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 text-black font-bold uppercase tracking-wider">
-                Save 20%
-              </span>
-            </button>
+          {/* Currency and Billing Controls */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            {/* Currency Selector */}
+            <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-slate-900 border border-slate-700 text-xs">
+              <button
+                type="button"
+                onClick={() => setCurrency("INR")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                  currency === "INR"
+                    ? "bg-emerald-500 text-slate-950 shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                🇮🇳 INR (₹) India
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrency("USD")}
+                className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                  currency === "USD"
+                    ? "bg-emerald-500 text-slate-950 shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                🌐 USD ($) Global
+              </button>
+            </div>
+
+            {/* Billing Frequency Switcher Toggle */}
+            <div className="inline-flex items-center gap-2 p-1 rounded-xl bg-slate-900 border border-slate-700">
+              <button
+                type="button"
+                onClick={() => setIsAnnual(false)}
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  !isAnnual ? "bg-slate-800 text-white shadow-sm" : "text-slate-300 hover:text-white"
+                }`}
+              >
+                Monthly
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsAnnual(true)}
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  isAnnual
+                    ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 shadow-md font-bold"
+                    : "text-slate-300 hover:text-white"
+                }`}
+              >
+                <span>Annual</span>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 text-black font-bold uppercase tracking-wider">
+                  Save 20%
+                </span>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           {plans.map((plan, idx) => {
-            const price = isAnnual ? plan.annualPrice : plan.monthlyPrice;
+            const price =
+              currency === "INR"
+                ? isAnnual
+                  ? plan.annualPriceINR
+                  : plan.monthlyPriceINR
+                : isAnnual
+                ? plan.annualPriceUSD
+                : plan.monthlyPriceUSD;
+
+            const currencySymbol = currency === "INR" ? "₹" : "$";
+
             return (
               <div
                 key={idx}
@@ -146,12 +195,15 @@ export default function PricingSection() {
                   <div className="mt-6 mb-6 pb-6 border-b border-slate-800">
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-4xl sm:text-5xl font-black text-white font-mono">
-                        ${price}
+                        {currencySymbol}
+                        {price.toLocaleString()}
                       </span>
                       <span className="text-slate-300 text-xs font-medium">/ month</span>
                     </div>
-                    <span className="text-xs text-slate-300 block mt-1">
-                      {isAnnual ? "Billed annually ($" + price * 12 + "/yr)" : "Billed monthly"}
+                    <span className="text-xs text-slate-300 block mt-1 font-mono">
+                      {isAnnual
+                        ? `Billed annually (${currencySymbol}${(price * 12).toLocaleString()}/yr)`
+                        : "Billed monthly (Cancel anytime)"}
                     </span>
                   </div>
 
@@ -186,20 +238,37 @@ export default function PricingSection() {
           })}
         </div>
 
-        {/* Footnote Assurance */}
-        <div className="mt-12 text-center text-xs text-slate-300 flex flex-wrap items-center justify-center gap-6 font-medium">
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            24-Hour Deployment Guarantee
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Phone className="w-4 h-4 text-cyan-400" />
-            Keep Your Existing Business Phone Number
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            No Long-Term Contracts • Cancel Anytime
-          </span>
+        {/* Indian & Global Payment Trust Badges */}
+        <div className="mt-12 p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-center space-y-3 max-w-4xl mx-auto">
+          <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-200 uppercase tracking-wider">
+            <CreditCard className="w-4 h-4 text-cyan-400" />
+            <span>Accepted Payment Methods &amp; Invoicing</span>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+            <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono border border-slate-700">
+              ⚡ UPI / QR Instant
+            </span>
+            <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono border border-slate-700">
+              📱 Google Pay &amp; PhonePe
+            </span>
+            <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono border border-slate-700">
+              💳 Razorpay Checkout
+            </span>
+            <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono border border-slate-700">
+              🏦 NetBanking (50+ Indian Banks)
+            </span>
+            <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono border border-slate-700">
+              🌍 Visa / Mastercard / Amex
+            </span>
+            <span className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200 text-xs font-mono border border-slate-700">
+              📄 GST Input Tax Credit
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-400 max-w-xl mx-auto">
+            Zero setup fees. Immediate trunk provisioning in under 24 hours. Includes dedicated Telegram engineer support.
+          </p>
         </div>
       </div>
     </section>

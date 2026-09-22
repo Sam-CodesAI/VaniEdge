@@ -11,14 +11,21 @@ import {
   Bot,
   Flame,
   Activity,
+  PhoneCall,
+  Sliders,
 } from "lucide-react";
 
 interface LandingHeroProps {
   onScrollToStudio: () => void;
   onOpenAuth: (mode?: "signin" | "signup") => void;
+  onOpenCustomizer?: () => void;
 }
 
-export default function LandingHero({ onScrollToStudio, onOpenAuth }: LandingHeroProps) {
+export default function LandingHero({
+  onScrollToStudio,
+  onOpenAuth,
+  onOpenCustomizer,
+}: LandingHeroProps) {
   return (
     <section className="relative overflow-hidden pt-12 pb-16 sm:pt-20 sm:pb-24 border-b border-slate-800/80">
       {/* Ambient Radial Background Glows (Hardware-Accelerated CSS Gradients - Zero Blur Filter Overlap) */}
@@ -58,6 +65,28 @@ export default function LandingHero({ onScrollToStudio, onOpenAuth }: LandingHer
           <span className="text-emerald-400 font-bold">Edge</span>: Sub-Second Telephony, Zero Cloud Hops
         </div>
 
+        {/* Clickable Bangalore Cloud Telephony Inbound Demo Banner */}
+        <div className="mt-5 flex items-center justify-center">
+          <a
+            href="tel:+918047361284"
+            className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-cyan-950/60 border border-emerald-500/50 hover:border-emerald-400 text-xs text-slate-200 font-mono shadow-lg transition-all cursor-pointer hover:scale-102"
+            title="Click to dial Bangalore SIP Inbound Demo line directly from your phone"
+          >
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <PhoneCall className="w-3.5 h-3.5 text-emerald-400 group-hover:rotate-12 transition-transform" />
+            <span>Bangalore PSTN Inbound Demo:</span>
+            <strong className="text-emerald-300 font-bold tracking-wider underline decoration-emerald-500/50">
+              +91 80 4736 1284
+            </strong>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-semibold uppercase">
+              Live Indic Dialect
+            </span>
+          </a>
+        </div>
+
         {/* Subtitle */}
         <p className="mt-6 text-base sm:text-lg text-slate-200 max-w-2xl mx-auto leading-relaxed font-normal">
           Never lose a customer to missed calls, busy tones, or language barriers. VaniEdge combines{" "}
@@ -77,6 +106,17 @@ export default function LandingHero({ onScrollToStudio, onOpenAuth }: LandingHer
             <span>Launch Interactive Studio</span>
             <ArrowRight className="w-4 h-4" />
           </button>
+
+          {onOpenCustomizer && (
+            <button
+              type="button"
+              onClick={onOpenCustomizer}
+              className="px-5 py-3.5 rounded-xl bg-slate-900 border border-cyan-500/50 hover:border-cyan-400 text-cyan-300 font-bold text-sm shadow-md shadow-cyan-500/10 hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <Sliders className="w-4 h-4 text-cyan-400" />
+              <span>Customize in 60s</span>
+            </button>
+          )}
 
           <button
             type="button"
@@ -102,15 +142,6 @@ export default function LandingHero({ onScrollToStudio, onOpenAuth }: LandingHer
               />
             </svg>
             <span>Start Free with Google</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onOpenAuth("signup")}
-            className="px-5 py-3.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm font-semibold hover:border-slate-500 hover:text-white transition-all flex items-center gap-2 cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span>Sign Up with Email</span>
           </button>
         </div>
 

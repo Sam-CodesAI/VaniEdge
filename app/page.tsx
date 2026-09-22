@@ -24,6 +24,7 @@ import PricingSection from "@/components/PricingSection";
 import FaqSection from "@/components/FaqSection";
 import LandingFooter from "@/components/LandingFooter";
 import AuthModal, { AuthUser } from "@/components/AuthModal";
+import VerticalCustomizerModal from "@/components/VerticalCustomizerModal";
 
 interface Message {
   id: string;
@@ -100,6 +101,36 @@ export default function VaniEdgePage() {
     }
     setCurrentUser(null);
     setUserDropdownOpen(false);
+  };
+
+  // Vertical Customizer Modal State (60s Onboarding Wizard)
+  const [customizerOpen, setCustomizerOpen] = useState<boolean>(false);
+
+  const handleDeployCustomizer = (config: {
+    category: BusinessCategory;
+    businessName: string;
+    language: string;
+    operatingHours: string;
+    servicesText: string;
+  }) => {
+    setSelectedPersona(config.category);
+    setBusinessName(config.businessName);
+    setSelectedLanguage(config.language);
+
+    const customGreeting = `Namaste! Welcome to ${config.businessName}. Operating hours: ${config.operatingHours}. How may I assist your call today?`;
+    setTranscript([
+      {
+        id: `custom-init-${Date.now()}`,
+        sender: "agent",
+        text: customGreeting,
+        timestamp: "Just now",
+        latencyMs: 10.4,
+        matchedDoc: "Custom Vertical Knowledge & Services",
+      },
+    ]);
+
+    scrollToSection("studio");
+    speakVoiceResponse(customGreeting);
   };
 
   const scrollToSection = (id: string) => {
@@ -541,6 +572,14 @@ export default function VaniEdgePage() {
               >
                 FAQ
               </button>
+              <button
+                type="button"
+                onClick={() => setCustomizerOpen(true)}
+                className="px-2.5 py-1 rounded-lg bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/25 transition-all cursor-pointer flex items-center gap-1 font-bold"
+              >
+                <Sparkles className="w-3 h-3 text-cyan-400" />
+                <span>Customize in 60s</span>
+              </button>
             </nav>
 
             {/* Right Quick Actions */}
@@ -774,6 +813,7 @@ export default function VaniEdgePage() {
             <LandingHero
               onScrollToStudio={() => scrollToSection("studio")}
               onOpenAuth={handleOpenAuth}
+              onOpenCustomizer={() => setCustomizerOpen(true)}
             />
           </div>
 
@@ -798,6 +838,7 @@ export default function VaniEdgePage() {
                 isConnecting={isConnecting}
                 isListening={isListening}
                 isSpeaking={isSpeaking}
+                isThinking={isProcessing}
                 callDuration={callDuration}
                 formatDuration={formatDuration}
                 transcript={transcript}
@@ -864,6 +905,13 @@ export default function VaniEdgePage() {
         onAuthSuccess={(user) => {
           setCurrentUser(user);
         }}
+      />
+
+      {/* 60-Second Vertical Customizer Wizard Modal */}
+      <VerticalCustomizerModal
+        isOpen={customizerOpen}
+        onClose={() => setCustomizerOpen(false)}
+        onDeployToStudio={handleDeployCustomizer}
       />
     </div>
   );
