@@ -18,6 +18,7 @@ import {
 import VaniStudioView, { BusinessCategory, AVAILABLE_CATEGORIES } from "@/components/VaniStudioView";
 import { TelephonyMissionControl } from "@/components/TelephonyMissionControl";
 import LandingHero from "@/components/LandingHero";
+import CinematicVoiceScrollytelling from "@/components/CinematicVoiceScrollytelling";
 import BentoArchitecture from "@/components/BentoArchitecture";
 import IndustrySolutionsSection from "@/components/IndustrySolutionsSection";
 import PricingSection from "@/components/PricingSection";
@@ -539,6 +540,14 @@ export default function VaniEdgePage() {
               </button>
               <button
                 type="button"
+                onClick={() => scrollToSection("cinematic-scrollytelling")}
+                className="hover:text-emerald-700 transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <span className="h-2 w-2 rounded-full bg-cyan-500 animate-ping" />
+                180ms Flight
+              </button>
+              <button
+                type="button"
                 onClick={() => scrollToSection("industries")}
                 className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
@@ -731,6 +740,14 @@ export default function VaniEdgePage() {
               </button>
               <button
                 type="button"
+                onClick={() => scrollToSection("cinematic-scrollytelling")}
+                className="block w-full text-left py-1 text-black hover:text-emerald-700 flex items-center gap-1.5"
+              >
+                <span className="h-2 w-2 rounded-full bg-cyan-500 animate-ping" />
+                180ms Telephony Flight
+              </button>
+              <button
+                type="button"
                 onClick={() => scrollToSection("industries")}
                 className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
@@ -857,6 +874,9 @@ export default function VaniEdgePage() {
               />
             </div>
           </section>
+
+          {/* Cinematic Scrollytelling Telephony Flight (Zero AI-Slop / Continuous Scrollytelling Engine) */}
+          <CinematicVoiceScrollytelling />
 
           {/* 3. Bento Architecture Grid */}
           <BentoArchitecture />
