@@ -483,7 +483,7 @@ export default function VaniEdgePage() {
               </a>
 
               <a
-                href="https://github.com/Sam-CodesAI/VaniEdge"
+                href="https://github.com/Sam-CodesAI/VaniEdge-Voice-Platform"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-xs font-medium hover:text-white hover:border-slate-500 transition-colors cursor-pointer"
