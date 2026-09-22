@@ -584,7 +584,7 @@ export default function VaniEdgePage() {
                 onClick={() => scrollToSection("mission-control")}
                 className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
-                Failover Watchdog
+                Audited Call &amp; Watchdog
               </button>
               <button
                 type="button"
@@ -811,7 +811,7 @@ export default function VaniEdgePage() {
                 onClick={() => scrollToSection("mission-control")}
                 className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
-                Failover Watchdog &amp; Health
+                Audited Call &amp; BridgeView Watchdog
               </button>
               <button
                 type="button"
@@ -936,13 +936,13 @@ export default function VaniEdgePage() {
               <div className="text-center max-w-3xl mx-auto mb-10">
                 <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-slate-100 border border-slate-300 text-black text-xs font-oswald uppercase tracking-wider font-bold mb-3">
                   <Activity className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>TELEPHONY FAILOVER WATCHDOG &amp; TELEMETRY</span>
+                  <span>TELEPHONY AUDIT, FAILOVER WATCHDOG &amp; BRIDGEVIEW</span>
                 </div>
                 <h2 className="text-3xl sm:text-5xl font-bold text-black font-oswald uppercase tracking-tight">
-                  Live Mission Control &amp; Carrier Health
+                  Live Mission Control, Audited Call &amp; BridgeView Suite
                 </h2>
                 <p className="mt-3 text-sm sm:text-base text-black font-medium">
-                  Real-time supervisor managing carrier WebSocket audio streams, heartbeat latency checks, and automatic atomic Twilio REST failover.
+                  Inspect live PSTN carrier health, play the audited inbound call recording with stage-by-stage latency telemetry (385ms TTFT), and manage BridgeView dispatch tickets with verified SHA-checksums.
                 </p>
               </div>
 
