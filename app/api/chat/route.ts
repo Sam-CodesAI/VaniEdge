@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SutraEdgeIndex, DEFAULT_KNOWLEDGE_PRESETS, DocumentEntry } from "@/lib/sutradb-engine";
 
+export type PersonaCategory =
+  | "clinic"
+  | "restaurant"
+  | "auto"
+  | "retail"
+  | "realestate"
+  | "finance"
+  | "hospitality"
+  | "general";
+
 interface ChatRequestBody {
   message: string;
-  persona?: "clinic" | "restaurant" | "auto" | "general";
+  persona?: PersonaCategory;
   language?: string; // en, hi, kn, ta, te, mr, es
   customDocuments?: DocumentEntry[];
   businessName?: string;
@@ -40,7 +50,16 @@ export async function POST(req: NextRequest) {
 
     // Advanced Dynamic Entity & Intent Extraction
     const lower = message.toLowerCase();
-    let detectedIntent: "BOOK_APPOINTMENT" | "ORDER_FOOD" | "EMERGENCY_DISPATCH" | "PRICE_INQUIRY" | "GENERAL_INQUIRY" = "GENERAL_INQUIRY";
+    let detectedIntent:
+      | "BOOK_APPOINTMENT"
+      | "ORDER_FOOD"
+      | "EMERGENCY_DISPATCH"
+      | "RETAIL_SUPPORT"
+      | "PROPERTY_INQUIRY"
+      | "BANKING_SERVICE"
+      | "HOTEL_RESERVATION"
+      | "PRICE_INQUIRY"
+      | "GENERAL_INQUIRY" = "GENERAL_INQUIRY";
     const extractedEntities: Record<string, string> = {};
 
     // 1. Name Extraction
@@ -65,7 +84,6 @@ export async function POST(req: NextRequest) {
     // 4. Intent Classification
     if (
       lower.includes("appointment") ||
-      lower.includes("book") ||
       lower.includes("doctor") ||
       lower.includes("timing") ||
       lower.includes("slot") ||
@@ -74,7 +92,6 @@ export async function POST(req: NextRequest) {
     ) {
       detectedIntent = "BOOK_APPOINTMENT";
     } else if (
-      lower.includes("order") ||
       lower.includes("thali") ||
       lower.includes("biryani") ||
       lower.includes("food") ||
@@ -84,7 +101,6 @@ export async function POST(req: NextRequest) {
       lower.includes("ಊಟ")
     ) {
       detectedIntent = "ORDER_FOOD";
-      // Dynamic item detection
       const foodItems: string[] = [];
       if (lower.includes("thali")) foodItems.push("Special Thali");
       if (lower.includes("biryani")) foodItems.push("Veg Biryani");
@@ -103,6 +119,50 @@ export async function POST(req: NextRequest) {
       detectedIntent = "EMERGENCY_DISPATCH";
       extractedEntities["severity"] = "HIGH_PRIORITY";
     } else if (
+      lower.includes("track") ||
+      lower.includes("return") ||
+      lower.includes("shipping") ||
+      lower.includes("refund") ||
+      lower.includes("package") ||
+      lower.includes("warranty") ||
+      lower.includes("स्टॉक") ||
+      lower.includes("ರಿಟರ್ನ್")
+    ) {
+      detectedIntent = "RETAIL_SUPPORT";
+    } else if (
+      lower.includes("apartment") ||
+      lower.includes("property") ||
+      lower.includes("flat") ||
+      lower.includes("bhk") ||
+      lower.includes("rent") ||
+      lower.includes("lease") ||
+      lower.includes("viewing") ||
+      lower.includes("मकान") ||
+      lower.includes("ಆಸ್ತಿ")
+    ) {
+      detectedIntent = "PROPERTY_INQUIRY";
+    } else if (
+      lower.includes("balance") ||
+      lower.includes("card") ||
+      lower.includes("freeze") ||
+      lower.includes("bank") ||
+      lower.includes("loan") ||
+      lower.includes("mortgage") ||
+      lower.includes("खाता") ||
+      lower.includes("ಬ್ಯಾಂಕ್")
+    ) {
+      detectedIntent = "BANKING_SERVICE";
+    } else if (
+      lower.includes("hotel") ||
+      lower.includes("suite") ||
+      lower.includes("check-in") ||
+      lower.includes("checkout") ||
+      lower.includes("shuttle") ||
+      lower.includes("होटल") ||
+      lower.includes("ಹೋಟೆಲ್")
+    ) {
+      detectedIntent = "HOTEL_RESERVATION";
+    } else if (
       lower.includes("cost") ||
       lower.includes("fee") ||
       lower.includes("price") ||
@@ -112,13 +172,20 @@ export async function POST(req: NextRequest) {
       lower.includes("ಬೆಲೆ")
     ) {
       detectedIntent = "PRICE_INQUIRY";
+    } else if (lower.includes("book") || lower.includes("order")) {
+      if (persona === "clinic") detectedIntent = "BOOK_APPOINTMENT";
+      else if (persona === "restaurant") detectedIntent = "ORDER_FOOD";
+      else if (persona === "hospitality") detectedIntent = "HOTEL_RESERVATION";
+      else if (persona === "realestate") detectedIntent = "PROPERTY_INQUIRY";
+      else if (persona === "retail") detectedIntent = "RETAIL_SUPPORT";
+      else detectedIntent = "BOOK_APPOINTMENT";
     }
 
     // Dynamic Multi-Lingual Natural Generation
     let voiceResponse = "";
     const name = extractedEntities["callerName"] || "Customer";
     const time = extractedEntities["scheduledTime"] || "the earliest available slot";
-    const items = extractedEntities["items"] || "your requested order";
+    const items = extractedEntities["items"] || "your requested item";
 
     if (language.startsWith("hi")) {
       // Hindi (हिंदी)
@@ -128,6 +195,14 @@ export async function POST(req: NextRequest) {
         voiceResponse = `नमस्ते ${name}! आपका ${items} का आर्डर प्राप्त हो गया है। हमारी रसोई से यह 30 मिनट में तैयार हो जाएगा।`;
       } else if (detectedIntent === "EMERGENCY_DISPATCH") {
         voiceResponse = `आपातकालीन सहायता सक्रिय कर दी गई है। हमारी बचाव टीम 20 मिनट में आपके पास पहुंच रही है। कृपया सुरक्षित रहें।`;
+      } else if (detectedIntent === "RETAIL_SUPPORT") {
+        voiceResponse = `नमस्ते ${name}! आपके आर्डर और रिटर्न का विवरण दर्ज कर लिया गया है। ${bestDocContent ? `विवरण: ${bestDocContent.slice(0, 120)}` : ""}`;
+      } else if (detectedIntent === "PROPERTY_INQUIRY") {
+        voiceResponse = `नमस्ते ${name}! प्रॉपर्टी विजिट और फ्लैट की जानकारी के लिए आपका अनुरोध दर्ज हो गया है। ${bestDocContent ? `विवरण: ${bestDocContent.slice(0, 120)}` : ""}`;
+      } else if (detectedIntent === "BANKING_SERVICE") {
+        voiceResponse = `नमस्ते ${name}! आपकी बैंकिंग सेवा और खाता सुरक्षा अनुरोध प्रोसेस कर दिया गया है।`;
+      } else if (detectedIntent === "HOTEL_RESERVATION") {
+        voiceResponse = `नमस्ते ${name}! ${businessName} में आपका कमरा ${time} के लिए आरक्षित कर लिया गया है।`;
       } else if (bestDocContent) {
         voiceResponse = `नमस्ते! हमारे रिकॉर्ड के अनुसार: ${bestDocContent.slice(0, 220)}। क्या मैं आपकी कुछ और मदद कर सकता हूँ?`;
       } else {
@@ -139,6 +214,14 @@ export async function POST(req: NextRequest) {
         voiceResponse = `ನಮಸ್ಕಾರ ${name}! ${businessName} ನಲ್ಲಿ ನಿಮ್ಮ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್ ${time} ಕ್ಕೆ ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ. ದಯವಿಟ್ಟು 10 ನಿಮಿಷ ಮುಂಚಿತವಾಗಿ ಬನ್ನಿ.`;
       } else if (detectedIntent === "ORDER_FOOD") {
         voiceResponse = `ನಮಸ್ಕಾರ ${name}! ನಿಮ್ಮ ${items} ಆರ್ಡರ್ ಸ್ವೀಕರಿಸಲಾಗಿದೆ. 30 ನಿಮಿಷಗಳಲ್ಲಿ ವಿತರಿಸಲಾಗುವುದು.`;
+      } else if (detectedIntent === "RETAIL_SUPPORT") {
+        voiceResponse = `ನಮಸ್ಕಾರ ${name}! ನಿಮ್ಮ ಚಿಲ್ಲರೆ ಆದೇಶ ಮತ್ತು ರಿಟರ್ನ್ ವಿನಂತಿ ದಾಖಲಾಗಿದೆ.`;
+      } else if (detectedIntent === "PROPERTY_INQUIRY") {
+        voiceResponse = `ನಮಸ್ಕಾರ ${name}! ಆಸ್ತಿ ವೀಕ್ಷಣೆ ಮತ್ತು ಅಪಾರ್ಟ್‌ಮೆಂಟ್ ವಿವರಗಳಿಗಾಗಿ ವಿನಂತಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ.`;
+      } else if (detectedIntent === "BANKING_SERVICE") {
+        voiceResponse = `ನಮಸ್ಕಾರ ${name}! ನಿಮ್ಮ ಬ್ಯಾಂಕಿಂಗ್ ಸೇವೆಯ ವಿನಂತಿಯನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ದಾಖಲಿಸಲಾಗಿದೆ.`;
+      } else if (detectedIntent === "HOTEL_RESERVATION") {
+        voiceResponse = `ನಮಸ್ಕಾರ ${name}! ${businessName} ನಲ್ಲಿ ಕೊಠಡಿ ಮೀಸಲಾತಿ ಖಚಿತಪಡಿಸಲಾಗಿದೆ.`;
       } else if (bestDocContent) {
         voiceResponse = `ನಮಸ್ಕಾರ! ನಮ್ಮ ದಾಖಲೆಗಳ ಪ್ರಕಾರ: ${bestDocContent.slice(0, 200)}.`;
       } else {
@@ -148,6 +231,12 @@ export async function POST(req: NextRequest) {
       // Marathi (मराठी)
       if (detectedIntent === "BOOK_APPOINTMENT") {
         voiceResponse = `नमस्कार ${name}! ${businessName} मध्ये आपली अपॉइंटमेंट ${time} साठी नोंदवण्यात आली आहे.`;
+      } else if (detectedIntent === "ORDER_FOOD") {
+        voiceResponse = `नमस्कार ${name}! आपली ऑर्डर नोंदवली गेली आहे. 30 मिनिटांत डिलिव्हरी होईल.`;
+      } else if (detectedIntent === "RETAIL_SUPPORT") {
+        voiceResponse = `नमस्कार ${name}! आपली खरेदी आणि परतावा विनंती यशस्वीरीत्या नोंदवण्यात आली आहे.`;
+      } else if (detectedIntent === "PROPERTY_INQUIRY") {
+        voiceResponse = `नमस्कार ${name}! मालमत्ता पाहणीसाठी आपली विनंती नोंदवली आहे.`;
       } else if (bestDocContent) {
         voiceResponse = `नमस्कार! माहितीनुसार: ${bestDocContent.slice(0, 200)}.`;
       } else {
@@ -162,6 +251,12 @@ export async function POST(req: NextRequest) {
       // Spanish (Español)
       if (detectedIntent === "BOOK_APPOINTMENT") {
         voiceResponse = `¡Hola ${name}! Su cita en ${businessName} ha sido confirmada para ${time}.`;
+      } else if (detectedIntent === "ORDER_FOOD") {
+        voiceResponse = `¡Hola ${name}! Su pedido de comida ha sido confirmado y llegará en 30 minutos.`;
+      } else if (detectedIntent === "RETAIL_SUPPORT") {
+        voiceResponse = `¡Hola ${name}! Su consulta sobre el pedido y devolución ha sido registrada.`;
+      } else if (detectedIntent === "PROPERTY_INQUIRY") {
+        voiceResponse = `¡Hola ${name}! Su solicitud de visita a la propiedad ha sido programada con éxito.`;
       } else if (bestDocContent) {
         voiceResponse = `Hola, según nuestros registros: ${bestDocContent.slice(0, 200)}.`;
       } else {
@@ -177,6 +272,22 @@ export async function POST(req: NextRequest) {
         voiceResponse = `Order confirmed for ${name}: ${items}. Kitchen preparation has started and your delivery will arrive in approximately 30 minutes.`;
       } else if (detectedIntent === "EMERGENCY_DISPATCH") {
         voiceResponse = `Emergency Dispatch Alert: An emergency recovery crew has been dispatched to your location with an estimated arrival time of 18 minutes.`;
+      } else if (detectedIntent === "RETAIL_SUPPORT") {
+        voiceResponse = `Hello ${name}! I have accessed your retail support request. ${
+          bestDocContent ? `Policy details: ${bestDocContent.slice(0, 140)}.` : ""
+        } Your return or tracking ticket is logged.`;
+      } else if (detectedIntent === "PROPERTY_INQUIRY") {
+        voiceResponse = `Hello ${name}! Thank you for your interest in ${businessName}. ${
+          bestDocContent ? `Listing summary: ${bestDocContent.slice(0, 140)}.` : ""
+        } A viewing tour has been scheduled.`;
+      } else if (detectedIntent === "BANKING_SERVICE") {
+        voiceResponse = `Hello ${name}! Your banking inquiry has been verified under secure edge protocol. ${
+          bestDocContent ? `Verified terms: ${bestDocContent.slice(0, 140)}.` : ""
+        }`;
+      } else if (detectedIntent === "HOTEL_RESERVATION") {
+        voiceResponse = `Hello ${name}! Your reservation request at ${businessName} is received for ${time}. ${
+          bestDocContent ? `Amenities: ${bestDocContent.slice(0, 140)}.` : ""
+        } We look forward to hosting you.`;
       } else if (detectedIntent === "PRICE_INQUIRY" && bestDocContent) {
         voiceResponse = `According to verified records: ${bestDocContent.slice(0, 230)}.`;
       } else if (bestDocContent) {

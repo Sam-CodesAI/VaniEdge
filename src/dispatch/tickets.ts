@@ -5,10 +5,21 @@
 export type SupportedLanguage = "en" | "hi" | "kn";
 export type TicketStatus = "CONFIRMED" | "DISPATCHED" | "ESCALATED" | "COMPLETED" | "CANCELLED";
 
+export type SupportedCategory =
+  | "clinic"
+  | "restaurant"
+  | "auto"
+  | "retail"
+  | "realestate"
+  | "finance"
+  | "hospitality"
+  | "general"
+  | string;
+
 export interface TicketRequest {
   callerName: string;
   callerPhone: string;
-  category: "clinic" | "restaurant" | "auto" | "general" | string;
+  category: SupportedCategory;
   serviceType: string;
   details: string;
   priority?: "STANDARD" | "HIGH" | "URGENT";
@@ -55,6 +66,16 @@ export function generateSmsConfirmation(
       return `[वाणीEdge AI] डॉ. शर्मा क्लिनिक: ${callerName} के लिए अपॉइंटमेंट कन्फर्म। टिकट: ${ticketId}। समय: ${details}।`;
     } else if (category === "restaurant") {
       return `[वाणीEdge AI] भोजनालय: आर्डर कन्फर्म (${serviceType})। टिकट: ${ticketId}। अनुमानित डिलीवरी: 25-35 मिनट।`;
+    } else if (category === "retail") {
+      return `[वाणीEdge AI] रिटेल सपोर्ट: ${callerName} के लिए अनुरोध दर्ज (${serviceType})। टिकट: ${ticketId}। विवरण: ${details}।`;
+    } else if (category === "realestate") {
+      return `[वाणीEdge AI] रियल एस्टेट: प्रॉपर्टी विजिट शेड्यूल हुई (${serviceType})। टिकट: ${ticketId}। समय: ${details}।`;
+    } else if (category === "finance") {
+      return `[वाणीEdge AI] बैंकिंग सेवा: ${callerName} का अनुरोध प्रोसेस हुआ (${serviceType})। टिकट: ${ticketId}।`;
+    } else if (category === "hospitality") {
+      return `[वाणीEdge AI] होटल रिजर्वेशन: कमरा बुक हुआ (${serviceType})। टिकट: ${ticketId}। विवरण: ${details}।`;
+    } else if (category === "general") {
+      return `[वाणीEdge AI] ग्राहक सेवा: सहायता टिकट जनरेट हुआ (${serviceType})। टिकट: ${ticketId}।`;
     } else {
       return `[वाणीEdge AI] एपेक्स रेस्क्यू: ${serviceType} के लिए वाहन रवाना। टिकट: ${ticketId}। ईटीए: 18 मिनट।`;
     }
@@ -65,6 +86,16 @@ export function generateSmsConfirmation(
       return `[ವಾಣಿEdge AI] ಡಾ. ಶರ್ಮಾ ಕ್ಲಿನಿಕ್: ${callerName} ಅವರಿಗೆ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ. ಟಿಕೆಟ್: ${ticketId}. ಸಮಯ: ${details}.`;
     } else if (category === "restaurant") {
       return `[ವಾಣಿEdge AI] ಭೋಜನಾಲಯ: ಆರ್ಡರ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ (${serviceType}). ಟಿಕೆಟ್: ${ticketId}. ವಿತರಣೆ ಸಮಯ: 25-35 ನಿಮಿಷಗಳು.`;
+    } else if (category === "retail") {
+      return `[ವಾಣಿEdge AI] ಚಿಲ್ಲರೆ ಬೆಂಬಲ: ${callerName} ಗಾಗಿ ವಿನಂತಿ ಸ್ವೀಕರಿಸಲಾಗಿದೆ (${serviceType}). ಟಿಕೆಟ್: ${ticketId}.`;
+    } else if (category === "realestate") {
+      return `[ವಾಣಿEdge AI] ರಿಯಲ್ ಎಸ್ಟೇಟ್: ಆಸ್ತಿ ಭೇಟಿ ನಿಗದಿಪಡಿಸಲಾಗಿದೆ (${serviceType}). ಟಿಕೆಟ್: ${ticketId}.`;
+    } else if (category === "finance") {
+      return `[ವಾಣಿEdge AI] ಬ್ಯಾಂಕಿಂಗ್ ಸೇವೆ: ${callerName} ಅವರ ವಿನಂತಿ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ (${serviceType}). ಟಿಕೆಟ್: ${ticketId}.`;
+    } else if (category === "hospitality") {
+      return `[ವಾಣಿEdge AI] ಹೋಟೆಲ್ ಮೀಸಲಾತಿ: ಕೊಠಡಿ ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ (${serviceType}). ಟಿಕೆಟ್: ${ticketId}.`;
+    } else if (category === "general") {
+      return `[ವಾಣಿEdge AI] ಗ್ರಾಹಕ ಸೇವೆ: ಬೆಂಬಲ ಟಿಕೆಟ್ ರಚಿಸಲಾಗಿದೆ (${serviceType}). ಟಿಕೆಟ್: ${ticketId}.`;
     } else {
       return `[ವಾಣಿEdge AI] ಅಪೆಕ್ಸ್ ರೆಸ್ಕ್ಯೂ: ${serviceType} ಗಾಗಿ ರಕ್ಷಣಾ ವಾಹನ ಕಳುಹಿಸಲಾಗಿದೆ. ಟಿಕೆಟ್: ${ticketId}. ಇಟಿಎ: 18 ನಿಮಿಷಗಳು.`;
     }
@@ -75,6 +106,16 @@ export function generateSmsConfirmation(
     return `[VaniEdge AI] Appointment confirmed for ${callerName} at Dr. Sharma Clinic. Ticket: ${ticketId}. Slot: ${details}.`;
   } else if (category === "restaurant") {
     return `[VaniEdge AI] Bhojanalaya Kitchen: Order confirmed (${serviceType}). Ticket: ${ticketId}. Estimated delivery: 25-35 mins.`;
+  } else if (category === "retail") {
+    return `[VaniEdge AI] Prime Retail: Inquiry & Order logged for ${callerName} (${serviceType}). Ticket: ${ticketId}. Details: ${details}.`;
+  } else if (category === "realestate") {
+    return `[VaniEdge AI] Skyline Realty: Viewing scheduled for ${callerName} (${serviceType}). Ticket: ${ticketId}. Time: ${details}.`;
+  } else if (category === "finance") {
+    return `[VaniEdge AI] Apex Banking: Request confirmed for ${callerName} (${serviceType}). Ticket: ${ticketId}. Ref: ${details}.`;
+  } else if (category === "hospitality") {
+    return `[VaniEdge AI] Grand Horizon Hotel: Reservation confirmed for ${callerName} (${serviceType}). Ticket: ${ticketId}. Stay: ${details}.`;
+  } else if (category === "general") {
+    return `[VaniEdge AI] Enterprise Support: Ticket created for ${callerName} (${serviceType}). Ticket: ${ticketId}. Status: In Progress.`;
   } else {
     return `[VaniEdge AI] Apex Rescue: Recovery vehicle dispatched for ${serviceType}. Ticket: ${ticketId}. ETA: 18 mins.`;
   }

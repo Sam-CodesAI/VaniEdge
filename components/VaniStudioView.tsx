@@ -27,6 +27,83 @@ interface Message {
   audioUrl?: string;
 }
 
+export type BusinessCategory =
+  | "clinic"
+  | "restaurant"
+  | "auto"
+  | "retail"
+  | "realestate"
+  | "finance"
+  | "hospitality"
+  | "general";
+
+export interface CategoryInfo {
+  id: BusinessCategory;
+  label: string;
+  icon: string;
+  shortDesc: string;
+  defaultBusinessName: string;
+}
+
+export const AVAILABLE_CATEGORIES: CategoryInfo[] = [
+  {
+    id: "clinic",
+    label: "Healthcare & Clinics",
+    icon: "🏥",
+    shortDesc: "Doctor appointments, patient triage & consultation fees",
+    defaultBusinessName: "CarePlus Healthcare & Clinics",
+  },
+  {
+    id: "restaurant",
+    label: "Restaurants & Dining",
+    icon: "🍲",
+    shortDesc: "Takeout food delivery, table reservations & daily menus",
+    defaultBusinessName: "Royal Feast Kitchen & Dining",
+  },
+  {
+    id: "auto",
+    label: "Automotive & Rescue",
+    icon: "🚨",
+    shortDesc: "24/7 Roadside towing, tyre puncture & battery jumpstart",
+    defaultBusinessName: "Apex 24/7 Roadside Rescue",
+  },
+  {
+    id: "retail",
+    label: "Retail & E-Commerce",
+    icon: "🛍️",
+    shortDesc: "Order tracking, 30-day returns & inventory stock check",
+    defaultBusinessName: "PrimeGoods Retail & Store",
+  },
+  {
+    id: "realestate",
+    label: "Real Estate & Property",
+    icon: "🏢",
+    shortDesc: "Apartment viewings, leasing inquiries & maintenance logs",
+    defaultBusinessName: "Skyline Realty & Properties",
+  },
+  {
+    id: "finance",
+    label: "Banking & Finance",
+    icon: "💳",
+    shortDesc: "Account balance, loan status inquiry & card freezing",
+    defaultBusinessName: "Apex Financial & Banking",
+  },
+  {
+    id: "hospitality",
+    label: "Hotels & Hospitality",
+    icon: "🏨",
+    shortDesc: "Room reservations, check-in amenities & airport shuttle",
+    defaultBusinessName: "Grand Horizon Suites & Hotel",
+  },
+  {
+    id: "general",
+    label: "Customer Support",
+    icon: "🌐",
+    shortDesc: "24/7 Inbound reception desk & callback scheduling",
+    defaultBusinessName: "Enterprise Concierge Support",
+  },
+];
+
 interface LanguageOption {
   code: string;
   label: string;
@@ -49,8 +126,8 @@ interface VaniStudioViewProps {
   onToggleCall: () => void;
   onToggleMic: () => void;
   onReplayAudio: (text: string) => void;
-  selectedPersona: "clinic" | "restaurant" | "auto";
-  onSelectPersona: (p: "clinic" | "restaurant" | "auto") => void;
+  selectedPersona: BusinessCategory;
+  onSelectPersona: (p: BusinessCategory) => void;
   selectedLanguage: string;
   onSelectLanguage: (l: string) => void;
   languages: LanguageOption[];
@@ -81,26 +158,51 @@ export default function VaniStudioView({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [transcript]);
 
-  // Quick prompt pills for instant action
+  // Quick prompt pills for instant action across all categories
   const samplePrompts = {
     clinic: [
-      { label: "Clinic Hours?", query: "What are Dr. Sharma's clinic hours?" },
-      { label: "Book 10 AM", query: "Book an appointment for Rahul tomorrow at 10 AM" },
-      { label: "Consultation Fee?", query: "What is the consultation fee?" },
+      { label: "Book Consultation", query: "Book a consultation appointment for Aarav tomorrow at 10 AM" },
+      { label: "Clinic Hours & Fee", query: "What are your consultation timings and specialist doctor fees?" },
+      { label: "Same-Day Walk-ins?", query: "Are walk-in patients accepted without advance booking?" },
     ],
     restaurant: [
-      { label: "Today's Special?", query: "What is today's Bhojanalaya special?" },
-      { label: "Order 2 Thalis", query: "Order 2 Special Thalis to Indiranagar" },
-      { label: "Delivery Time?", query: "What is the delivery turnaround time?" },
+      { label: "Order Deluxe Thali", query: "I want to order 2 Deluxe Thalis and Biryani for delivery" },
+      { label: "Chef's Special?", query: "What are today's chef specials and delivery hours?" },
+      { label: "Reserve Table", query: "Can I book a table for 4 guests tonight at 8:00 PM?" },
     ],
     auto: [
-      { label: "Highway Puncture", query: "I have a highway tyre puncture at Mile 44" },
-      { label: "Towing Rate?", query: "What is the emergency towing rate?" },
-      { label: "Dispatch Rescue", query: "Dispatch roadside rescue team immediately" },
+      { label: "Highway Breakdown", query: "My car broke down on the expressway with a flat tyre, need urgent help" },
+      { label: "Towing Rates?", query: "What is your emergency flatbed towing charge per kilometer?" },
+      { label: "Battery Jumpstart", query: "Can you dispatch a technician for an on-site battery jumpstart?" },
+    ],
+    retail: [
+      { label: "Track My Order", query: "Where is my order #58219 and when will it be delivered?" },
+      { label: "Return Policy?", query: "What is your 30-day return policy and refund procedure?" },
+      { label: "Check Product Stock", query: "Is the wireless Bluetooth headset available in stock at your store?" },
+    ],
+    realestate: [
+      { label: "Schedule Site Visit", query: "I would like to schedule a site viewing for a 3BHK flat this Saturday" },
+      { label: "Rental Rates & Deposit", query: "What is the monthly rental price and security deposit amount?" },
+      { label: "Maintenance Request", query: "I need to log an urgent plumbing maintenance request for unit 304" },
+    ],
+    finance: [
+      { label: "Loan Status Inquiry", query: "What is the status of my home loan application reference #HL-9821?" },
+      { label: "Freeze Lost Card", query: "I misplaced my debit card, please help me freeze it immediately" },
+      { label: "Branch Hours & IFSC", query: "What are your branch working hours and IFSC routing code?" },
+    ],
+    hospitality: [
+      { label: "Book Deluxe Suite", query: "Do you have deluxe rooms with king beds available this Friday night?" },
+      { label: "Check-in & Breakfast", query: "What time is check-in and is complimentary breakfast included?" },
+      { label: "Airport Shuttle?", query: "Do you offer airport pick-up and drop shuttle services?" },
+    ],
+    general: [
+      { label: "Support Callback", query: "I need to speak to an account manager, please arrange a callback" },
+      { label: "Office Address & Hours", query: "What are your business operating hours and headquarters address?" },
+      { label: "Raise Support Ticket", query: "Can you log an official service ticket for my account inquiry?" },
     ],
   }[selectedPersona] || [
     { label: "Business Hours?", query: "What are your business hours?" },
-    { label: "Book Appointment", query: "Can I schedule an appointment?" },
+    { label: "Schedule Service", query: "Can I schedule a service appointment?" },
   ];
 
   return (
@@ -108,53 +210,48 @@ export default function VaniStudioView({
       {/* Clean Hero Header */}
       <div className="text-center space-y-2 max-w-2xl mx-auto pt-2">
         <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-          AI Voice Assistant <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">for Local Businesses</span>
+          AI Voice Assistant <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">for Every Industry</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-400">
-          24/7 natural voice phone answering. Select a business type below to test live in your browser.
+          24/7 natural voice phone answering. Select any business category below to test live in your browser.
         </p>
       </div>
 
-      {/* Business Persona Switcher (Segmented Control) */}
-      <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 bg-slate-900/90 border border-slate-800 rounded-2xl w-fit mx-auto shadow-lg backdrop-blur-md">
-        <button
-          type="button"
-          onClick={() => onSelectPersona("clinic")}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-            selectedPersona === "clinic"
-              ? "bg-emerald-500 text-black shadow-md shadow-emerald-500/25 scale-100"
-              : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-          }`}
-        >
-          <span className="text-base">🏥</span>
-          <span>Dr. Sharma Clinic</span>
-        </button>
+      {/* All Available Categories (Multi-Industry Segmented Control) */}
+      <div className="w-full max-w-5xl mx-auto space-y-2">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3 h-3 text-cyan-400" />
+            Available Business Categories:
+          </span>
+          <span className="text-[11px] text-slate-500 font-mono">
+            {AVAILABLE_CATEGORIES.length} Active Domains
+          </span>
+        </div>
 
-        <button
-          type="button"
-          onClick={() => onSelectPersona("restaurant")}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-            selectedPersona === "restaurant"
-              ? "bg-cyan-500 text-black shadow-md shadow-cyan-500/25 scale-100"
-              : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-          }`}
-        >
-          <span className="text-base">🍲</span>
-          <span>Bhojanalaya Kitchen</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onSelectPersona("auto")}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
-            selectedPersona === "auto"
-              ? "bg-amber-500 text-black shadow-md shadow-amber-500/25 scale-100"
-              : "text-slate-400 hover:text-white hover:bg-slate-800/60"
-          }`}
-        >
-          <span className="text-base">🚨</span>
-          <span>Apex Roadside Rescue</span>
-        </button>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {AVAILABLE_CATEGORIES.map((cat) => {
+            const isSelected = selectedPersona === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => onSelectPersona(cat.id)}
+                className={`px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2.5 border text-left ${
+                  isSelected
+                    ? "bg-slate-800 text-white border-cyan-500/80 shadow-[0_0_15px_rgba(6,182,212,0.25)] ring-1 ring-cyan-400/50"
+                    : "bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-800/50 hover:border-slate-700"
+                }`}
+              >
+                <span className="text-lg shrink-0">{cat.icon}</span>
+                <div className="flex flex-col min-w-0">
+                  <span className="truncate font-bold text-slate-100 text-[12px]">{cat.label}</span>
+                  <span className="text-[10px] text-slate-400 truncate">{cat.shortDesc}</span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* 2-COLUMN SIDE-BY-SIDE CONSOLE (Unified Single-Viewport Frame) */}

@@ -8,7 +8,7 @@ import {
   Code2,
   Flame,
 } from "lucide-react";
-import VaniStudioView from "@/components/VaniStudioView";
+import VaniStudioView, { BusinessCategory, AVAILABLE_CATEGORIES } from "@/components/VaniStudioView";
 import { TelephonyMissionControl } from "@/components/TelephonyMissionControl";
 
 interface Message {
@@ -46,8 +46,8 @@ export default function VaniEdgePage() {
   const [callDuration, setCallDuration] = useState<number>(0);
 
   // Business Persona State
-  const [selectedPersona, setSelectedPersona] = useState<"clinic" | "restaurant" | "auto">("clinic");
-  const [businessName, setBusinessName] = useState<string>("Dr. Sharma Healthcare Clinic");
+  const [selectedPersona, setSelectedPersona] = useState<BusinessCategory>("clinic");
+  const [businessName, setBusinessName] = useState<string>("CarePlus Healthcare & Clinics");
   const [selectedVoice, setSelectedVoice] = useState<string>("sarah");
   const [speechRate, setSpeechRate] = useState<number>(1.0);
   const [speechPitch, setSpeechPitch] = useState<number>(1.0);
@@ -58,7 +58,7 @@ export default function VaniEdgePage() {
     {
       id: "initial-msg",
       sender: "agent",
-      text: "Namaste! Welcome to Dr. Sharma Healthcare Clinic. How may I assist with your appointment or consultation today?",
+      text: "Namaste! Welcome to CarePlus Healthcare & Clinics. How may I assist with your doctor appointment or consultation today?",
       timestamp: "Just now",
       latencyMs: 14.2,
     },
@@ -305,51 +305,95 @@ export default function VaniEdgePage() {
   };
 
   // Switch Business Persona
-  const handleSelectPersona = (p: "clinic" | "restaurant" | "auto") => {
+  const handleSelectPersona = (p: BusinessCategory) => {
     setSelectedPersona(p);
-    if (p === "clinic") {
-      setBusinessName("Dr. Sharma Healthcare Clinic");
-      setSelectedVoice("sarah");
-      setSpeechRate(1.0);
-      setSpeechPitch(1.0);
-      setTranscript([
-        {
-          id: `init-${Date.now()}`,
-          sender: "agent",
-          text: "Namaste! Welcome to Dr. Sharma Healthcare Clinic. How may I assist with your appointment or consultation today?",
-          timestamp: "Just now",
-          latencyMs: 14.2,
-        },
-      ]);
-    } else if (p === "restaurant") {
-      setBusinessName("Bhojanalaya Cloud Kitchen");
-      setSelectedVoice("bella");
-      setSpeechRate(1.05);
-      setSpeechPitch(1.05);
-      setTranscript([
-        {
-          id: `init-${Date.now()}`,
-          sender: "agent",
-          text: "Namaste! Welcome to Bhojanalaya Kitchen. Are you calling to place a food order or check our daily thali menu?",
-          timestamp: "Just now",
-          latencyMs: 12.8,
-        },
-      ]);
-    } else {
-      setBusinessName("Apex Roadside Assistance");
-      setSelectedVoice("adam");
-      setSpeechRate(1.1);
-      setSpeechPitch(0.95);
-      setTranscript([
-        {
-          id: `init-${Date.now()}`,
-          sender: "agent",
-          text: "Apex Roadside Rescue dispatch. Do you require immediate towing, battery jumpstart, or tyre assistance?",
-          timestamp: "Just now",
-          latencyMs: 11.5,
-        },
-      ]);
-    }
+    const cat = AVAILABLE_CATEGORIES.find((c) => c.id === p);
+    const defaultName = cat?.defaultBusinessName || "VaniEdge AI Assistant";
+    setBusinessName(defaultName);
+
+    const personaGreetings: Record<
+      BusinessCategory,
+      { voice: string; rate: number; pitch: number; greeting: string; latency: number }
+    > = {
+      clinic: {
+        voice: "sarah",
+        rate: 1.0,
+        pitch: 1.0,
+        greeting:
+          "Namaste! Welcome to CarePlus Healthcare & Clinics. How may I assist with your doctor appointment, consultation, or triage today?",
+        latency: 12.4,
+      },
+      restaurant: {
+        voice: "bella",
+        rate: 1.05,
+        pitch: 1.05,
+        greeting:
+          "Namaste! Welcome to Royal Feast Kitchen & Dining. Would you like to place a food delivery order, reserve a dining table, or check our daily menu?",
+        latency: 11.8,
+      },
+      auto: {
+        voice: "adam",
+        rate: 1.1,
+        pitch: 0.95,
+        greeting:
+          "Apex 24/7 Roadside Rescue dispatch center. Do you require immediate vehicle towing, battery jumpstart, tyre repair, or fuel delivery?",
+        latency: 10.5,
+      },
+      retail: {
+        voice: "sarah",
+        rate: 1.0,
+        pitch: 1.0,
+        greeting:
+          "Hello! Welcome to PrimeGoods Retail. How can I help you with your order status, return request, or product stock inquiry today?",
+        latency: 13.1,
+      },
+      realestate: {
+        voice: "adam",
+        rate: 1.0,
+        pitch: 1.0,
+        greeting:
+          "Welcome to Skyline Realty & Properties. Are you looking to schedule an apartment viewing, inquire about lease terms, or check property pricing?",
+        latency: 12.9,
+      },
+      finance: {
+        voice: "sarah",
+        rate: 1.0,
+        pitch: 1.0,
+        greeting:
+          "Welcome to Apex Financial & Banking. How can I assist with your account balance, loan inquiry, or card services today?",
+        latency: 14.0,
+      },
+      hospitality: {
+        voice: "bella",
+        rate: 1.0,
+        pitch: 1.05,
+        greeting:
+          "Welcome to Grand Horizon Suites & Hotel. How may I assist you with room reservations, check-in amenities, or airport shuttle transfers?",
+        latency: 12.2,
+      },
+      general: {
+        voice: "sarah",
+        rate: 1.0,
+        pitch: 1.0,
+        greeting:
+          "Hello! Welcome to Enterprise Concierge Support. How may I direct your call, assist your inquiry, or schedule a callback for you?",
+        latency: 11.2,
+      },
+    };
+
+    const cfg = personaGreetings[p] || personaGreetings.general;
+    setSelectedVoice(cfg.voice);
+    setSpeechRate(cfg.rate);
+    setSpeechPitch(cfg.pitch);
+    setTranscript([
+      {
+        id: `init-${Date.now()}`,
+        sender: "agent",
+        text: cfg.greeting,
+        timestamp: "Just now",
+        latencyMs: cfg.latency,
+      },
+    ]);
   };
 
   return (
