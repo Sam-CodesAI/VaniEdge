@@ -6,10 +6,21 @@ import {
   Globe2,
   ExternalLink,
   Code2,
-  Flame,
+  Sparkles,
+  Menu,
+  X,
+  Bot,
+  Activity,
+  ArrowRight,
 } from "lucide-react";
 import VaniStudioView, { BusinessCategory, AVAILABLE_CATEGORIES } from "@/components/VaniStudioView";
 import { TelephonyMissionControl } from "@/components/TelephonyMissionControl";
+import LandingHero from "@/components/LandingHero";
+import BentoArchitecture from "@/components/BentoArchitecture";
+import IndustrySolutionsSection from "@/components/IndustrySolutionsSection";
+import PricingSection from "@/components/PricingSection";
+import FaqSection from "@/components/FaqSection";
+import LandingFooter from "@/components/LandingFooter";
 
 interface Message {
   id: string;
@@ -66,6 +77,16 @@ export default function VaniEdgePage() {
   const [customQuery, setCustomQuery] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [browserVoices, setBrowserVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  const scrollToSection = (id: string) => {
+    setMobileMenuOpen(false);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   // Audio & Mic Refs
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
@@ -397,18 +418,25 @@ export default function VaniEdgePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 selection:bg-emerald-500 selection:text-black font-sans antialiased">
+    <div className="min-h-screen bg-[#070b12] text-slate-100 selection:bg-emerald-500 selection:text-black font-sans antialiased scroll-smooth">
       {/* Hidden Audio Player for ElevenLabs Streaming */}
       <audio ref={audioPlayerRef} className="hidden" />
 
       {/* Main Content Area */}
       <div className="flex flex-col min-h-screen w-full">
         {/* Top Sticky Navigation Bar */}
-        <header className="border-b border-slate-800/80 bg-[#090e17]/90 backdrop-blur-xl sticky top-0 z-40">
+        <header className="border-b border-slate-800/80 bg-[#090e17]/95 backdrop-blur-xl sticky top-0 z-50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             {/* Left Brand */}
-            <div className="flex items-center gap-3">
-              <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.35)] border border-cyan-500/40 group hover:border-cyan-400 transition-all shrink-0">
+            <a
+              href="#overview"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("overview");
+              }}
+              className="flex items-center gap-3 group cursor-pointer"
+            >
+              <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.35)] border border-cyan-500/40 group-hover:border-cyan-400 transition-all shrink-0">
                 <img
                   src="/vaniedge-logo.png"
                   alt="VaniEdge Voice Platform Logo"
@@ -428,9 +456,63 @@ export default function VaniEdgePage() {
                   Sub-Second Telephony &amp; SutraDB RAG
                 </span>
               </div>
-            </div>
+            </a>
 
-            {/* Right Controls */}
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300">
+              <button
+                type="button"
+                onClick={() => scrollToSection("overview")}
+                className="hover:text-cyan-400 transition-colors cursor-pointer"
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("studio")}
+                className="hover:text-cyan-400 transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live Studio
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("industries")}
+                className="hover:text-cyan-400 transition-colors cursor-pointer"
+              >
+                8 Industries
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("architecture")}
+                className="hover:text-cyan-400 transition-colors cursor-pointer"
+              >
+                Architecture
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("mission-control")}
+                className="hover:text-cyan-400 transition-colors cursor-pointer"
+              >
+                Failover Watchdog
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("pricing")}
+                className="hover:text-cyan-400 transition-colors cursor-pointer"
+              >
+                Pricing
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("faq")}
+                className="hover:text-cyan-400 transition-colors cursor-pointer"
+              >
+                FAQ
+              </button>
+            </nav>
+
+            {/* Right Quick Actions */}
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Spoken Language Selector */}
               <div className="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700/80 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs shadow-sm">
@@ -483,47 +565,177 @@ export default function VaniEdgePage() {
               </a>
 
               <a
-                href="https://github.com/Sam-CodesAI/VaniEdge-Voice-Platform"
+                href="https://t.me/Samarth1306"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 text-xs font-medium hover:text-white hover:border-slate-500 transition-colors cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 hover:brightness-110 active:scale-95 transition-all cursor-pointer"
               >
-                <Code2 className="w-3.5 h-3.5" />
-                <span className="hidden md:inline">GitHub</span>
-                <ExternalLink className="w-3 h-3 text-slate-500" />
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Claim Line</span>
               </a>
+
+              {/* Mobile Menu Toggle Button */}
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 lg:hidden cursor-pointer"
+                aria-label="Toggle Mobile Menu"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
             </div>
           </div>
+
+          {/* Mobile Dropdown Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden border-t border-slate-800 bg-[#090e17] px-4 py-4 space-y-3 font-semibold text-sm">
+              <button
+                type="button"
+                onClick={() => scrollToSection("overview")}
+                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("studio")}
+                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+              >
+                Live Interactive Studio
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("industries")}
+                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+              >
+                8 Industry Personas
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("architecture")}
+                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+              >
+                Vani + Edge Architecture
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("mission-control")}
+                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+              >
+                Failover Watchdog &amp; Health
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("pricing")}
+                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+              >
+                Commercial Pricing
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("faq")}
+                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+              >
+                Frequently Asked Questions
+              </button>
+              <div className="pt-2 border-t border-slate-800">
+                <a
+                  href="https://t.me/Samarth1306"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block w-full py-2.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-center text-xs"
+                >
+                  Claim Dedicated Line (@Samarth1306)
+                </a>
+              </div>
+            </div>
+          )}
         </header>
 
-        {/* Studio Console Main Container */}
-        <main className="w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-1">
-          <VaniStudioView
-            isCalling={isCalling}
-            isConnecting={isConnecting}
-            isListening={isListening}
-            isSpeaking={isSpeaking}
-            callDuration={callDuration}
-            formatDuration={formatDuration}
-            transcript={transcript}
-            customQuery={customQuery}
-            setCustomQuery={setCustomQuery}
-            isProcessing={isProcessing}
-            onSend={handleSend}
-            onToggleCall={handleToggleCall}
-            onToggleMic={handleToggleMic}
-            onReplayAudio={speakVoiceResponse}
-            selectedPersona={selectedPersona}
-            onSelectPersona={handleSelectPersona}
-            selectedLanguage={selectedLanguage}
-            onSelectLanguage={setSelectedLanguage}
-            languages={LANGUAGES}
-          />
-
-          <div className="mt-8 max-w-5xl mx-auto">
-            <TelephonyMissionControl />
+        {/* Landing Page Content Sections */}
+        <main className="w-full flex-1 flex flex-col">
+          {/* 1. Hero Section */}
+          <div id="overview">
+            <LandingHero onScrollToStudio={() => scrollToSection("studio")} />
           </div>
+
+          {/* 2. Interactive Live Studio Section */}
+          <section id="studio" className="py-16 sm:py-20 border-b border-slate-800/80 bg-[#070b12] relative scroll-mt-16">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="text-center max-w-3xl mx-auto mb-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium mb-3">
+                  <Bot className="w-3.5 h-3.5" />
+                  <span>INTERACTIVE LIVE TELEPHONY STUDIO</span>
+                </div>
+                <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                  Experience VaniEdge in Real Time
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-slate-400">
+                  Select any of the 8 business categories below, start a browser call or click sample test prompts to observe sub-15ms SutraDB vector retrieval and multi-lingual voice speech generation.
+                </p>
+              </div>
+
+              <VaniStudioView
+                isCalling={isCalling}
+                isConnecting={isConnecting}
+                isListening={isListening}
+                isSpeaking={isSpeaking}
+                callDuration={callDuration}
+                formatDuration={formatDuration}
+                transcript={transcript}
+                customQuery={customQuery}
+                setCustomQuery={setCustomQuery}
+                isProcessing={isProcessing}
+                onSend={handleSend}
+                onToggleCall={handleToggleCall}
+                onToggleMic={handleToggleMic}
+                onReplayAudio={speakVoiceResponse}
+                selectedPersona={selectedPersona}
+                onSelectPersona={handleSelectPersona}
+                selectedLanguage={selectedLanguage}
+                onSelectLanguage={setSelectedLanguage}
+                languages={LANGUAGES}
+              />
+            </div>
+          </section>
+
+          {/* 3. Bento Architecture Grid */}
+          <BentoArchitecture />
+
+          {/* 4. 8 Turnkey Industry Solutions */}
+          <IndustrySolutionsSection onSelectCategory={(id) => handleSelectPersona(id)} />
+
+          {/* 5. Telephony Failover Mission Control */}
+          <section id="mission-control" className="py-16 sm:py-20 border-b border-slate-800/80 bg-[#060910] scroll-mt-16">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6">
+              <div className="text-center max-w-3xl mx-auto mb-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-medium mb-3">
+                  <Activity className="w-3.5 h-3.5" />
+                  <span>TELEPHONY FAILOVER WATCHDOG &amp; TELEMETRY</span>
+                </div>
+                <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                  Live Mission Control &amp; Carrier Health
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-slate-400">
+                  Real-time supervisor managing carrier WebSocket audio streams, heartbeat latency checks, and automatic atomic Twilio REST failover.
+                </p>
+              </div>
+
+              <div className="max-w-5xl mx-auto">
+                <TelephonyMissionControl />
+              </div>
+            </div>
+          </section>
+
+          {/* 6. Commercial Pricing Matrix */}
+          <PricingSection />
+
+          {/* 7. Frequently Asked Questions */}
+          <FaqSection />
         </main>
+
+        {/* 8. Modern Conversion Footer */}
+        <LandingFooter />
       </div>
     </div>
   );
