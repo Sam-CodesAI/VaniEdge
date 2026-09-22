@@ -321,9 +321,11 @@ export async function POST(req: NextRequest) {
         failoverWatchdogSafe: true,
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("VaniEdge Chat Route Error:", msg);
     return NextResponse.json(
-      { error: "Internal dynamic voice processing error", details: err?.message || String(err) },
+      { error: "Internal chat engine error", details: msg },
       { status: 500 }
     );
   }

@@ -11,24 +11,23 @@ import {
   ArrowRight,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
-  ShieldCheck,
-  Building2,
+  Key,
 } from "lucide-react";
+import { UserRecord } from "@/lib/auth-store";
 
-export interface AuthUser {
-  name: string;
-  email: string;
-  provider: "google" | "email";
-  avatarUrl?: string;
-  tier: "Free Trial" | "Starter" | "Growth" | "Enterprise";
+interface AuthApiResponse {
+  success?: boolean;
+  user?: UserRecord;
+  token?: string;
+  error?: string;
+  message?: string;
 }
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialMode?: "signin" | "signup";
-  onAuthSuccess: (user: AuthUser) => void;
+  onAuthSuccess: (user: UserRecord, token?: string) => void;
 }
 
 export default function AuthModal({
@@ -42,7 +41,6 @@ export default function AuthModal({
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [agreeTerms, setAgreeTerms] = useState<boolean>(true);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -60,27 +58,49 @@ export default function AuthModal({
 
   if (!isOpen) return null;
 
-  // Handle Google OAuth 1-Click Simulation (ElevenLabs / IBM style)
-  const handleGoogleAuth = () => {
+  // Handle Google OAuth authentication
+  const handleGoogleAuth = async () => {
     setIsLoading(true);
     setError(null);
-    setTimeout(() => {
-      const mockGoogleUser: AuthUser = {
-        name: "Google Cloud User",
-        email: email.trim() || "developer@google.com",
-        provider: "google",
-        avatarUrl: "https://lh3.googleusercontent.com/a/default-user=s96-c",
-        tier: "Free Trial",
-      };
-      localStorage.setItem("vaniedge_auth_user", JSON.stringify(mockGoogleUser));
+
+    try {
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim() || "developer@google.com",
+          name: name.trim() || "Google Cloud Developer",
+          avatarUrl: "https://lh3.googleusercontent.com/a/default-user=s96-c",
+        }),
+      });
+
+      const data = await res.json() as AuthApiResponse;
+      if (res.ok && data.user) {
+        localStorage.setItem("vaniedge_auth_user", JSON.stringify(data.user));
+        if (data.token) {
+          localStorage.setItem("vaniedge_session_token", data.token);
+        }
+        onAuthSuccess(data.user, data.token);
+        onClose();
+      } else {
+        setError(data.error || "Google authentication failed.");
+      }
+    } catch {
+      setError("Network error connecting to authentication server.");
+    } finally {
       setIsLoading(false);
-      onAuthSuccess(mockGoogleUser);
-      onClose();
-    }, 850);
+    }
+  };
+
+  // Quick 1-Click Demo Account Loader
+  const loadDemoAccount = (demoEmail: string, demoPass: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPass);
+    setError(null);
   };
 
   // Handle Email & Password Submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccessMessage(null);
@@ -115,28 +135,46 @@ export default function AuthModal({
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const endpoint = mode === "signup" ? "/api/auth/signup" : "/api/auth/signin";
+      const payload = mode === "signup"
+        ? { name: name.trim(), email: email.trim(), password, company: "CarePlus Health Systems" }
+        : { email: email.trim(), password };
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json() as AuthApiResponse;
+
+      if (res.ok && data.user) {
+        localStorage.setItem("vaniedge_auth_user", JSON.stringify(data.user));
+        if (data.token) {
+          localStorage.setItem("vaniedge_session_token", data.token);
+        }
+        onAuthSuccess(data.user, data.token);
+        onClose();
+      } else {
+        setError(data.error || "Authentication failed. Please check credentials.");
+      }
+    } catch {
+      setError("Network error while connecting to authentication service.");
+    } finally {
       setIsLoading(false);
-      const user: AuthUser = {
-        name: name.trim() || email.split("@")[0],
-        email: email.trim(),
-        provider: "email",
-        tier: "Starter",
-      };
-      localStorage.setItem("vaniedge_auth_user", JSON.stringify(user));
-      onAuthSuccess(user);
-      onClose();
-    }, 800);
+    }
   };
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto"
       role="dialog"
       aria-modal="true"
     >
       {/* Modal Container in Oswald & Black Text */}
-      <div className="relative w-full max-w-md rounded-2xl bg-white border-2 border-slate-200 shadow-2xl p-6 sm:p-8 overflow-hidden text-black">
+      <div className="relative w-full max-w-md my-8 rounded-2xl bg-white border-2 border-slate-200 shadow-2xl p-6 sm:p-8 overflow-hidden text-black">
         {/* Close Button */}
         <button
           type="button"
@@ -148,168 +186,167 @@ export default function AuthModal({
         </button>
 
         {/* Brand Header */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <div className="h-10 w-10 rounded-xl overflow-hidden border-2 border-emerald-500 shadow-md">
-              <img
-                src="/vaniedge-logo.png"
-                alt="VaniEdge Logo"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <span className="font-bold text-2xl text-black font-oswald uppercase tracking-tight">
-              VaniEdge <span className="text-emerald-800 text-xs font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-100 border border-emerald-300">AI</span>
-            </span>
+        <div className="flex items-center gap-2 mb-6">
+          <div className="h-9 w-9 rounded-xl bg-black flex items-center justify-center text-white font-bold font-oswald text-base shadow-sm">
+            V
           </div>
+          <div>
+            <div className="text-sm font-bold font-oswald uppercase tracking-wider text-black">
+              VANIEDGE PLATFORM
+            </div>
+            <div className="text-[11px] text-slate-700 font-medium">
+              Enterprise Voice &amp; Telephony Edge Core
+            </div>
+          </div>
+        </div>
 
-          <h2 className="text-2xl sm:text-3xl font-bold text-black font-oswald uppercase tracking-tight">
-            {mode === "signin"
-              ? "Welcome back to VaniEdge"
-              : mode === "signup"
-              ? "Start Your Voice AI Trial"
-              : "Reset Your Password"}
+        {/* Heading based on Mode */}
+        <div className="mb-5">
+          <h2 className="text-2xl sm:text-3xl font-bold font-oswald uppercase tracking-tight text-black">
+            {mode === "signin" && "Welcome Back"}
+            {mode === "signup" && "Create Developer Account"}
+            {mode === "forgot" && "Reset Your Password"}
           </h2>
-          <p className="text-xs sm:text-sm text-black font-medium mt-1.5">
-            {mode === "signin"
-              ? "Access your telephony agents, SutraDB RAG, and call transcripts."
-              : mode === "signup"
-              ? "Deploy enterprise voice telephony in minutes. 500 free minutes included."
-              : "Enter your verified email address to receive password reset instructions."}
+          <p className="text-xs text-slate-700 font-medium mt-1">
+            {mode === "signin" && "Sign in to access your live SIP trunking, SutraDB RAG, and API credentials."}
+            {mode === "signup" && "Get 500 free minutes, instant Bangalore DID number, and live API keys."}
+            {mode === "forgot" && "Enter your email address and we'll send you a password recovery link."}
           </p>
         </div>
 
-        {/* Sign In / Sign Up Mode Pill Switcher */}
-        {mode !== "forgot" && (
-          <div className="flex rounded-xl bg-slate-100 border border-slate-300 p-1 mb-5">
-            <button
-              type="button"
-              onClick={() => {
-                setMode("signin");
-                setError(null);
-              }}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold font-oswald uppercase tracking-wider transition-all cursor-pointer ${
-                mode === "signin"
-                  ? "bg-black text-white shadow-sm"
-                  : "text-slate-600 hover:text-black"
-              }`}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode("signup");
-                setError(null);
-              }}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold font-oswald uppercase tracking-wider transition-all cursor-pointer ${
-                mode === "signup"
-                  ? "bg-black text-white shadow-sm"
-                  : "text-slate-600 hover:text-black"
-              }`}
-            >
-              Create Account
-            </button>
+        {/* Quick 1-Click Demo Accounts Pill */}
+        {mode === "signin" && (
+          <div className="mb-5 p-3 rounded-xl bg-slate-50 border border-slate-300">
+            <div className="text-[10px] font-oswald uppercase font-bold text-slate-700 flex items-center gap-1.5 mb-2">
+              <Key className="w-3.5 h-3.5 text-emerald-600" />
+              <span>One-Click Test Accounts</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => loadDemoAccount("developer@vaniedge.ai", "password123")}
+                className="text-left p-2 rounded-lg bg-white border border-slate-300 hover:border-black transition-colors cursor-pointer"
+              >
+                <div className="text-xs font-oswald font-bold uppercase text-black">Arjun (Dev)</div>
+                <div className="text-[10px] text-slate-600 font-mono truncate">developer@vaniedge.ai</div>
+              </button>
+              <button
+                type="button"
+                onClick={() => loadDemoAccount("demo@vaniedge.ai", "password123")}
+                className="text-left p-2 rounded-lg bg-white border border-slate-300 hover:border-black transition-colors cursor-pointer"
+              >
+                <div className="text-xs font-oswald font-bold uppercase text-black">Priya (Growth)</div>
+                <div className="text-[10px] text-slate-600 font-mono truncate">demo@vaniedge.ai</div>
+              </button>
+            </div>
           </div>
         )}
 
-        {/* Error Alert */}
+        {/* Alert / Error Message */}
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-50 border-2 border-rose-300 flex items-start gap-2.5 text-xs text-rose-900 font-medium">
-            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-300 text-rose-800 text-xs font-medium flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Success Alert */}
+        {/* Success Message */}
         {successMessage && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-300 flex items-start gap-2.5 text-xs text-emerald-900 font-medium">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-medium flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
             <span>{successMessage}</span>
           </div>
         )}
 
-        {/* Google One-Tap OAuth Button */}
+        {/* Google OAuth Button */}
         {mode !== "forgot" && (
-          <div className="space-y-4 mb-5">
+          <div className="space-y-3 mb-5">
             <button
               type="button"
               onClick={handleGoogleAuth}
               disabled={isLoading}
-              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-50 border-2 border-slate-300 text-black font-bold font-oswald text-xs uppercase tracking-wider flex items-center justify-center gap-3 transition-all shadow-sm active:scale-98 cursor-pointer disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-white border-2 border-slate-300 hover:border-black text-black font-oswald font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-98 cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"
                 />
                 <path
                   fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z"
                 />
                 <path
                   fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"
                 />
                 <path
                   fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"
                 />
               </svg>
-              <span>{mode === "signin" ? "Sign in with Google" : "Sign up with Google"}</span>
+              <span>Continue with Google</span>
             </button>
 
-            {/* Divider */}
-            <div className="relative flex items-center justify-center">
+            <div className="relative flex items-center justify-center my-3">
               <div className="border-t border-slate-300 w-full" />
-              <span className="bg-white px-3 text-[11px] font-oswald text-black uppercase tracking-wider font-bold shrink-0">
-                Or with Email &amp; Password
+              <span className="bg-white px-3 text-[11px] font-oswald uppercase tracking-wider text-slate-600 font-bold">
+                OR CONTINUE WITH EMAIL
               </span>
               <div className="border-t border-slate-300 w-full" />
             </div>
           </div>
         )}
 
-        {/* Email & Password Form */}
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        {/* Email/Password Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name Field (Sign Up Only) */}
           {mode === "signup" && (
             <div>
-              <label className="block text-xs font-bold font-oswald uppercase text-black mb-1.5">
-                Full Name or Business Name
+              <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-black mb-1">
+                Full Name / Organization
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                  <User className="w-4 h-4" />
+                </div>
                 <input
                   type="text"
+                  required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Dr. Aarav Sharma"
-                  className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs text-black focus:outline-none focus:border-black font-medium transition-colors"
+                  placeholder="e.g. Arjun Mehta or CarePlus Healthcare"
+                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-white border border-slate-300 focus:border-black focus:ring-1 focus:ring-black text-xs text-black font-semibold placeholder:text-slate-500 transition-all outline-none"
                 />
               </div>
             </div>
           )}
 
+          {/* Email Field */}
           <div>
-            <label className="block text-xs font-bold font-oswald uppercase text-black mb-1.5">
+            <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-black mb-1">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                <Mail className="w-4 h-4" />
+              </div>
               <input
                 type="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@business.com"
-                required
-                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs text-black focus:outline-none focus:border-black font-medium transition-colors"
+                placeholder="name@company.com"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-white border border-slate-300 focus:border-black focus:ring-1 focus:ring-black text-xs text-black font-semibold placeholder:text-slate-500 transition-all outline-none"
               />
             </div>
           </div>
 
+          {/* Password Field */}
           {mode !== "forgot" && (
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-bold font-oswald uppercase text-black">
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-oswald uppercase tracking-wider font-bold text-black">
                   Password
                 </label>
                 {mode === "signin" && (
@@ -319,27 +356,30 @@ export default function AuthModal({
                       setMode("forgot");
                       setError(null);
                     }}
-                    className="text-[11px] text-emerald-800 hover:underline font-bold"
+                    className="text-[11px] font-oswald uppercase font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
                   >
                     Forgot Password?
                   </button>
                 )}
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                  <Lock className="w-4 h-4" />
+                </div>
                 <input
                   type={showPassword ? "text" : "password"}
+                  required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-xs text-black focus:outline-none focus:border-black font-medium transition-colors"
+                  placeholder="••••••••••••"
+                  className="w-full pl-9 pr-10 py-2 rounded-xl bg-white border border-slate-300 focus:border-black focus:ring-1 focus:ring-black text-xs text-black font-semibold placeholder:text-slate-500 transition-all outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-black transition-colors"
-                  aria-label="Toggle password visibility"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-black transition-colors cursor-pointer"
+                  tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -347,54 +387,35 @@ export default function AuthModal({
             </div>
           )}
 
-          {mode === "signin" && (
-            <div className="flex items-center justify-between text-xs pt-0.5">
-              <label className="flex items-center gap-2 text-black cursor-pointer select-none font-medium">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-slate-300 text-black focus:ring-black"
-                />
-                <span>Remember this workstation</span>
-              </label>
-            </div>
-          )}
-
+          {/* Sign Up Terms Checkbox */}
           {mode === "signup" && (
-            <div className="flex items-start gap-2 text-xs pt-0.5">
+            <label className="flex items-start gap-2 pt-1 text-xs text-black font-medium cursor-pointer">
               <input
                 type="checkbox"
-                id="agree-terms"
                 checked={agreeTerms}
                 onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="rounded border-slate-300 text-black focus:ring-black mt-0.5"
+                className="mt-0.5 rounded border-slate-300 text-black focus:ring-black accent-black"
               />
-              <label htmlFor="agree-terms" className="text-black font-medium select-none text-[11px]">
-                I agree to the <span className="underline font-bold">Terms of Service</span> and{" "}
-                <span className="underline font-bold">Privacy Policy</span>.
-              </label>
-            </div>
+              <span>
+                I agree to the <span className="underline font-bold">Terms of Service</span>, <span className="underline font-bold">Privacy Policy</span>, and telecom compliance standards.
+              </span>
+            </label>
           )}
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 rounded-xl bg-black hover:bg-slate-800 disabled:opacity-50 text-white font-bold font-oswald uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-98 cursor-pointer mt-2"
+            className="w-full py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white font-oswald font-bold uppercase text-xs tracking-wider shadow-sm transition-all flex items-center justify-center gap-2 mt-2 cursor-pointer active:scale-98 disabled:opacity-50"
           >
             {isLoading ? (
-              <div className="flex items-center gap-2">
-                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Authenticating with Edge...</span>
-              </div>
+              <span className="inline-block animate-pulse">Authenticating with Edge Core...</span>
             ) : (
               <>
                 <span>
-                  {mode === "signin"
-                    ? "Sign In to Mission Control"
-                    : mode === "signup"
-                    ? "Create Account & Provision Line"
-                    : "Send Password Reset Link"}
+                  {mode === "signin" && "Sign In to Console"}
+                  {mode === "signup" && "Create Free Account & Provision DID"}
+                  {mode === "forgot" && "Send Password Reset Link"}
                 </span>
                 <ArrowRight className="w-4 h-4" />
               </>
@@ -402,17 +423,56 @@ export default function AuthModal({
           </button>
         </form>
 
-        {mode === "forgot" && (
-          <div className="mt-4 text-center">
+        {/* Mode Toggle Footer */}
+        <div className="mt-6 pt-4 border-t border-slate-200 text-center text-xs text-black font-medium">
+          {mode === "signin" && (
+            <span>
+              Don&apos;t have an account yet?{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("signup");
+                  setError(null);
+                  setSuccessMessage(null);
+                }}
+                className="font-oswald uppercase font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
+              >
+                Sign Up Free
+              </button>
+            </span>
+          )}
+
+          {mode === "signup" && (
+            <span>
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("signin");
+                  setError(null);
+                  setSuccessMessage(null);
+                }}
+                className="font-oswald uppercase font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
+              >
+                Sign In
+              </button>
+            </span>
+          )}
+
+          {mode === "forgot" && (
             <button
               type="button"
-              onClick={() => setMode("signin")}
-              className="text-xs text-black hover:underline font-bold font-oswald uppercase"
+              onClick={() => {
+                setMode("signin");
+                setError(null);
+                setSuccessMessage(null);
+              }}
+              className="font-oswald uppercase font-bold text-emerald-700 hover:text-emerald-800 transition-colors"
             >
-              ← Back to Sign In
+              Return to Sign In
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

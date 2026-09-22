@@ -14,6 +14,7 @@ import {
   ArrowRight,
   LogOut,
   User as UserIcon,
+  Key,
 } from "lucide-react";
 import VaniStudioView, { BusinessCategory, AVAILABLE_CATEGORIES } from "@/components/VaniStudioView";
 import { TelephonyMissionControl } from "@/components/TelephonyMissionControl";
@@ -24,8 +25,10 @@ import IndustrySolutionsSection from "@/components/IndustrySolutionsSection";
 import PricingSection from "@/components/PricingSection";
 import FaqSection from "@/components/FaqSection";
 import LandingFooter from "@/components/LandingFooter";
-import AuthModal, { AuthUser } from "@/components/AuthModal";
+import AuthModal from "@/components/AuthModal";
+import CredentialsModal from "@/components/CredentialsModal";
 import VerticalCustomizerModal from "@/components/VerticalCustomizerModal";
+import { UserRecord, UserCredentials } from "@/lib/auth-store";
 
 interface Message {
   id: string;
@@ -88,17 +91,33 @@ export default function VaniEdgePage() {
   // Authentication State (ElevenLabs & IBM Platform Standard)
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
   const [authModalMode, setAuthModalMode] = useState<"signin" | "signup">("signup");
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserRecord | null>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
+  const [credentialsModalOpen, setCredentialsModalOpen] = useState<boolean>(false);
 
   const handleOpenAuth = (mode: "signin" | "signup" = "signup") => {
     setAuthModalMode(mode);
     setAuthModalOpen(true);
   };
 
+  const handleCredentialsUpdated = (newCredentials: UserCredentials) => {
+    if (currentUser) {
+      const updated: UserRecord = {
+        ...currentUser,
+        credentials: newCredentials,
+      };
+      setCurrentUser(updated);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("vaniedge_auth_user", JSON.stringify(updated));
+      }
+    }
+  };
+
   const handleSignOut = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("vaniedge_auth_user");
+      localStorage.removeItem("vaniedge_session_token");
+      document.cookie = "vaniedge_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
     }
     setCurrentUser(null);
     setUserDropdownOpen(false);
@@ -630,63 +649,90 @@ export default function VaniEdgePage() {
 
               {/* Authentication Actions */}
               {currentUser ? (
-                <div className="relative">
+                <div className="flex items-center gap-2">
+                  {/* Quick Credentials Modal Opener */}
                   <button
                     type="button"
-                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-black text-xs text-black font-bold transition-all cursor-pointer shadow-sm"
+                    onClick={() => setCredentialsModalOpen(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold font-oswald uppercase text-xs shadow-sm transition-all cursor-pointer active:scale-95"
+                    title="View API Keys & SIP Credentials"
                   >
-                    <div className="h-6 w-6 rounded-full bg-black text-white font-bold flex items-center justify-center text-[11px] font-oswald">
-                      {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
-                    </div>
-                    <span className="hidden sm:inline font-bold">{currentUser.name}</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-100 text-black font-mono font-bold hidden md:inline border border-slate-200">
-                      {currentUser.tier}
-                    </span>
+                    <Key className="w-3.5 h-3.5" />
+                    <span>Credentials</span>
                   </button>
 
-                  {userDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white border-2 border-slate-200 p-2 shadow-2xl z-50 animate-in fade-in text-black">
-                      <div className="px-3 py-2 border-b border-slate-200">
-                        <div className="text-xs font-bold text-black font-oswald uppercase truncate">{currentUser.name}</div>
-                        <div className="text-[11px] text-slate-600 font-mono truncate">{currentUser.email}</div>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                      className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-black text-xs text-black font-bold transition-all cursor-pointer shadow-sm"
+                    >
+                      <div className="h-6 w-6 rounded-full bg-black text-white font-bold flex items-center justify-center text-[11px] font-oswald">
+                        {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
                       </div>
-                      <div className="py-1">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setUserDropdownOpen(false);
-                            scrollToSection("studio");
-                          }}
-                          className="w-full text-left px-3 py-1.5 text-xs text-black font-oswald uppercase font-bold hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
-                        >
-                          <Bot className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Interactive Studio</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setUserDropdownOpen(false);
-                            scrollToSection("mission-control");
-                          }}
-                          className="w-full text-left px-3 py-1.5 text-xs text-black font-oswald uppercase font-bold hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
-                        >
-                          <Activity className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>Carrier Health &amp; Watchdog</span>
-                        </button>
+                      <span className="hidden sm:inline font-bold">{currentUser.name}</span>
+                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-100 text-black font-mono font-bold hidden md:inline border border-slate-200">
+                        {currentUser.tier}
+                      </span>
+                    </button>
+
+                    {userDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white border-2 border-slate-200 p-2 shadow-2xl z-50 animate-in fade-in text-black">
+                        <div className="px-3 py-2 border-b border-slate-200">
+                          <div className="text-xs font-bold text-black font-oswald uppercase truncate">{currentUser.name}</div>
+                          <div className="text-[11px] text-slate-600 font-mono truncate">{currentUser.email}</div>
+                          <div className="text-[10px] text-emerald-700 font-mono font-bold mt-0.5 truncate">
+                            DID: {currentUser.credentials.assignedPhoneNumber}
+                          </div>
+                        </div>
+                        <div className="py-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setUserDropdownOpen(false);
+                              setCredentialsModalOpen(true);
+                            }}
+                            className="w-full text-left px-3 py-1.5 text-xs text-black font-oswald uppercase font-bold hover:bg-emerald-50 hover:text-emerald-800 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                          >
+                            <Key className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>API Keys &amp; SIP Trunks</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setUserDropdownOpen(false);
+                              scrollToSection("studio");
+                            }}
+                            className="w-full text-left px-3 py-1.5 text-xs text-black font-oswald uppercase font-bold hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                          >
+                            <Bot className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Interactive Studio</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setUserDropdownOpen(false);
+                              scrollToSection("mission-control");
+                            }}
+                            className="w-full text-left px-3 py-1.5 text-xs text-black font-oswald uppercase font-bold hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                          >
+                            <Activity className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Carrier Health &amp; Watchdog</span>
+                          </button>
+                        </div>
+                        <div className="pt-1 border-t border-slate-200">
+                          <button
+                            type="button"
+                            onClick={handleSignOut}
+                            className="w-full text-left px-3 py-1.5 text-xs text-rose-600 font-oswald uppercase font-bold hover:bg-rose-50 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                          >
+                            <LogOut className="w-3.5 h-3.5" />
+                            <span>Sign Out</span>
+                          </button>
+                        </div>
                       </div>
-                      <div className="pt-1 border-t border-slate-200">
-                        <button
-                          type="button"
-                          onClick={handleSignOut}
-                          className="w-full text-left px-3 py-1.5 text-xs text-rose-600 font-oswald uppercase font-bold hover:bg-rose-50 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
-                        >
-                          <LogOut className="w-3.5 h-3.5" />
-                          <span>Sign Out</span>
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
@@ -922,9 +968,20 @@ export default function VaniEdgePage() {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         initialMode={authModalMode}
-        onAuthSuccess={(user) => {
+        onAuthSuccess={(user, token) => {
           setCurrentUser(user);
+          if (token && typeof window !== "undefined") {
+            localStorage.setItem("vaniedge_session_token", token);
+          }
         }}
+      />
+
+      {/* Developer Credentials & SIP Trunk Inspector Modal */}
+      <CredentialsModal
+        isOpen={credentialsModalOpen}
+        onClose={() => setCredentialsModalOpen(false)}
+        user={currentUser}
+        onCredentialsUpdated={handleCredentialsUpdated}
       />
 
       {/* 60-Second Vertical Customizer Wizard Modal */}

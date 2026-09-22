@@ -46,18 +46,18 @@ export function TelephonyMissionControl() {
   useEffect(() => {
     fetch("/api/health")
       .then((r) => r.json())
-      .then((data: any) => setHealth(data))
+      .then((data) => setHealth(data as React.SetStateAction<typeof health>))
       .catch(() => {});
 
     fetch("/api/metrics")
       .then((r) => r.json())
-      .then((data: any) => setMetrics(data))
+      .then((data) => setMetrics(data as React.SetStateAction<typeof metrics>))
       .catch(() => {});
 
     const interval = setInterval(() => {
       fetch("/api/metrics")
         .then((r) => r.json())
-        .then((data: any) => setMetrics(data))
+        .then((data) => setMetrics(data as React.SetStateAction<typeof metrics>))
         .catch(() => {});
     }, 5000);
 

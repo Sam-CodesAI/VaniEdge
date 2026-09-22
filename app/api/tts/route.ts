@@ -78,10 +78,11 @@ export async function POST(req: NextRequest) {
         "Cache-Control": "public, max-age=3600",
       },
     });
-  } catch (err: any) {
-    console.error("[ERROR] TTS route error:", err);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("VaniEdge TTS Route Error:", msg);
     return NextResponse.json(
-      { error: "TTS generation failed", fallback: true, details: err?.message || String(err) },
+      { error: "TTS Generation failed", details: msg },
       { status: 500 }
     );
   }
