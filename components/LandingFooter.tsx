@@ -138,6 +138,28 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
               </li>
               <li>
                 <a
+                  href="/api/dispatch"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-black hover:text-emerald-700 transition-colors flex items-center gap-1"
+                >
+                  <span>/api/dispatch</span>
+                  <ExternalLink className="w-3 h-3 text-slate-500" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/api/query"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-black hover:text-emerald-700 transition-colors flex items-center gap-1"
+                >
+                  <span>/api/query</span>
+                  <ExternalLink className="w-3 h-3 text-slate-500" />
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://github.com/Sam-CodesAI/VaniEdge-Voice-Platform"
                   target="_blank"
                   rel="noreferrer"

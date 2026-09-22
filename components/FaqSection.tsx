@@ -38,6 +38,16 @@ export default function FaqSection() {
         "SutraDB is our custom ultra-lightweight hybrid vector engine built specifically for edge runtimes. It executes Reciprocal Rank Fusion combining 60% Dense Semantic Vector embeddings with 40% BM25 Lexical text matching in under 12ms with zero external cloud dependencies. This eliminates $70+/month SaaS bills for Pinecone or Weaviate while delivering faster responses.",
     },
     {
+      question: "What is BridgeView and how does it handle client leads and SMS dispatch?",
+      answer:
+        "BridgeView is the integrated client operations portal for business owners and receptionists. Every inbound customer call is automatically parsed for caller name, contact details, requested service, and triage urgency. The system immediately issues a cryptographically verified booking ticket (e.g. VANI-CLI-4A9B with 8-character SHA-checksum) and dispatches localized SMS confirmations to both the customer and on-duty staff.",
+    },
+    {
+      question: "How do you achieve 385ms voice latency and can I audit the stage-by-stage benchmarks?",
+      answer:
+        "By terminating Twilio carrier media streams directly on distributed edge workers, eliminating intermediate cloud relays, and querying SutraDB in under 10ms, our time-to-first-audio-byte (TTFT) clocks in at ~385ms. You can inspect the real recorded call in our Live Mission Control studio, which breaks down every stage: 18ms webhook validation, 42ms WebSocket upgrade, 92ms ElevenLabs session, 9.8ms SutraDB lookup, and 385ms first voice frame.",
+    },
+    {
       question: "How fast can my business go live with a custom answering agent?",
       answer:
         "You can be fully live in under 24 hours. We ingest your business services, FAQs, hours, and pricing into SutraDB, assign your dedicated local phone line, configure the SMS dispatch templates, and run test verification before handing over the line.",
