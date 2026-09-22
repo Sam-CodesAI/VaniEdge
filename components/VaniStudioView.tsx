@@ -21,7 +21,6 @@ import {
   Copy,
   Check,
   RotateCcw,
-  Sparkle,
   Globe2,
   FileText,
 } from "lucide-react";
@@ -198,14 +197,14 @@ export default function VaniStudioView({
     signature: string;
   } | null>(null);
 
-  // Smooth auto-scroll to bottom of transcript as new messages arrive
+  // Auto-scroll to bottom of transcript
   useEffect(() => {
     if (activeTab === "dialogue") {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [transcript, activeTab]);
 
-  // Quick prompt pills for instant action across all categories
+  // Quick prompt pills
   const samplePrompts = {
     clinic: [
       { label: "Book Consultation", query: "Book a consultation appointment for Aarav tomorrow at 10 AM" },
@@ -252,7 +251,7 @@ export default function VaniStudioView({
     { label: "Schedule Service", query: "Can I schedule a service appointment?" },
   ];
 
-  // Dynamic real-time entity extraction from multi-turn dialogue
+  // Dynamic real-time entity extraction
   const extractedEntities = useMemo(() => {
     const lastUser = [...transcript].reverse().find((m) => m.sender === "user")?.text || "";
     const lastAgent = [...transcript].reverse().find((m) => m.sender === "agent");
@@ -313,7 +312,7 @@ export default function VaniStudioView({
     };
   }, [transcript, selectedPersona, selectedLanguage, callDuration]);
 
-  // Export transcript to JSON or TXT
+  // Export transcript
   const handleExportTranscript = (format: "json" | "txt") => {
     let content = "";
     let mimeType = "text/plain";
@@ -340,7 +339,7 @@ export default function VaniStudioView({
     URL.revokeObjectURL(url);
   };
 
-  // Copy reproducible cURL command for developers
+  // Copy cURL
   const handleCopyCurl = () => {
     const curlCmd = `curl -X POST https://vaniedge.vercel.app/api/chat \\
   -H "Content-Type: application/json" \\
@@ -356,14 +355,14 @@ export default function VaniStudioView({
     setTimeout(() => setCopiedCurl(false), 2000);
   };
 
-  // Copy Extracted JSON
+  // Copy JSON
   const handleCopyJson = () => {
     navigator.clipboard.writeText(JSON.stringify(extractedEntities, null, 2));
     setCopiedJson(true);
     setTimeout(() => setCopiedJson(false), 2000);
   };
 
-  // SutraDB document ingestion benchmark
+  // SutraDB ingestion
   const handleIngestDocument = () => {
     if (!ingestTitle.trim() || !ingestContent.trim()) return;
     setIsIngesting(true);
@@ -380,7 +379,7 @@ export default function VaniStudioView({
     }, 450);
   };
 
-  // Webhook dispatch simulation
+  // Webhook dispatch
   const handleDispatchWebhook = () => {
     setIsDispatchingWebhook(true);
     setWebhookResponse(null);
@@ -398,12 +397,12 @@ export default function VaniStudioView({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Clean Hero Header */}
+      {/* Clean Hero Header in Oswald Font with Black Text */}
       <div className="text-center space-y-2 max-w-2xl mx-auto pt-2">
-        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-          AI Voice Assistant <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">for Every Industry</span>
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-black font-oswald uppercase">
+          AI Voice Assistant <span className="text-emerald-600">for Every Industry</span>
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400">
+        <p className="text-xs sm:text-sm text-black font-medium">
           24/7 natural voice phone answering. Select any business category below to test live in your browser.
         </p>
       </div>
@@ -411,11 +410,11 @@ export default function VaniStudioView({
       {/* All Available Categories (Multi-Industry Segmented Control) */}
       <div className="w-full max-w-5xl mx-auto space-y-2">
         <div className="flex items-center justify-between px-1">
-          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <Sparkles className="w-3 h-3 text-cyan-400" />
+          <span className="text-xs font-oswald text-black uppercase tracking-wider flex items-center gap-1.5 font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             Available Business Categories:
           </span>
-          <span className="text-[11px] text-slate-500 font-mono">
+          <span className="text-xs text-black font-mono font-bold">
             {AVAILABLE_CATEGORIES.length} Active Domains
           </span>
         </div>
@@ -428,16 +427,16 @@ export default function VaniStudioView({
                 key={cat.id}
                 type="button"
                 onClick={() => onSelectPersona(cat.id)}
-                className={`px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2.5 border text-left ${
+                className={`px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-2.5 border-2 text-left ${
                   isSelected
-                    ? "bg-slate-800 text-white border-cyan-500/80 shadow-[0_0_15px_rgba(6,182,212,0.25)] ring-1 ring-cyan-400/50"
-                    : "bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-800/50 hover:border-slate-700"
+                    ? "bg-emerald-50 text-black border-emerald-600 shadow-md ring-1 ring-emerald-600"
+                    : "bg-white text-black border-slate-200 hover:border-slate-400 hover:bg-slate-50 shadow-sm"
                 }`}
               >
-                <span className="text-lg shrink-0">{cat.icon}</span>
+                <span className="text-xl shrink-0">{cat.icon}</span>
                 <div className="flex flex-col min-w-0">
-                  <span className="truncate font-bold text-slate-100 text-[12px]">{cat.label}</span>
-                  <span className="text-[10px] text-slate-400 truncate">{cat.shortDesc}</span>
+                  <span className="truncate font-bold text-black text-xs font-oswald uppercase">{cat.label}</span>
+                  <span className="text-[11px] text-slate-700 truncate font-normal">{cat.shortDesc}</span>
                 </div>
               </button>
             );
@@ -449,49 +448,49 @@ export default function VaniStudioView({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-6xl mx-auto items-stretch">
         {/* Left Column: AI Voice Agent & Call Action */}
         <div className="lg:col-span-5 flex flex-col">
-          <div className="bg-[#0b121e] border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between text-center space-y-3 h-full shadow-xl">
-            <div className="w-full flex items-center justify-between pb-3 border-b border-slate-800/80">
+          <div className="bg-white border-2 border-slate-200 rounded-2xl p-5 flex flex-col justify-between text-center space-y-3 h-full shadow-lg">
+            <div className="w-full flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="font-bold text-xs uppercase tracking-wider text-slate-200">
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-bold text-xs uppercase tracking-wider text-black font-oswald">
                   AI Voice Agent
                 </span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 font-mono hidden sm:inline border border-slate-700/60">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-black font-mono font-bold hidden sm:inline border border-slate-300">
                   {AVAILABLE_CATEGORIES.find((c) => c.id === selectedPersona)?.label.split(" ")[0] || "Live"}
                 </span>
               </div>
 
               {/* Real-time telephony state indicator */}
-              <div className="flex items-center gap-1.5 text-[11px]">
+              <div className="flex items-center gap-1.5 text-xs font-oswald uppercase">
                 {isConnecting ? (
                   <>
-                    <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />
-                    <span className="font-mono text-amber-300 font-medium">Connecting...</span>
+                    <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />
+                    <span className="font-mono text-amber-700 font-bold">Connecting...</span>
                   </>
                 ) : isThinking ? (
                   <>
-                    <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-                    <span className="font-mono text-amber-300 font-medium">Retrieving...</span>
+                    <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                    <span className="font-mono text-amber-700 font-bold">Retrieving...</span>
                   </>
                 ) : isSpeaking ? (
                   <>
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="font-mono text-emerald-300 font-medium">Speaking</span>
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="font-mono text-emerald-700 font-bold">Speaking</span>
                   </>
                 ) : isListening ? (
                   <>
-                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping" />
-                    <span className="font-mono text-cyan-300 font-medium">Listening</span>
+                    <span className="h-2 w-2 rounded-full bg-cyan-500 animate-ping" />
+                    <span className="font-mono text-cyan-700 font-bold">Listening</span>
                   </>
                 ) : isCalling ? (
                   <>
-                    <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                    <span className="font-mono text-emerald-300 font-medium">Connected</span>
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span className="font-mono text-emerald-700 font-bold">Connected</span>
                   </>
                 ) : (
                   <>
-                    <span className="h-2 w-2 rounded-full bg-slate-500" />
-                    <span className="font-mono text-slate-400">Standby</span>
+                    <span className="h-2 w-2 rounded-full bg-slate-400" />
+                    <span className="font-mono text-slate-600 font-bold">Standby</span>
                   </>
                 )}
               </div>
@@ -499,12 +498,12 @@ export default function VaniStudioView({
 
             {/* Inline Indic Language Preview Selector */}
             <div className="w-full pt-1">
-              <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 px-1 font-mono">
+              <div className="flex items-center justify-between text-xs text-black mb-1.5 px-1 font-oswald uppercase font-bold">
                 <span className="flex items-center gap-1">
-                  <Globe2 className="w-3 h-3 text-cyan-400" />
+                  <Globe2 className="w-3.5 h-3.5 text-emerald-600" />
                   Indic Dialect Preview:
                 </span>
-                <span className="text-[10px] text-emerald-400">Instant Switch</span>
+                <span className="text-[10px] text-emerald-700 font-mono font-bold">Instant Switch</span>
               </div>
               <div className="flex items-center justify-center gap-1.5 flex-wrap">
                 {languages.map((lang) => {
@@ -525,10 +524,10 @@ export default function VaniStudioView({
                         };
                         onReplayAudio(switchVoiceGreetings[lang.code] || "Hello! Language updated.");
                       }}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer border ${
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
                         isLangSelected
-                          ? "bg-gradient-to-r from-emerald-500/25 to-cyan-500/25 text-emerald-300 border-emerald-400/60 shadow-sm"
-                          : "bg-slate-900/80 text-slate-400 border-slate-800 hover:text-slate-200 hover:bg-slate-800"
+                          ? "bg-emerald-500 text-black border-emerald-600 shadow-sm font-oswald"
+                          : "bg-slate-100 text-black border-slate-200 hover:bg-slate-200"
                       }`}
                       title={`Listen in ${lang.label}`}
                     >
@@ -555,12 +554,12 @@ export default function VaniStudioView({
                 type="button"
                 onClick={onToggleCall}
                 disabled={isConnecting}
-                className={`w-full py-3.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95 cursor-pointer disabled:cursor-wait ${
+                className={`w-full py-3.5 px-4 rounded-xl text-sm font-oswald uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer disabled:cursor-wait ${
                   isConnecting
-                    ? "bg-emerald-500 text-black font-semibold animate-pulse opacity-80"
+                    ? "bg-emerald-500 text-black font-bold animate-pulse opacity-80"
                     : isCalling
-                    ? "bg-rose-600 hover:bg-rose-500 text-white font-semibold shadow-rose-500/25"
-                    : "bg-emerald-500 hover:bg-emerald-400 text-black font-semibold shadow-emerald-500/20"
+                    ? "bg-rose-600 hover:bg-rose-500 text-white font-bold shadow-rose-500/25"
+                    : "bg-black hover:bg-slate-800 text-white font-bold"
                 }`}
               >
                 {isConnecting ? (
@@ -579,15 +578,15 @@ export default function VaniStudioView({
                   </>
                 ) : (
                   <>
-                    <PhoneCall className="w-4 h-4" />
+                    <PhoneCall className="w-4 h-4 text-emerald-400" />
                     <span>Connect In-Browser Call</span>
                   </>
                 )}
               </button>
 
               {/* Edge Streaming Audio Status */}
-              <div className="flex items-center justify-center gap-2 text-xs text-slate-300 pt-1 font-mono">
-                <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="flex items-center justify-center gap-2 text-xs text-black pt-1 font-mono font-bold">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>WebRTC Carrier Audio Stream Connected (Airtel / Twilio)</span>
               </div>
             </div>
@@ -596,59 +595,59 @@ export default function VaniStudioView({
 
         {/* Right Column: Multi-Turn Dialogue, JSON Inspector, SutraDB Vector Ingest & Webhook Dispatch */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="bg-[#0b121e] border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between h-full min-h-[460px] shadow-xl">
+          <div className="bg-white border-2 border-slate-200 rounded-2xl p-5 flex flex-col justify-between h-full min-h-[460px] shadow-lg">
             {/* Tabbed Header Navigation */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-800/80 text-xs">
-              <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-200 text-xs">
+              <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 border border-slate-300">
                 <button
                   type="button"
                   onClick={() => setActiveTab("dialogue")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold font-oswald uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
                     activeTab === "dialogue"
-                      ? "bg-slate-800 text-cyan-300 shadow-sm border border-slate-700"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-white text-black shadow-sm border border-slate-300"
+                      : "text-slate-600 hover:text-black"
                   }`}
                 >
-                  <Bot className="w-3.5 h-3.5 text-cyan-400" />
+                  <Bot className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Live Dialogue</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab("json")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold font-oswald uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
                     activeTab === "json"
-                      ? "bg-slate-800 text-emerald-300 shadow-sm border border-slate-700"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-white text-black shadow-sm border border-slate-300"
+                      : "text-slate-600 hover:text-black"
                   }`}
                 >
-                  <Code2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <Code2 className="w-3.5 h-3.5 text-teal-600" />
                   <span>Extracted JSON</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab("sutradb")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold font-oswald uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
                     activeTab === "sutradb"
-                      ? "bg-slate-800 text-amber-300 shadow-sm border border-slate-700"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-white text-black shadow-sm border border-slate-300"
+                      : "text-slate-600 hover:text-black"
                   }`}
                 >
-                  <Database className="w-3.5 h-3.5 text-amber-400" />
+                  <Database className="w-3.5 h-3.5 text-amber-600" />
                   <span>SutraDB Ingest</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveTab("webhook")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold font-oswald uppercase transition-all cursor-pointer flex items-center gap-1.5 ${
                     activeTab === "webhook"
-                      ? "bg-slate-800 text-indigo-300 shadow-sm border border-slate-700"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "bg-white text-black shadow-sm border border-slate-300"
+                      : "text-slate-600 hover:text-black"
                   }`}
                 >
-                  <Webhook className="w-3.5 h-3.5 text-indigo-400" />
+                  <Webhook className="w-3.5 h-3.5 text-indigo-600" />
                   <span>Webhook Dispatch</span>
                 </button>
               </div>
@@ -658,30 +657,30 @@ export default function VaniStudioView({
                 <button
                   type="button"
                   onClick={() => handleExportTranscript("json")}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-300 hover:bg-slate-200 text-black text-[11px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
                   title="Export full transcript as JSON"
                 >
-                  <Download className="w-3 h-3 text-cyan-400" />
+                  <Download className="w-3 h-3 text-emerald-600" />
                   <span className="hidden sm:inline">Export</span> JSON
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleExportTranscript("txt")}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-300 hover:bg-slate-200 text-black text-[11px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
                   title="Export transcript as plain text"
                 >
-                  <FileText className="w-3 h-3 text-emerald-400" />
+                  <FileText className="w-3 h-3 text-teal-600" />
                   <span>TXT</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCopyCurl}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 text-[11px] font-mono flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-300 hover:bg-slate-200 text-black text-[11px] font-mono font-bold flex items-center gap-1 transition-colors cursor-pointer"
                   title="Copy cURL snippet to reproduce request"
                 >
-                  {copiedCurl ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-amber-400" />}
+                  {copiedCurl ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3 text-black" />}
                   <span>{copiedCurl ? "Copied" : "cURL"}</span>
                 </button>
               </div>
@@ -695,49 +694,49 @@ export default function VaniStudioView({
                   {transcript.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex gap-3 p-3.5 rounded-xl border transition-all ${
+                      className={`flex gap-3 p-3.5 rounded-xl border-2 transition-all ${
                         msg.sender === "agent"
-                          ? "bg-slate-900/90 border-slate-800 text-slate-200"
-                          : "bg-emerald-950/40 border-emerald-500/30 text-emerald-200 ml-6"
+                          ? "bg-slate-50 border-slate-200 text-black"
+                          : "bg-emerald-50 border-emerald-300 text-black ml-6"
                       }`}
                     >
                       <div
                         className={`h-7 w-7 rounded-lg shrink-0 flex items-center justify-center ${
-                          msg.sender === "agent" ? "bg-emerald-500/10 text-emerald-400" : "bg-cyan-500/10 text-cyan-300"
+                          msg.sender === "agent" ? "bg-black text-white" : "bg-emerald-600 text-white"
                         }`}
                       >
                         {msg.sender === "agent" ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
                       </div>
 
                       <div className="flex-1 space-y-1">
-                        <div className="flex items-center justify-between text-[10px] text-slate-400">
+                        <div className="flex items-center justify-between text-[11px] text-black">
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-slate-300">
+                            <span className="font-bold text-black font-oswald uppercase">
                               {msg.sender === "agent" ? "AI Voice Assistant" : "You (Caller)"}
                             </span>
                             {msg.latencyMs && (
-                              <span className="font-mono text-[9px] px-1.5 py-0.2 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">
+                              <span className="font-mono text-[9px] px-1.5 py-0.2 rounded bg-slate-200 text-black border border-slate-300 font-bold">
                                 {msg.latencyMs}ms RAG
                               </span>
                             )}
                           </div>
-                          <span className="font-mono text-slate-500">{msg.timestamp}</span>
+                          <span className="font-mono text-black font-bold">{msg.timestamp}</span>
                         </div>
-                        <p className="text-xs leading-relaxed">{msg.text}</p>
+                        <p className="text-xs leading-relaxed text-black font-medium">{msg.text}</p>
 
                         {msg.sender === "agent" && (
                           <div className="pt-1 flex items-center gap-2">
                             <button
                               type="button"
                               onClick={() => onReplayAudio(msg.text)}
-                              className="text-[10px] text-slate-400 hover:text-emerald-400 flex items-center gap-1 transition-colors cursor-pointer"
+                              className="text-[11px] text-black font-bold hover:text-emerald-700 flex items-center gap-1 transition-colors cursor-pointer"
                               title="Re-play audio response"
                             >
-                              <Volume2 className="w-3 h-3" />
+                              <Volume2 className="w-3 h-3 text-emerald-600" />
                               <span>Listen Again</span>
                             </button>
                             {msg.matchedDoc && (
-                              <span className="text-[10px] text-slate-500 font-mono truncate max-w-[200px]">
+                              <span className="text-[10px] text-slate-600 font-mono truncate max-w-[200px]">
                                 • Matched: {msg.matchedDoc}
                               </span>
                             )}
@@ -750,20 +749,20 @@ export default function VaniStudioView({
                 </div>
 
                 {/* Quick Prompts & Text Input */}
-                <div className="space-y-2.5 pt-3 border-t border-slate-800/80">
+                <div className="space-y-2.5 pt-3 border-t border-slate-200">
                   {/* Quick Prompt Pills */}
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="text-[11px] text-slate-400 mr-1 font-medium">Quick Prompts:</span>
+                    <span className="text-xs text-black mr-1 font-bold font-oswald uppercase">Quick Prompts:</span>
                     {samplePrompts.map((p, idx) => (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => onSend(p.query)}
                         disabled={isProcessing}
-                        className="text-xs px-3.5 py-1.5 rounded-full bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 hover:text-white border border-emerald-500/40 hover:border-emerald-300 shadow-sm shadow-emerald-500/10 hover:shadow-emerald-500/30 transition-all cursor-pointer font-medium active:scale-95 disabled:opacity-50 flex items-center gap-1.5 group"
+                        className="text-xs px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-black border border-slate-300 shadow-sm transition-all cursor-pointer font-bold active:scale-95 disabled:opacity-50 flex items-center gap-1.5 group"
                         title="Click to immediately speak this query and hear AI response"
                       >
-                        <Sparkles className="w-3 h-3 text-emerald-400 group-hover:scale-110 transition-transform" />
+                        <Sparkles className="w-3 h-3 text-emerald-600 group-hover:scale-110 transition-transform" />
                         <span>{p.label}</span>
                       </button>
                     ))}
@@ -780,10 +779,10 @@ export default function VaniStudioView({
                     <button
                       type="button"
                       onClick={onToggleMic}
-                      className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+                      className={`p-2.5 rounded-xl border-2 transition-all cursor-pointer ${
                         isListening
-                          ? "bg-rose-500 text-white border-rose-400 animate-pulse"
-                          : "bg-slate-900 text-slate-300 border-slate-800 hover:text-white hover:bg-slate-800"
+                          ? "bg-rose-600 text-white border-rose-500 animate-pulse"
+                          : "bg-slate-100 text-black border-slate-300 hover:bg-slate-200"
                       }`}
                       title={isListening ? "Listening... click to stop" : "Start Voice Input (Microphone)"}
                     >
@@ -796,15 +795,15 @@ export default function VaniStudioView({
                       onChange={(e) => setCustomQuery(e.target.value)}
                       placeholder={isListening ? "Listening... speak now" : "Speak or type your customer query..."}
                       disabled={isProcessing}
-                      className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                      className="flex-1 bg-white border-2 border-slate-300 rounded-xl px-3.5 py-2.5 text-xs text-black placeholder-slate-500 focus:outline-none focus:border-black transition-colors font-medium"
                     />
 
                     <button
                       type="submit"
                       disabled={isProcessing || !customQuery.trim()}
-                      className="p-2.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-semibold rounded-xl transition-colors shadow-md shadow-emerald-500/20 cursor-pointer"
+                      className="p-2.5 bg-black hover:bg-slate-800 disabled:opacity-50 text-white font-bold rounded-xl transition-colors shadow-sm cursor-pointer"
                     >
-                      {isProcessing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      {isProcessing ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Send className="w-4 h-4 text-white" />}
                     </button>
                   </form>
                 </div>
@@ -816,28 +815,28 @@ export default function VaniStudioView({
               <div className="flex flex-col justify-between flex-1 space-y-3 py-2">
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-mono text-slate-300 font-semibold uppercase">
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs font-oswald text-black font-bold uppercase">
                       Live Telephony Entity Schema
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={handleCopyJson}
-                    className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                    className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-black text-xs font-mono font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-300"
                   >
-                    {copiedJson ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedJson ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-black" />}
                     <span>{copiedJson ? "Copied" : "Copy Schema JSON"}</span>
                   </button>
                 </div>
 
-                <div className="h-[310px] overflow-y-auto bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-[11px] text-emerald-300/90 leading-relaxed scrollbar-thin">
+                <div className="h-[310px] overflow-y-auto bg-slate-900 p-4 rounded-xl border-2 border-slate-300 font-mono text-[11px] text-emerald-300 leading-relaxed scrollbar-thin">
                   <pre>{JSON.stringify(extractedEntities, null, 2)}</pre>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-mono">
+                <div className="flex items-center justify-between text-xs text-black px-1 font-mono font-bold">
                   <span>Latency: ~11.8ms | Reciprocal Rank Fusion (0.60 Dense + 0.40 BM25)</span>
-                  <span className="text-emerald-400">Zero PII Leakage Compliant</span>
+                  <span className="text-emerald-700">Zero PII Leakage Compliant</span>
                 </div>
               </div>
             )}
@@ -847,37 +846,37 @@ export default function VaniStudioView({
               <div className="flex flex-col justify-between flex-1 space-y-3 py-1">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-white flex items-center gap-2">
-                      <Database className="w-3.5 h-3.5 text-amber-400" />
+                    <h4 className="text-xs font-bold text-black font-oswald uppercase flex items-center gap-2">
+                      <Database className="w-3.5 h-3.5 text-amber-600" />
                       <span>Self-Service SutraDB Knowledge Base Ingestion</span>
                     </h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 font-bold">
                       Edge Vector Memory
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-xs text-black font-medium">
                     Ingest custom policies, clinic consultation rates, or menu items into the in-memory vector store. Tested live at &lt;15ms.
                   </p>
                 </div>
 
                 <div className="space-y-2 text-xs">
                   <div>
-                    <label className="block text-[11px] text-slate-400 font-medium mb-1">Document / FAQ Title</label>
+                    <label className="block text-xs text-black font-bold font-oswald uppercase mb-1">Document / FAQ Title</label>
                     <input
                       type="text"
                       value={ingestTitle}
                       onChange={(e) => setIngestTitle(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      className="w-full bg-white border-2 border-slate-300 rounded-lg px-3 py-2 text-xs text-black focus:outline-none focus:border-black font-medium"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] text-slate-400 font-medium mb-1">Knowledge Content (Text / Q&amp;A)</label>
+                    <label className="block text-xs text-black font-bold font-oswald uppercase mb-1">Knowledge Content (Text / Q&amp;A)</label>
                     <textarea
                       rows={3}
                       value={ingestContent}
                       onChange={(e) => setIngestContent(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 resize-none"
+                      className="w-full bg-white border-2 border-slate-300 rounded-lg px-3 py-2 text-xs text-black focus:outline-none focus:border-black resize-none font-medium"
                     />
                   </div>
 
@@ -885,31 +884,31 @@ export default function VaniStudioView({
                     type="button"
                     onClick={handleIngestDocument}
                     disabled={isIngesting}
-                    className="w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-2.5 px-4 rounded-xl bg-black hover:bg-slate-800 text-white font-bold font-oswald text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isIngesting ? (
                       <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
                         <span>Embedding into 512-dim Vector Store...</span>
                       </>
                     ) : (
                       <>
-                        <Database className="w-3.5 h-3.5" />
+                        <Database className="w-3.5 h-3.5 text-amber-400" />
                         <span>Ingest &amp; Benchmark against Edge Vector Index</span>
                       </>
                     )}
                   </button>
 
                   {ingestSuccess && (
-                    <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/40 text-amber-200 text-[11px] font-mono space-y-1 animate-in fade-in">
-                      <div className="flex items-center justify-between font-bold text-amber-300">
+                    <div className="p-3 rounded-xl bg-amber-50 border-2 border-amber-300 text-black text-[11px] font-mono space-y-1 animate-in fade-in">
+                      <div className="flex items-center justify-between font-bold text-black">
                         <span>✓ Chunk Ingested Successfully</span>
-                        <span>{ingestSuccess.latencyMs}ms Latency</span>
+                        <span className="text-amber-800">{ingestSuccess.latencyMs}ms Latency</span>
                       </div>
-                      <div className="text-slate-300">
+                      <div className="text-black">
                         • Vector Dimensions: 512 | Tokens Indexed: {ingestSuccess.tokens}
                       </div>
-                      <div className="text-slate-300">
+                      <div className="text-black">
                         • Search Benchmark Score: {ingestSuccess.testQueryScore} (Cosine + BM25 RRF)
                       </div>
                     </div>
@@ -923,33 +922,33 @@ export default function VaniStudioView({
               <div className="flex flex-col justify-between flex-1 space-y-3 py-1">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-white flex items-center gap-2">
-                      <Webhook className="w-3.5 h-3.5 text-indigo-400" />
+                    <h4 className="text-xs font-bold text-black font-oswald uppercase flex items-center gap-2">
+                      <Webhook className="w-3.5 h-3.5 text-indigo-600" />
                       <span>Enterprise CRM &amp; Ticket Webhook Dispatcher</span>
                     </h4>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/15 text-indigo-300 border border-indigo-500/40">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-100 text-indigo-900 border border-indigo-300 font-bold">
                       HMAC-SHA256 Signed
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-xs text-black font-medium">
                     Real-time webhook notification fired when the voice call finishes or an appointment/order is confirmed.
                   </p>
                 </div>
 
                 <div className="space-y-2.5 text-xs">
                   <div>
-                    <label className="block text-[11px] text-slate-400 font-medium mb-1">Target Webhook HTTPS Endpoint</label>
+                    <label className="block text-xs text-black font-bold font-oswald uppercase mb-1">Target Webhook HTTPS Endpoint</label>
                     <input
                       type="url"
                       value={webhookUrl}
                       onChange={(e) => setWebhookUrl(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-400 font-mono"
+                      className="w-full bg-white border-2 border-slate-300 rounded-lg px-3 py-2 text-xs text-black focus:outline-none focus:border-black font-mono font-medium"
                     />
                   </div>
 
-                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 font-mono text-[10px] text-indigo-300 space-y-1">
-                    <div className="text-slate-400">Header: X-Vani-Signature: sha256:7f83b165...</div>
-                    <div className="text-slate-300 font-semibold">
+                  <div className="p-3 bg-slate-50 rounded-xl border border-slate-300 font-mono text-[10px] text-black space-y-1">
+                    <div className="text-slate-600">Header: X-Vani-Signature: sha256:7f83b165...</div>
+                    <div className="text-black font-bold">
                       Payload: {`{ "event": "call.completed", "ticketId": "${extractedEntities.audit.ticketId}", "durationSec": ${callDuration} }`}
                     </div>
                   </div>
@@ -958,31 +957,31 @@ export default function VaniStudioView({
                     type="button"
                     onClick={handleDispatchWebhook}
                     disabled={isDispatchingWebhook}
-                    className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-2.5 px-4 rounded-xl bg-black hover:bg-slate-800 text-white font-bold font-oswald text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isDispatchingWebhook ? (
                       <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
                         <span>Dispatching Webhook &amp; Verifying TLS...</span>
                       </>
                     ) : (
                       <>
-                        <Send className="w-3.5 h-3.5" />
+                        <Send className="w-3.5 h-3.5 text-emerald-400" />
                         <span>Dispatch Live Test Webhook</span>
                       </>
                     )}
                   </button>
 
                   {webhookResponse && (
-                    <div className="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/40 text-indigo-200 text-[11px] font-mono space-y-1 animate-in fade-in">
-                      <div className="flex items-center justify-between font-bold text-emerald-400">
+                    <div className="p-3 rounded-xl bg-indigo-50 border-2 border-indigo-300 text-black text-[11px] font-mono space-y-1 animate-in fade-in">
+                      <div className="flex items-center justify-between font-bold text-black">
                         <span>✓ Response: {webhookResponse.status} OK</span>
-                        <span>{webhookResponse.latencyMs}ms Roundtrip</span>
+                        <span className="text-emerald-700">{webhookResponse.latencyMs}ms Roundtrip</span>
                       </div>
-                      <div className="text-slate-300 truncate">
+                      <div className="text-black truncate">
                         • Ticket Reference: {webhookResponse.ticketId}
                       </div>
-                      <div className="text-slate-400 text-[10px] truncate">
+                      <div className="text-slate-700 text-[10px] truncate">
                         • HMAC Verified: {webhookResponse.signature}
                       </div>
                     </div>
@@ -995,13 +994,13 @@ export default function VaniStudioView({
       </div>
 
       {/* Clean Commercial Footer Banner */}
-      <div className="w-full max-w-6xl mx-auto p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900/80 to-cyan-950/40 border border-emerald-500/30 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+      <div className="w-full max-w-6xl mx-auto p-5 rounded-2xl bg-white border-2 border-slate-200 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <div className="space-y-0.5">
-          <div className="text-xs sm:text-sm font-bold text-white flex items-center justify-center sm:justify-start gap-1.5">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
+          <div className="text-sm sm:text-base font-bold text-black font-oswald uppercase flex items-center justify-center sm:justify-start gap-1.5">
+            <Sparkles className="w-4 h-4 text-emerald-600" />
             <span>Want VaniEdge AI for your clinic, restaurant, or business?</span>
           </div>
-          <p className="text-[11px] text-slate-400">
+          <p className="text-xs text-black font-medium">
             Deploy a dedicated 24/7 autonomous phone answering line tailored to your local business in under 24 hours.
           </p>
         </div>
@@ -1009,9 +1008,9 @@ export default function VaniStudioView({
           href="https://t.me/Samarth1306"
           target="_blank"
           rel="noreferrer"
-          className="shrink-0 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs shadow-md shadow-emerald-500/20 hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+          className="shrink-0 px-5 py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white font-bold font-oswald text-xs uppercase tracking-wider shadow-sm active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
         >
-          <span>Claim Your Dedicated Line</span>
+          <span>Claim Dedicated Line</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </a>
       </div>

@@ -2,51 +2,56 @@
 
 @layer base {
   :root {
-    --background: #070b12;
-    --foreground: #f8fafc;
+    --background: #ffffff;
+    --foreground: #000000;
   }
 
   * {
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(0, 0, 0, 0.12);
   }
 
   html {
-    color-scheme: dark;
-    background-color: #070b12;
-    color: #f8fafc;
-    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color-scheme: light;
+    background-color: #ffffff;
+    color: #000000;
+    font-family: "Matt", "Manrope", "Montserrat", "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: #070b12;
-    color: #f8fafc;
+    background-color: #ffffff;
+    color: #000000;
     min-height: 100vh;
     overflow-x: hidden;
-    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Matt", "Manrope", "Montserrat", "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* High contrast font smoothing: on standard resolution screens, auto subpixel prevents blurriness */
-  @media screen and (-webkit-min-device-pixel-ratio: 1) and (max-resolution: 150dpi) {
-    html, body {
-      -webkit-font-smoothing: auto;
-      -moz-osx-font-smoothing: auto;
-    }
+  /* All titles and headings prominently use Oswald */
+  h1, h2, h3, h4, h5, h6, .font-oswald, .font-heading {
+    font-family: "Oswald", "Matt", "Montserrat", sans-serif !important;
+    letter-spacing: 0.015em;
+    color: #000000;
   }
 
-  /* On high-DPI screens, antialiased provides smooth curves */
-  @media screen and (min-resolution: 151dpi), screen and (-webkit-min-device-pixel-ratio: 1.5) {
-    html, body {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+  p, span, label, div {
+    font-family: "Matt", "Manrope", "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif;
   }
 
   code, pre, kbd, samp, .font-mono {
     font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
   }
+}
+
+.font-oswald {
+  font-family: "Oswald", "Matt", "Montserrat", sans-serif !important;
+}
+
+.font-matt {
+  font-family: "Matt", "Manrope", "Montserrat", "Plus Jakarta Sans", system-ui, sans-serif !important;
 }
 
 /* Custom scrollbars */
@@ -55,12 +60,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #070b12;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(0, 0, 0, 0.4);
 }

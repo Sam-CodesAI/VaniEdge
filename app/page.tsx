@@ -480,14 +480,14 @@ export default function VaniEdgePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 selection:bg-emerald-500 selection:text-black scroll-smooth">
+    <div className="min-h-screen bg-white text-black selection:bg-emerald-400 selection:text-black scroll-smooth">
       {/* Hidden Audio Player for ElevenLabs Streaming */}
       <audio ref={audioPlayerRef} className="hidden" />
 
       {/* Main Content Area */}
       <div className="flex flex-col min-h-screen w-full">
-        {/* Top Sticky Navigation Bar (Solid Background - No Backdrop Blur Subpixel Degradation) */}
-        <header className="border-b border-slate-800 bg-[#090e17] sticky top-0 z-50 shadow-md">
+        {/* Top Sticky Navigation Bar */}
+        <header className="border-b border-slate-200 bg-white/95 sticky top-0 z-50 shadow-sm backdrop-blur-md">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             {/* Left Brand */}
             <a
@@ -498,86 +498,86 @@ export default function VaniEdgePage() {
               }}
               className="flex items-center gap-3 group cursor-pointer"
             >
-              <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.35)] border border-cyan-500/40 group-hover:border-cyan-400 transition-all shrink-0">
+              <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-md border-2 border-emerald-500 group-hover:scale-105 transition-all shrink-0">
                 <img
                   src="/vaniedge-logo.png"
                   alt="VaniEdge Voice Platform Logo"
-                  className="h-full w-full object-cover transform group-hover:scale-105 transition-transform"
+                  className="h-full w-full object-cover"
                 />
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <span className="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-cyan-100 to-emerald-400 bg-clip-text text-transparent">
+                  <span className="font-bold text-xl tracking-tight text-black font-oswald uppercase">
                     VaniEdge
                   </span>
-                  <span className="text-[9px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold tracking-wider">
+                  <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-slate-100 text-black border border-slate-300 font-bold tracking-wider font-oswald">
                     VOICE PLATFORM
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-300 font-mono -mt-0.5 hidden sm:block">
+                <span className="text-[11px] text-black font-mono font-semibold -mt-0.5 hidden sm:block">
                   Sub-Second Telephony &amp; SutraDB RAG
                 </span>
               </div>
             </a>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-200">
+            <nav className="hidden lg:flex items-center gap-6 text-xs font-bold font-oswald uppercase text-black">
               <button
                 type="button"
                 onClick={() => scrollToSection("overview")}
-                className="hover:text-cyan-300 transition-colors cursor-pointer"
+                className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
                 Overview
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("studio")}
-                className="hover:text-cyan-300 transition-colors cursor-pointer flex items-center gap-1.5"
+                className="hover:text-emerald-700 transition-colors cursor-pointer flex items-center gap-1.5"
               >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 Live Studio
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("industries")}
-                className="hover:text-cyan-300 transition-colors cursor-pointer"
+                className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
                 8 Industries
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("architecture")}
-                className="hover:text-cyan-300 transition-colors cursor-pointer"
+                className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
                 Architecture
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("mission-control")}
-                className="hover:text-cyan-300 transition-colors cursor-pointer"
+                className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
                 Failover Watchdog
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("pricing")}
-                className="hover:text-cyan-300 transition-colors cursor-pointer"
+                className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
                 Pricing
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("faq")}
-                className="hover:text-cyan-300 transition-colors cursor-pointer"
+                className="hover:text-emerald-700 transition-colors cursor-pointer"
               >
                 FAQ
               </button>
               <button
                 type="button"
                 onClick={() => setCustomizerOpen(true)}
-                className="px-2.5 py-1 rounded-lg bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/25 transition-all cursor-pointer flex items-center gap-1 font-bold"
+                className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-300 text-black hover:bg-slate-200 transition-all cursor-pointer flex items-center gap-1 font-bold font-oswald"
               >
-                <Sparkles className="w-3 h-3 text-cyan-400" />
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Customize in 60s</span>
               </button>
             </nav>
@@ -585,8 +585,8 @@ export default function VaniEdgePage() {
             {/* Right Quick Actions */}
             <div className="flex items-center gap-2 sm:gap-3">
               {/* Spoken Language Selector */}
-              <div className="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700/80 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs shadow-sm">
-                <Globe2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <div className="flex items-center gap-1.5 bg-white border border-slate-300 px-2.5 py-1.5 rounded-lg text-xs shadow-sm">
+                <Globe2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <select
                   value={selectedLanguage}
                   onChange={(e) => {
@@ -608,39 +608,39 @@ export default function VaniEdgePage() {
                       speakVoiceResponse(switchAudio[newLang] || `Language set to ${langMeta?.label || newLang}.`);
                     }
                   }}
-                  className="bg-transparent text-slate-200 text-xs font-medium focus:outline-none cursor-pointer pr-1"
+                  className="bg-transparent text-black text-xs font-bold focus:outline-none cursor-pointer pr-1"
                   aria-label="Select Spoken Language"
                 >
                   {LANGUAGES.map((l) => (
-                    <option key={l.code} value={l.code} className="bg-slate-900 text-white">
+                    <option key={l.code} value={l.code} className="bg-white text-black font-semibold">
                       {l.label} ({l.nativeLabel})
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Authentication Actions (ElevenLabs & IBM Standard) */}
+              {/* Authentication Actions */}
               {currentUser ? (
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-500 text-xs text-white font-medium transition-all cursor-pointer shadow-sm"
+                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-black text-xs text-black font-bold transition-all cursor-pointer shadow-sm"
                   >
-                    <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-emerald-400 to-cyan-500 text-slate-950 font-bold flex items-center justify-center text-[11px]">
+                    <div className="h-6 w-6 rounded-full bg-black text-white font-bold flex items-center justify-center text-[11px] font-oswald">
                       {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
                     </div>
-                    <span className="hidden sm:inline font-semibold">{currentUser.name}</span>
-                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono hidden md:inline">
+                    <span className="hidden sm:inline font-bold">{currentUser.name}</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-100 text-black font-mono font-bold hidden md:inline border border-slate-200">
                       {currentUser.tier}
                     </span>
                   </button>
 
                   {userDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#0b121e] border border-slate-700 p-2 shadow-2xl z-50 animate-in fade-in">
-                      <div className="px-3 py-2 border-b border-slate-800">
-                        <div className="text-xs font-bold text-white truncate">{currentUser.name}</div>
-                        <div className="text-[11px] text-slate-400 font-mono truncate">{currentUser.email}</div>
+                    <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white border-2 border-slate-200 p-2 shadow-2xl z-50 animate-in fade-in text-black">
+                      <div className="px-3 py-2 border-b border-slate-200">
+                        <div className="text-xs font-bold text-black font-oswald uppercase truncate">{currentUser.name}</div>
+                        <div className="text-[11px] text-slate-600 font-mono truncate">{currentUser.email}</div>
                       </div>
                       <div className="py-1">
                         <button
@@ -649,9 +649,9 @@ export default function VaniEdgePage() {
                             setUserDropdownOpen(false);
                             scrollToSection("studio");
                           }}
-                          className="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                          className="w-full text-left px-3 py-1.5 text-xs text-black font-oswald uppercase font-bold hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
                         >
-                          <Bot className="w-3.5 h-3.5 text-cyan-400" />
+                          <Bot className="w-3.5 h-3.5 text-emerald-600" />
                           <span>Interactive Studio</span>
                         </button>
                         <button
@@ -660,17 +660,17 @@ export default function VaniEdgePage() {
                             setUserDropdownOpen(false);
                             scrollToSection("mission-control");
                           }}
-                          className="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                          className="w-full text-left px-3 py-1.5 text-xs text-black font-oswald uppercase font-bold hover:bg-slate-100 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
                         >
-                          <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                          <Activity className="w-3.5 h-3.5 text-emerald-600" />
                           <span>Carrier Health &amp; Watchdog</span>
                         </button>
                       </div>
-                      <div className="pt-1 border-t border-slate-800">
+                      <div className="pt-1 border-t border-slate-200">
                         <button
                           type="button"
                           onClick={handleSignOut}
-                          className="w-full text-left px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-950/40 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                          className="w-full text-left px-3 py-1.5 text-xs text-rose-600 font-oswald uppercase font-bold hover:bg-rose-50 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
                         >
                           <LogOut className="w-3.5 h-3.5" />
                           <span>Sign Out</span>
@@ -684,7 +684,7 @@ export default function VaniEdgePage() {
                   <button
                     type="button"
                     onClick={() => handleOpenAuth("signin")}
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-slate-800/80 transition-colors cursor-pointer"
+                    className="px-3 py-1.5 rounded-lg text-xs font-bold font-oswald uppercase text-black hover:bg-slate-100 transition-colors cursor-pointer"
                   >
                     Sign In
                   </button>
@@ -692,9 +692,9 @@ export default function VaniEdgePage() {
                   <button
                     type="button"
                     onClick={() => handleOpenAuth("signup")}
-                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 via-cyan-500 to-teal-400 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-lg bg-black hover:bg-slate-800 text-white font-bold font-oswald uppercase text-xs shadow-sm transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                     <span>Get Started Free</span>
                   </button>
                 </div>
@@ -704,7 +704,7 @@ export default function VaniEdgePage() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 lg:hidden cursor-pointer"
+                className="p-1.5 rounded-lg bg-white border border-slate-300 text-black lg:hidden cursor-pointer"
                 aria-label="Toggle Mobile Menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -714,53 +714,53 @@ export default function VaniEdgePage() {
 
           {/* Mobile Dropdown Menu */}
           {mobileMenuOpen && (
-            <div className="lg:hidden border-t border-slate-800 bg-[#090e17] px-4 py-4 space-y-3 font-semibold text-sm">
+            <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-3 font-bold font-oswald uppercase text-sm text-black">
               <button
                 type="button"
                 onClick={() => scrollToSection("overview")}
-                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+                className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
                 Overview
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("studio")}
-                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+                className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
                 Live Interactive Studio
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("industries")}
-                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+                className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
                 8 Industry Personas
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("architecture")}
-                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+                className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
                 Vani + Edge Architecture
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("mission-control")}
-                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+                className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
                 Failover Watchdog &amp; Health
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("pricing")}
-                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+                className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
                 Commercial Pricing
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("faq")}
-                className="block w-full text-left py-1 text-slate-300 hover:text-cyan-400"
+                className="block w-full text-left py-1 text-black hover:text-emerald-700"
               >
                 Frequently Asked Questions
               </button>
@@ -818,17 +818,17 @@ export default function VaniEdgePage() {
           </div>
 
           {/* 2. Interactive Live Studio Section */}
-          <section id="studio" className="py-16 sm:py-20 border-b border-slate-800/80 bg-[#070b12] relative scroll-mt-16">
+          <section id="studio" className="py-16 sm:py-20 border-b border-slate-200 bg-slate-50/70 relative scroll-mt-16">
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
               <div className="text-center max-w-3xl mx-auto mb-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium mb-3">
-                  <Bot className="w-3.5 h-3.5" />
+                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-slate-100 border border-slate-300 text-black text-xs font-oswald uppercase tracking-wider font-bold mb-3">
+                  <Bot className="w-3.5 h-3.5 text-emerald-600" />
                   <span>INTERACTIVE LIVE TELEPHONY STUDIO</span>
                 </div>
-                <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                <h2 className="text-3xl sm:text-5xl font-bold text-black font-oswald uppercase tracking-tight">
                   Experience VaniEdge in Real Time
                 </h2>
-                <p className="mt-3 text-sm sm:text-base text-slate-400">
+                <p className="mt-3 text-sm sm:text-base text-black font-medium">
                   Select any of the 8 business categories below, start a browser call or click sample test prompts to observe sub-15ms SutraDB vector retrieval and multi-lingual voice speech generation.
                 </p>
               </div>
@@ -865,17 +865,17 @@ export default function VaniEdgePage() {
           <IndustrySolutionsSection onSelectCategory={(id) => handleSelectPersona(id)} />
 
           {/* 5. Telephony Failover Mission Control */}
-          <section id="mission-control" className="py-16 sm:py-20 border-b border-slate-800/80 bg-[#060910] scroll-mt-16">
+          <section id="mission-control" className="py-16 sm:py-20 border-b border-slate-200 bg-slate-50/70 scroll-mt-16">
             <div className="max-w-6xl mx-auto px-4 sm:px-6">
               <div className="text-center max-w-3xl mx-auto mb-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-medium mb-3">
-                  <Activity className="w-3.5 h-3.5" />
+                <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-slate-100 border border-slate-300 text-black text-xs font-oswald uppercase tracking-wider font-bold mb-3">
+                  <Activity className="w-3.5 h-3.5 text-emerald-600" />
                   <span>TELEPHONY FAILOVER WATCHDOG &amp; TELEMETRY</span>
                 </div>
-                <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                <h2 className="text-3xl sm:text-5xl font-bold text-black font-oswald uppercase tracking-tight">
                   Live Mission Control &amp; Carrier Health
                 </h2>
-                <p className="mt-3 text-sm sm:text-base text-slate-400">
+                <p className="mt-3 text-sm sm:text-base text-black font-medium">
                   Real-time supervisor managing carrier WebSocket audio streams, heartbeat latency checks, and automatic atomic Twilio REST failover.
                 </p>
               </div>

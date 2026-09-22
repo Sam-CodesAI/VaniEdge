@@ -62,28 +62,28 @@ export default function VerticalCustomizerModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#0b121e] border border-slate-700 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-white border-2 border-slate-200 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto text-black">
         {/* Modal Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-2 rounded-xl text-black hover:bg-slate-100 transition-colors cursor-pointer"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Modal Header */}
+        {/* Modal Header in Oswald & Black Text */}
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-medium mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-100 border border-slate-300 text-black text-xs font-oswald uppercase font-bold mb-2">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             <span>60-SECOND AGENT CUSTOMIZER WIZARD</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold text-black font-oswald uppercase">
             Tailor Your 24/7 Autonomous Voice Receptionist
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-black font-medium mt-1">
             Configure your brand, services, operating hours, and Indic language model in 3 simple steps.
           </p>
         </div>
@@ -91,18 +91,18 @@ export default function VerticalCustomizerModal({
         {/* Step Progression Bar */}
         <div className="grid grid-cols-3 gap-2">
           <div
-            className={`h-1.5 rounded-full transition-all ${
-              step >= 1 ? "bg-gradient-to-r from-emerald-500 to-cyan-500" : "bg-slate-800"
+            className={`h-2 rounded-full transition-all ${
+              step >= 1 ? "bg-black" : "bg-slate-200"
             }`}
           />
           <div
-            className={`h-1.5 rounded-full transition-all ${
-              step >= 2 ? "bg-gradient-to-r from-emerald-500 to-cyan-500" : "bg-slate-800"
+            className={`h-2 rounded-full transition-all ${
+              step >= 2 ? "bg-black" : "bg-slate-200"
             }`}
           />
           <div
-            className={`h-1.5 rounded-full transition-all ${
-              step >= 3 ? "bg-gradient-to-r from-emerald-500 to-cyan-500" : "bg-slate-800"
+            className={`h-2 rounded-full transition-all ${
+              step >= 3 ? "bg-black" : "bg-slate-200"
             }`}
           />
         </div>
@@ -111,7 +111,7 @@ export default function VerticalCustomizerModal({
         {step === 1 && (
           <div className="space-y-4 animate-in fade-in">
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
+              <label className="block text-xs font-bold text-black font-oswald uppercase mb-1.5">
                 1. Your Business or Practice Name
               </label>
               <input
@@ -119,12 +119,12 @@ export default function VerticalCustomizerModal({
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 placeholder="e.g. Apex Health Clinic, Royal Biryani Express..."
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-4 py-2.5 text-sm text-black focus:outline-none focus:border-black font-medium transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-2">
+              <label className="block text-xs font-bold text-black font-oswald uppercase mb-2">
                 2. Select Industry Vertical
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -135,14 +135,14 @@ export default function VerticalCustomizerModal({
                       key={cat.id}
                       type="button"
                       onClick={() => setSelectedCategory(cat.id)}
-                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                      className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
                         isSel
-                          ? "bg-slate-800 border-cyan-400 text-white shadow-[0_0_15px_rgba(6,182,212,0.25)] ring-1 ring-cyan-400/50"
-                          : "bg-slate-900/60 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
+                          ? "bg-emerald-50 border-emerald-600 text-black shadow-md ring-1 ring-emerald-600"
+                          : "bg-white border-slate-200 text-black hover:border-slate-400 hover:bg-slate-50 shadow-sm"
                       }`}
                     >
                       <div className="text-xl mb-1">{cat.icon}</div>
-                      <div className="text-xs font-bold text-slate-100 truncate">{cat.label}</div>
+                      <div className="text-xs font-bold text-black font-oswald uppercase truncate">{cat.label}</div>
                     </button>
                   );
                 })}
@@ -155,7 +155,7 @@ export default function VerticalCustomizerModal({
         {step === 2 && (
           <div className="space-y-4 animate-in fade-in">
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
+              <label className="block text-xs font-bold text-black font-oswald uppercase mb-1.5">
                 1. Business Operating Hours
               </label>
               <input
@@ -163,15 +163,15 @@ export default function VerticalCustomizerModal({
                 value={operatingHours}
                 onChange={(e) => setOperatingHours(e.target.value)}
                 placeholder="e.g. 9:00 AM - 9:00 PM (Monday - Sunday)"
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-4 py-2.5 text-sm text-black focus:outline-none focus:border-black font-medium transition-colors"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">
+              <span className="text-[11px] text-slate-600 mt-1 block font-medium">
                 After-hours callers are politely informed of timings and their callback request is logged.
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
+              <label className="block text-xs font-bold text-black font-oswald uppercase mb-1.5">
                 2. Primary Voice Dialect
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -187,10 +187,10 @@ export default function VerticalCustomizerModal({
                     key={lang.code}
                     type="button"
                     onClick={() => setSelectedLanguage(lang.code)}
-                    className={`py-2 px-3 rounded-xl border text-xs font-medium transition-all cursor-pointer text-center ${
+                    className={`py-2 px-3 rounded-xl border-2 text-xs font-bold transition-all cursor-pointer text-center ${
                       selectedLanguage === lang.code
-                        ? "bg-emerald-950/60 border-emerald-400 text-emerald-300 font-bold"
-                        : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white"
+                        ? "bg-emerald-500 border-emerald-600 text-black font-oswald"
+                        : "bg-white border-slate-200 text-black hover:bg-slate-100"
                     }`}
                   >
                     {lang.label}
@@ -200,7 +200,7 @@ export default function VerticalCustomizerModal({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
+              <label className="block text-xs font-bold text-black font-oswald uppercase mb-1.5">
                 3. Manager Escalation Phone (For SMS Alerts)
               </label>
               <input
@@ -208,7 +208,7 @@ export default function VerticalCustomizerModal({
                 value={escalationPhone}
                 onChange={(e) => setEscalationPhone(e.target.value)}
                 placeholder="+91 98450 12345"
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors font-mono"
+                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-4 py-2.5 text-sm text-black focus:outline-none focus:border-black font-mono font-medium transition-colors"
               />
             </div>
           </div>
@@ -218,7 +218,7 @@ export default function VerticalCustomizerModal({
         {step === 3 && (
           <div className="space-y-4 animate-in fade-in">
             <div>
-              <label className="block text-xs font-semibold text-slate-200 mb-1.5">
+              <label className="block text-xs font-bold text-black font-oswald uppercase mb-1.5">
                 Custom Services, Fees &amp; FAQs for SutraDB
               </label>
               <textarea
@@ -226,35 +226,35 @@ export default function VerticalCustomizerModal({
                 value={servicesText}
                 onChange={(e) => setServicesText(e.target.value)}
                 placeholder="List your key offerings, prices, walk-in rules or menu specials..."
-                className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-4 py-2.5 text-xs text-black focus:outline-none focus:border-black font-medium transition-colors"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">
+              <span className="text-[11px] text-slate-600 mt-1 block font-medium">
                 These rules are vectorized instantly into SutraDB memory for sub-15ms caller retrieval.
               </span>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
-              <div className="font-bold text-slate-200 flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-emerald-400" />
+            <div className="p-4 rounded-xl bg-slate-50 border-2 border-slate-200 space-y-2 text-xs">
+              <div className="font-bold text-black font-oswald uppercase text-sm flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-emerald-600" />
                 <span>Configuration Ready for Live Simulation</span>
               </div>
-              <div className="text-slate-400 grid grid-cols-2 gap-2 text-[11px] font-mono">
-                <div>• Brand: <span className="text-white">{businessName}</span></div>
-                <div>• Vertical: <span className="text-cyan-300">{selectedCategory}</span></div>
-                <div>• Dialect: <span className="text-emerald-300">{selectedLanguage.toUpperCase()}</span></div>
-                <div>• Hours: <span className="text-slate-300">{operatingHours}</span></div>
+              <div className="text-black grid grid-cols-2 gap-2 text-xs font-mono font-bold">
+                <div>• Brand: <span className="text-black">{businessName}</span></div>
+                <div>• Vertical: <span className="text-emerald-700">{selectedCategory}</span></div>
+                <div>• Dialect: <span className="text-black">{selectedLanguage.toUpperCase()}</span></div>
+                <div>• Hours: <span className="text-black">{operatingHours}</span></div>
               </div>
             </div>
           </div>
         )}
 
         {/* Footer Navigation Buttons */}
-        <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+        <div className="flex items-center justify-between pt-4 border-t border-slate-200">
           {step > 1 ? (
             <button
               type="button"
               onClick={handleBack}
-              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-black text-xs font-oswald uppercase font-bold flex items-center gap-2 transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
@@ -267,7 +267,7 @@ export default function VerticalCustomizerModal({
             <button
               type="button"
               onClick={handleNext}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:brightness-110 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md"
+              className="px-5 py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white font-bold font-oswald uppercase text-xs flex items-center gap-2 transition-all cursor-pointer shadow-sm"
             >
               <span>Next Step</span>
               <ArrowRight className="w-4 h-4" />
@@ -277,9 +277,9 @@ export default function VerticalCustomizerModal({
               <button
                 type="button"
                 onClick={handleFinishDeploy}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:brightness-110 text-slate-950 font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95"
+                className="px-5 py-2.5 rounded-xl bg-black hover:bg-slate-800 text-white font-bold font-oswald uppercase text-xs flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95"
               >
-                <Bot className="w-4 h-4" />
+                <Bot className="w-4 h-4 text-emerald-400" />
                 <span>Deploy &amp; Test in Studio</span>
               </button>
             </div>

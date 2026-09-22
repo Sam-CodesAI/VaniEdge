@@ -104,8 +104,13 @@ export default function AuthModal({
       return;
     }
 
+    if (mode === "signup" && !name.trim()) {
+      setError("Please enter your full name or company name.");
+      return;
+    }
+
     if (mode === "signup" && !agreeTerms) {
-      setError("Please accept the Terms of Service to create your account.");
+      setError("Please agree to the Terms of Service & Privacy Policy.");
       return;
     }
 
@@ -116,7 +121,7 @@ export default function AuthModal({
         name: name.trim() || email.split("@")[0],
         email: email.trim(),
         provider: "email",
-        tier: "Free Trial",
+        tier: "Starter",
       };
       localStorage.setItem("vaniedge_auth_user", JSON.stringify(user));
       onAuthSuccess(user);
@@ -126,23 +131,17 @@ export default function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
     >
-      {/* Modal Container */}
-      <div
-        className="relative w-full max-w-md rounded-2xl bg-[#0b121e] border border-slate-700 shadow-2xl p-6 sm:p-8 overflow-hidden"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.12) 0%, transparent 60%)",
-        }}
-      >
+      {/* Modal Container in Oswald & Black Text */}
+      <div className="relative w-full max-w-md rounded-2xl bg-white border-2 border-slate-200 shadow-2xl p-6 sm:p-8 overflow-hidden text-black">
         {/* Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-1.5 rounded-lg text-black hover:bg-slate-100 transition-colors cursor-pointer"
           aria-label="Close Auth Modal"
         >
           <X className="w-5 h-5" />
@@ -151,26 +150,26 @@ export default function AuthModal({
         {/* Brand Header */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2 mb-3">
-            <div className="h-9 w-9 rounded-xl overflow-hidden border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+            <div className="h-10 w-10 rounded-xl overflow-hidden border-2 border-emerald-500 shadow-md">
               <img
                 src="/vaniedge-logo.png"
                 alt="VaniEdge Logo"
                 className="h-full w-full object-cover"
               />
             </div>
-            <span className="font-black text-xl text-white tracking-tight">
-              VaniEdge <span className="text-cyan-400 text-xs font-mono font-semibold uppercase px-1.5 py-0.5 rounded bg-cyan-500/20 border border-cyan-500/40">AI</span>
+            <span className="font-bold text-2xl text-black font-oswald uppercase tracking-tight">
+              VaniEdge <span className="text-emerald-800 text-xs font-mono font-bold uppercase px-2 py-0.5 rounded bg-emerald-100 border border-emerald-300">AI</span>
             </span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold text-black font-oswald uppercase tracking-tight">
             {mode === "signin"
               ? "Welcome back to VaniEdge"
               : mode === "signup"
               ? "Start Your Voice AI Trial"
               : "Reset Your Password"}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1.5">
+          <p className="text-xs sm:text-sm text-black font-medium mt-1.5">
             {mode === "signin"
               ? "Access your telephony agents, SutraDB RAG, and call transcripts."
               : mode === "signup"
@@ -179,19 +178,19 @@ export default function AuthModal({
           </p>
         </div>
 
-        {/* Sign In / Sign Up Mode Pill Switcher (Inspired by ElevenLabs) */}
+        {/* Sign In / Sign Up Mode Pill Switcher */}
         {mode !== "forgot" && (
-          <div className="flex rounded-xl bg-slate-900 border border-slate-700/80 p-1 mb-5">
+          <div className="flex rounded-xl bg-slate-100 border border-slate-300 p-1 mb-5">
             <button
               type="button"
               onClick={() => {
                 setMode("signin");
                 setError(null);
               }}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex-1 py-2 rounded-lg text-xs font-bold font-oswald uppercase tracking-wider transition-all cursor-pointer ${
                 mode === "signin"
-                  ? "bg-slate-800 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-black text-white shadow-sm"
+                  : "text-slate-600 hover:text-black"
               }`}
             >
               Sign In
@@ -202,10 +201,10 @@ export default function AuthModal({
                 setMode("signup");
                 setError(null);
               }}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex-1 py-2 rounded-lg text-xs font-bold font-oswald uppercase tracking-wider transition-all cursor-pointer ${
                 mode === "signup"
-                  ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-black text-white shadow-sm"
+                  : "text-slate-600 hover:text-black"
               }`}
             >
               Create Account
@@ -215,28 +214,28 @@ export default function AuthModal({
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-950/50 border border-rose-500/40 flex items-start gap-2.5 text-xs text-rose-200">
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border-2 border-rose-300 flex items-start gap-2.5 text-xs text-rose-900 font-medium">
+            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Success Alert */}
         {successMessage && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-950/50 border border-emerald-500/40 flex items-start gap-2.5 text-xs text-emerald-200">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border-2 border-emerald-300 flex items-start gap-2.5 text-xs text-emerald-900 font-medium">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
             <span>{successMessage}</span>
           </div>
         )}
 
-        {/* Google One-Tap OAuth Button (ElevenLabs / IBM Standard) */}
+        {/* Google One-Tap OAuth Button */}
         {mode !== "forgot" && (
           <div className="space-y-4 mb-5">
             <button
               type="button"
               onClick={handleGoogleAuth}
               disabled={isLoading}
-              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-semibold text-xs sm:text-sm flex items-center justify-center gap-3 transition-all shadow-md active:scale-98 cursor-pointer disabled:opacity-50"
+              className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-50 border-2 border-slate-300 text-black font-bold font-oswald text-xs uppercase tracking-wider flex items-center justify-center gap-3 transition-all shadow-sm active:scale-98 cursor-pointer disabled:opacity-50"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
@@ -261,60 +260,58 @@ export default function AuthModal({
 
             {/* Divider */}
             <div className="relative flex items-center justify-center">
-              <div className="border-t border-slate-700/80 w-full" />
-              <span className="bg-[#0b121e] px-3 text-[11px] font-mono text-slate-400 uppercase tracking-wider shrink-0">
+              <div className="border-t border-slate-300 w-full" />
+              <span className="bg-white px-3 text-[11px] font-oswald text-black uppercase tracking-wider font-bold shrink-0">
                 Or with Email &amp; Password
               </span>
-              <div className="border-t border-slate-700/80 w-full" />
+              <div className="border-t border-slate-300 w-full" />
             </div>
           </div>
         )}
 
         {/* Email & Password Form */}
         <form onSubmit={handleSubmit} className="space-y-3.5">
-          {/* Full Name field (Sign Up only) */}
           {mode === "signup" && (
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-bold font-oswald uppercase text-black mb-1.5">
                 Full Name or Business Name
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Dr. Sharma or Apex Roadside"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
-                  required
+                  placeholder="e.g. Dr. Aarav Sharma"
+                  className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs text-black focus:outline-none focus:border-black font-medium transition-colors"
                 />
               </div>
             </div>
           )}
 
-          {/* Email field */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Work or Personal Email
+            <label className="block text-xs font-bold font-oswald uppercase text-black mb-1.5">
+              Email Address
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
+                placeholder="name@business.com"
                 required
+                className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-10 pr-4 py-2.5 text-xs text-black focus:outline-none focus:border-black font-medium transition-colors"
               />
             </div>
           </div>
 
-          {/* Password field */}
           {mode !== "forgot" && (
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-semibold text-slate-300">Password</label>
+                <label className="block text-xs font-bold font-oswald uppercase text-black">
+                  Password
+                </label>
                 {mode === "signin" && (
                   <button
                     type="button"
@@ -322,27 +319,27 @@ export default function AuthModal({
                       setMode("forgot");
                       setError(null);
                     }}
-                    className="text-[11px] text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer"
+                    className="text-[11px] text-emerald-800 hover:underline font-bold"
                   >
-                    Forgot password?
+                    Forgot Password?
                   </button>
                 )}
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-10 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
+                  placeholder="••••••••"
                   required
+                  className="w-full bg-slate-50 border-2 border-slate-300 rounded-xl pl-10 pr-10 py-2.5 text-xs text-black focus:outline-none focus:border-black font-medium transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white cursor-pointer"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-black transition-colors"
+                  aria-label="Toggle password visibility"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -350,116 +347,72 @@ export default function AuthModal({
             </div>
           )}
 
-          {/* Checkbox Options */}
-          {mode === "signin" ? (
-            <div className="flex items-center gap-2 pt-1">
-              <input
-                type="checkbox"
-                id="remember"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="rounded border-slate-700 text-cyan-500 focus:ring-cyan-400 bg-slate-900 cursor-pointer"
-              />
-              <label htmlFor="remember" className="text-xs text-slate-300 cursor-pointer">
-                Keep me signed in for 30 days
+          {mode === "signin" && (
+            <div className="flex items-center justify-between text-xs pt-0.5">
+              <label className="flex items-center gap-2 text-black cursor-pointer select-none font-medium">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="rounded border-slate-300 text-black focus:ring-black"
+                />
+                <span>Remember this workstation</span>
               </label>
             </div>
-          ) : mode === "signup" ? (
-            <div className="flex items-start gap-2 pt-1">
+          )}
+
+          {mode === "signup" && (
+            <div className="flex items-start gap-2 text-xs pt-0.5">
               <input
                 type="checkbox"
-                id="terms"
+                id="agree-terms"
                 checked={agreeTerms}
                 onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="rounded border-slate-700 text-emerald-500 focus:ring-emerald-400 bg-slate-900 mt-0.5 cursor-pointer"
+                className="rounded border-slate-300 text-black focus:ring-black mt-0.5"
               />
-              <label htmlFor="terms" className="text-[11px] text-slate-300 leading-tight cursor-pointer">
-                I agree to the VaniEdge Terms of Service, Privacy Policy, and Fair Use telephony guidelines.
+              <label htmlFor="agree-terms" className="text-black font-medium select-none text-[11px]">
+                I agree to the <span className="underline font-bold">Terms of Service</span> and{" "}
+                <span className="underline font-bold">Privacy Policy</span>.
               </label>
             </div>
-          ) : null}
+          )}
 
-          {/* Submit Action Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 via-cyan-500 to-teal-400 hover:brightness-110 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-98 cursor-pointer disabled:opacity-50 mt-4"
+            className="w-full py-3 px-4 rounded-xl bg-black hover:bg-slate-800 disabled:opacity-50 text-white font-bold font-oswald uppercase tracking-wider text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-98 cursor-pointer mt-2"
           >
             {isLoading ? (
-              <span className="flex items-center gap-2">
-                <span className="h-4 w-4 rounded-full border-2 border-slate-950 border-t-transparent animate-spin" />
-                <span>Authenticating...</span>
-              </span>
-            ) : mode === "signin" ? (
-              <span>Sign In with Email</span>
-            ) : mode === "signup" ? (
-              <span>Create Free Account</span>
+              <div className="flex items-center gap-2">
+                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <span>Authenticating with Edge...</span>
+              </div>
             ) : (
-              <span>Send Recovery Link</span>
+              <>
+                <span>
+                  {mode === "signin"
+                    ? "Sign In to Mission Control"
+                    : mode === "signup"
+                    ? "Create Account & Provision Line"
+                    : "Send Password Reset Link"}
+                </span>
+                <ArrowRight className="w-4 h-4" />
+              </>
             )}
-            {!isLoading && <ArrowRight className="w-4 h-4" />}
           </button>
         </form>
 
-        {/* Footer Mode Switcher */}
-        <div className="mt-5 pt-4 border-t border-slate-800 text-center text-xs text-slate-400">
-          {mode === "signin" ? (
-            <p>
-              Don't have an account yet?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("signup");
-                  setError(null);
-                }}
-                className="text-cyan-400 font-semibold hover:underline cursor-pointer ml-1"
-              >
-                Sign up free
-              </button>
-            </p>
-          ) : mode === "signup" ? (
-            <p>
-              Already registered?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("signin");
-                  setError(null);
-                }}
-                className="text-cyan-400 font-semibold hover:underline cursor-pointer ml-1"
-              >
-                Sign in
-              </button>
-            </p>
-          ) : (
-            <p>
-              Remembered your password?{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("signin");
-                  setError(null);
-                }}
-                className="text-cyan-400 font-semibold hover:underline cursor-pointer ml-1"
-              >
-                Back to Sign in
-              </button>
-            </p>
-          )}
-        </div>
-
-        {/* Enterprise SSO Reference (IBM / ElevenLabs Style) */}
-        <div className="mt-3 text-center">
-          <a
-            href="https://t.me/Samarth1306"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-[11px] text-slate-400 hover:text-slate-200 transition-colors"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Looking for Enterprise SSO (SAML / Okta)? Inquire with Solutions Desk</span>
-          </a>
-        </div>
+        {mode === "forgot" && (
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={() => setMode("signin")}
+              className="text-xs text-black hover:underline font-bold font-oswald uppercase"
+            >
+              ← Back to Sign In
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

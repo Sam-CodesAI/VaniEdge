@@ -18,22 +18,19 @@ interface LandingFooterProps {
 
 export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
   return (
-    <footer className="bg-[#05080e] border-t border-slate-800/80 pt-16 pb-12 text-slate-400 text-xs">
+    <footer className="bg-white border-t border-slate-200 pt-16 pb-12 text-black text-xs">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Call to Action Banner */}
-        <div
-          className="rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-cyan-950/80 border border-emerald-500/40 p-8 sm:p-12 mb-16 text-center relative overflow-hidden shadow-2xl"
-          style={{ backgroundImage: "radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.15) 0%, transparent 60%)" }}
-        >
+        {/* Call to Action Banner in Oswald & Black Text */}
+        <div className="rounded-2xl bg-slate-50 border-2 border-slate-200 p-8 sm:p-12 mb-16 text-center relative overflow-hidden shadow-lg">
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/50 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-300 text-black text-xs font-oswald uppercase tracking-wider font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               <span>COMMERCIAL ONBOARDING OPEN</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-bold text-black font-oswald uppercase tracking-tight">
               Ready to automate your business calls with sub-second AI?
             </h2>
-            <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-normal">
+            <p className="text-black text-sm sm:text-base leading-relaxed font-medium">
               Eliminate missed calls and scale customer intake across 8 industry verticals. Speak directly with the architect to claim your dedicated phone line today.
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
@@ -41,7 +38,7 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
                 href="https://t.me/Samarth1306"
                 target="_blank"
                 rel="noreferrer"
-                className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-[0_0_25px_rgba(16,185,129,0.35)] hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-6 py-3.5 rounded-xl bg-black hover:bg-slate-800 text-white font-bold font-oswald uppercase tracking-wider text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer active:scale-95"
               >
                 <span>Chat on Telegram (@Samarth1306)</span>
                 <ArrowRight className="w-4 h-4" />
@@ -49,9 +46,9 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
               <button
                 type="button"
                 onClick={() => onOpenAuth?.("signup")}
-                className="px-5 py-3.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-semibold text-sm hover:border-slate-500 transition-all flex items-center gap-2 cursor-pointer shadow-sm"
+                className="px-5 py-3.5 rounded-xl bg-white border-2 border-black text-black font-bold font-oswald uppercase tracking-wider text-sm hover:bg-slate-100 transition-all flex items-center gap-2 cursor-pointer shadow-sm"
               >
-                <Sparkles className="w-4 h-4 text-cyan-400" />
+                <Sparkles className="w-4 h-4 text-emerald-600" />
                 <span>Create Free Account</span>
               </button>
             </div>
@@ -59,53 +56,53 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
         </div>
 
         {/* Footer Navigation Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-slate-800/80">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-slate-200">
           <div className="space-y-3 md:col-span-2">
             <div className="flex items-center gap-2.5">
               <img
                 src="/vaniedge-logo.png"
                 alt="VaniEdge Logo"
-                className="h-8 w-8 rounded-lg object-cover border border-cyan-500/40"
+                className="h-8 w-8 rounded-lg object-cover border border-emerald-500"
               />
-              <span className="font-black text-lg text-white tracking-tight">
+              <span className="font-bold text-xl text-black font-oswald uppercase tracking-tight">
                 VaniEdge Voice Platform
               </span>
             </div>
-            <p className="text-slate-300 text-xs leading-relaxed max-w-sm">
+            <p className="text-black text-xs leading-relaxed max-w-sm font-medium">
               The sovereign multi-lingual telephony &amp; voice agent platform. Built with Next.js 16 Turbopack, Cloudflare edge streaming, sub-1,200ms failover watchdogs, and embedded SutraDB vector memory.
             </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-400">
+            <div className="pt-1 text-[11px] font-mono text-black font-bold">
               MIT License • Built by Samarth Nimangre
             </div>
           </div>
 
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-200 block mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-black font-oswald block mb-3">
               Platform &amp; Architecture
             </span>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-2 text-xs font-medium">
               <li>
-                <a href="#studio" className="hover:text-cyan-400 transition-colors">
+                <a href="#studio" className="text-black hover:text-emerald-700 transition-colors">
                   Interactive Live Studio
                 </a>
               </li>
               <li>
-                <a href="#industries" className="hover:text-cyan-400 transition-colors">
+                <a href="#industries" className="text-black hover:text-emerald-700 transition-colors">
                   8 Industry Verticals
                 </a>
               </li>
               <li>
-                <a href="#architecture" className="hover:text-cyan-400 transition-colors">
+                <a href="#architecture" className="text-black hover:text-emerald-700 transition-colors">
                   Vani + Edge Paradigm
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="hover:text-cyan-400 transition-colors">
+                <a href="#pricing" className="text-black hover:text-emerald-700 transition-colors">
                   Commercial Pricing
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-cyan-400 transition-colors">
+                <a href="#faq" className="text-black hover:text-emerald-700 transition-colors">
                   Frequently Asked Questions
                 </a>
               </li>
@@ -113,19 +110,19 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
           </div>
 
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-200 block mb-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-black font-oswald block mb-3">
               Developer Endpoints
             </span>
-            <ul className="space-y-2 text-xs font-mono">
+            <ul className="space-y-2 text-xs font-mono font-bold">
               <li>
                 <a
                   href="/api/health"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-emerald-400 transition-colors flex items-center gap-1"
+                  className="text-black hover:text-emerald-700 transition-colors flex items-center gap-1"
                 >
                   <span>/api/health</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600" />
+                  <ExternalLink className="w-3 h-3 text-slate-500" />
                 </a>
               </li>
               <li>
@@ -133,10 +130,10 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
                   href="/api/metrics?format=prometheus"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-emerald-400 transition-colors flex items-center gap-1"
+                  className="text-black hover:text-emerald-700 transition-colors flex items-center gap-1"
                 >
                   <span>/api/metrics</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600" />
+                  <ExternalLink className="w-3 h-3 text-slate-500" />
                 </a>
               </li>
               <li>
@@ -144,10 +141,10 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
                   href="https://github.com/Sam-CodesAI/VaniEdge-Voice-Platform"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-cyan-400 transition-colors flex items-center gap-1"
+                  className="text-black hover:text-emerald-700 transition-colors flex items-center gap-1"
                 >
                   <span>GitHub Repository</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600" />
+                  <ExternalLink className="w-3 h-3 text-slate-500" />
                 </a>
               </li>
               <li>
@@ -155,27 +152,28 @@ export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
                   href="https://sam-codes.vercel.app"
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:text-cyan-400 transition-colors flex items-center gap-1"
+                  className="text-black hover:text-emerald-700 transition-colors flex items-center gap-1"
                 >
                   <span>Architect Portfolio</span>
-                  <ExternalLink className="w-3 h-3 text-slate-600" />
+                  <ExternalLink className="w-3 h-3 text-slate-500" />
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Credits & Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono">
-          <div>
-            &copy; {new Date().getFullYear()} VaniEdge Voice Platform (वाणीEdge). All rights reserved.
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-black font-medium">
+          <div className="flex items-center gap-1">
+            <span>Built with precision for 2026 voice commerce. Zero dropped calls guaranteed.</span>
           </div>
           <div className="flex items-center gap-4">
-            <span>Sovereign Voice Telephony</span>
+            <a href="https://t.me/Samarth1306" target="_blank" rel="noreferrer" className="text-black hover:underline font-bold">
+              Telegram Direct Desk
+            </a>
             <span>•</span>
-            <span>Zero Dropped Calls</span>
-            <span>•</span>
-            <span>Sub-Second TTFT</span>
+            <a href="https://vaniedge.vercel.app" className="text-black hover:underline font-bold">
+              vaniedge.vercel.app
+            </a>
           </div>
         </div>
       </div>

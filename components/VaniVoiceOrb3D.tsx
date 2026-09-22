@@ -204,19 +204,19 @@ export default function VaniVoiceOrb3D({
         />
       </div>
 
-      {/* State label pill */}
+      {/* State label pill in Oswald & high contrast */}
       <div className="absolute -bottom-5 z-20">
         <span
-          className={`text-[10px] font-mono px-2 py-0.5 rounded-full border transition-all ${
+          className={`text-[10px] font-oswald uppercase tracking-wider font-bold px-3 py-1 rounded-full border shadow-sm transition-all ${
             isSpeaking
-              ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+              ? "bg-emerald-100 text-emerald-950 border-emerald-400"
               : isListening
-              ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+              ? "bg-cyan-100 text-cyan-950 border-cyan-400"
               : isThinking
-              ? "bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse"
+              ? "bg-amber-100 text-amber-950 border-amber-400 animate-pulse"
               : isCalling
-              ? "bg-indigo-500/20 text-indigo-300 border-indigo-500/40"
-              : "bg-slate-800/80 text-slate-400 border-slate-700"
+              ? "bg-indigo-100 text-indigo-950 border-indigo-400"
+              : "bg-white text-black border-slate-300"
           }`}
         >
           {isSpeaking
