@@ -12,7 +12,11 @@ import {
   Globe2,
 } from "lucide-react";
 
-export default function LandingFooter() {
+interface LandingFooterProps {
+  onOpenAuth?: (mode?: "signin" | "signup") => void;
+}
+
+export default function LandingFooter({ onOpenAuth }: LandingFooterProps) {
   return (
     <footer className="bg-[#05080e] border-t border-slate-800/80 pt-16 pb-12 text-slate-400 text-xs">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -42,13 +46,14 @@ export default function LandingFooter() {
                 <span>Chat on Telegram (@Samarth1306)</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
-              <a
-                href="tel:+18149613703"
-                className="px-5 py-3.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm hover:border-slate-500 transition-all flex items-center gap-2 cursor-pointer"
+              <button
+                type="button"
+                onClick={() => onOpenAuth?.("signup")}
+                className="px-5 py-3.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-semibold text-sm hover:border-slate-500 transition-all flex items-center gap-2 cursor-pointer shadow-sm"
               >
-                <Phone className="w-4 h-4 text-emerald-400" />
-                <span>Call Line: +1 (814) 961-3703</span>
-              </a>
+                <Sparkles className="w-4 h-4 text-cyan-400" />
+                <span>Create Free Account</span>
+              </button>
             </div>
           </div>
         </div>

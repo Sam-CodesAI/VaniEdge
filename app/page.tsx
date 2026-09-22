@@ -12,6 +12,8 @@ import {
   Bot,
   Activity,
   ArrowRight,
+  LogOut,
+  User as UserIcon,
 } from "lucide-react";
 import VaniStudioView, { BusinessCategory, AVAILABLE_CATEGORIES } from "@/components/VaniStudioView";
 import { TelephonyMissionControl } from "@/components/TelephonyMissionControl";
@@ -21,6 +23,7 @@ import IndustrySolutionsSection from "@/components/IndustrySolutionsSection";
 import PricingSection from "@/components/PricingSection";
 import FaqSection from "@/components/FaqSection";
 import LandingFooter from "@/components/LandingFooter";
+import AuthModal, { AuthUser } from "@/components/AuthModal";
 
 interface Message {
   id: string;
@@ -80,6 +83,25 @@ export default function VaniEdgePage() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
+  // Authentication State (ElevenLabs & IBM Platform Standard)
+  const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [authModalMode, setAuthModalMode] = useState<"signin" | "signup">("signup");
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
+
+  const handleOpenAuth = (mode: "signin" | "signup" = "signup") => {
+    setAuthModalMode(mode);
+    setAuthModalOpen(true);
+  };
+
+  const handleSignOut = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("vaniedge_auth_user");
+    }
+    setCurrentUser(null);
+    setUserDropdownOpen(false);
+  };
+
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
     const el = document.getElementById(id);
@@ -92,9 +114,18 @@ export default function VaniEdgePage() {
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
   const recognitionRef = useRef<any>(null);
 
-  // Load browser voices & setup Web Speech Recognition on mount
+  // Load browser voices, restore auth session & setup Web Speech Recognition on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
+      try {
+        const storedUser = localStorage.getItem("vaniedge_auth_user");
+        if (storedUser) {
+          setCurrentUser(JSON.parse(storedUser));
+        }
+      } catch {
+        // Ignore JSON parse errors
+      }
+
       const updateVoices = () => {
         const available = window.speechSynthesis?.getVoices() || [];
         setBrowserVoices(available);
@@ -549,30 +580,86 @@ export default function VaniEdgePage() {
                 </select>
               </div>
 
-              {/* Live PSTN Phone Line Badge */}
-              <a
-                href="tel:+18149613703"
-                className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-mono hover:bg-emerald-900/60 transition-colors shadow-sm cursor-pointer"
-                title="Click to dial live production telephony line"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <Phone className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">+1 (814) 961-3703</span>
-                <span className="sm:hidden">Call</span>
-              </a>
+              {/* Authentication Actions (ElevenLabs & IBM Standard) */}
+              {currentUser ? (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-slate-500 text-xs text-white font-medium transition-all cursor-pointer shadow-sm"
+                  >
+                    <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-emerald-400 to-cyan-500 text-slate-950 font-bold flex items-center justify-center text-[11px]">
+                      {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+                    <span className="hidden sm:inline font-semibold">{currentUser.name}</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono hidden md:inline">
+                      {currentUser.tier}
+                    </span>
+                  </button>
 
-              <a
-                href="https://t.me/Samarth1306"
-                target="_blank"
-                rel="noreferrer"
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 hover:brightness-110 active:scale-95 transition-all cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Claim Line</span>
-              </a>
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#0b121e] border border-slate-700 p-2 shadow-2xl z-50 animate-in fade-in">
+                      <div className="px-3 py-2 border-b border-slate-800">
+                        <div className="text-xs font-bold text-white truncate">{currentUser.name}</div>
+                        <div className="text-[11px] text-slate-400 font-mono truncate">{currentUser.email}</div>
+                      </div>
+                      <div className="py-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            scrollToSection("studio");
+                          }}
+                          className="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                        >
+                          <Bot className="w-3.5 h-3.5 text-cyan-400" />
+                          <span>Interactive Studio</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            scrollToSection("mission-control");
+                          }}
+                          className="w-full text-left px-3 py-1.5 text-xs text-slate-200 hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                        >
+                          <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Carrier Health &amp; Watchdog</span>
+                        </button>
+                      </div>
+                      <div className="pt-1 border-t border-slate-800">
+                        <button
+                          type="button"
+                          onClick={handleSignOut}
+                          className="w-full text-left px-3 py-1.5 text-xs text-rose-400 hover:bg-rose-950/40 rounded-lg transition-colors flex items-center gap-2 cursor-pointer"
+                        >
+                          <LogOut className="w-3.5 h-3.5" />
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenAuth("signin")}
+                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-200 hover:text-white hover:bg-slate-800/80 transition-colors cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleOpenAuth("signup")}
+                    className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 via-cyan-500 to-teal-400 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 hover:brightness-110 active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Get Started Free</span>
+                  </button>
+                </div>
+              )}
 
               {/* Mobile Menu Toggle Button */}
               <button
@@ -638,15 +725,43 @@ export default function VaniEdgePage() {
               >
                 Frequently Asked Questions
               </button>
-              <div className="pt-2 border-t border-slate-800">
-                <a
-                  href="https://t.me/Samarth1306"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block w-full py-2.5 rounded-lg bg-emerald-500 text-slate-950 font-bold text-center text-xs"
-                >
-                  Claim Dedicated Line (@Samarth1306)
-                </a>
+              <div className="pt-2 border-t border-slate-800 space-y-2">
+                {currentUser ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSignOut();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full py-2.5 rounded-lg bg-slate-800 text-rose-400 font-bold text-center text-xs flex items-center justify-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out ({currentUser.name})</span>
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        handleOpenAuth("signin");
+                      }}
+                      className="w-full py-2 rounded-lg bg-slate-800 text-white font-semibold text-center text-xs"
+                    >
+                      Sign In
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        handleOpenAuth("signup");
+                      }}
+                      className="w-full py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold text-center text-xs"
+                    >
+                      Get Started Free
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -656,7 +771,10 @@ export default function VaniEdgePage() {
         <main className="w-full flex-1 flex flex-col">
           {/* 1. Hero Section */}
           <div id="overview">
-            <LandingHero onScrollToStudio={() => scrollToSection("studio")} />
+            <LandingHero
+              onScrollToStudio={() => scrollToSection("studio")}
+              onOpenAuth={handleOpenAuth}
+            />
           </div>
 
           {/* 2. Interactive Live Studio Section */}
@@ -735,8 +853,18 @@ export default function VaniEdgePage() {
         </main>
 
         {/* 8. Modern Conversion Footer */}
-        <LandingFooter />
+        <LandingFooter onOpenAuth={handleOpenAuth} />
       </div>
+
+      {/* Modern Authentication Modal (Google OAuth & Email/Password) */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialMode={authModalMode}
+        onAuthSuccess={(user) => {
+          setCurrentUser(user);
+        }}
+      />
     </div>
   );
 }

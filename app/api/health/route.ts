@@ -12,7 +12,7 @@ export async function GET() {
     providers: {
       twilio: {
         configured: hasTwilio,
-        phoneNumber: process.env.TWILIO_PHONE_NUMBER || "+18149613703",
+        phoneNumber: process.env.TWILIO_PHONE_NUMBER ? "configured" : "carrier-trunk-ready",
       },
       elevenlabs: {
         configured: hasElevenLabs,

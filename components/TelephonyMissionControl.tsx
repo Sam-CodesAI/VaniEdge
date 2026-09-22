@@ -64,14 +64,11 @@ export function TelephonyMissionControl() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-slate-300 font-medium">Carrier PSTN Line:</span>
-          <a
-            href="tel:+18149613703"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/40 text-indigo-300 text-xs font-mono font-bold transition-all"
-          >
-            <PhoneCall className="w-3.5 h-3.5" />
-            +1 (814) 961-3703
-          </a>
+          <span className="text-xs font-mono text-slate-300 font-medium">Carrier Trunk:</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/40 text-indigo-300 text-xs font-mono font-bold">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Dual-Trunk Failover Armed</span>
+          </div>
         </div>
       </div>
 

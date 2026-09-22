@@ -346,18 +346,11 @@ export default function VaniStudioView({
                 )}
               </button>
 
-              {/* Direct Dial Link */}
-              <p className="text-center text-xs text-slate-400 pt-0.5">
-                Or dial direct:{" "}
-                <a
-                  href="tel:+18149613703"
-                  className="text-emerald-400 hover:text-emerald-300 font-mono font-medium hover:underline inline-flex items-center gap-1 ml-1"
-                  title="Dial direct PSTN carrier line"
-                >
-                  <Phone className="w-3 h-3 inline" />
-                  +1 (814) 961-3703
-                </a>
-              </p>
+              {/* Edge Streaming Audio Status */}
+              <div className="flex items-center justify-center gap-2 text-xs text-slate-300 pt-1 font-mono">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>WebRTC Carrier Audio Stream Connected</span>
+              </div>
             </div>
           </div>
         </div>
