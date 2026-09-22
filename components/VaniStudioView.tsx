@@ -256,14 +256,17 @@ export default function VaniStudioView({
 
       {/* 2-COLUMN SIDE-BY-SIDE CONSOLE (Unified Single-Viewport Frame) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-6xl mx-auto items-stretch">
-        {/* Left Column: Voice Core & Call Action */}
+        {/* Left Column: AI Voice Agent & Call Action */}
         <div className="lg:col-span-5 flex flex-col">
           <div className="bg-[#0b121e]/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col justify-between text-center space-y-3 h-full shadow-xl backdrop-blur-md">
             <div className="w-full flex items-center justify-between pb-3 border-b border-slate-800/80">
               <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                <span className="font-bold text-xs uppercase tracking-wider text-slate-300">
-                  Voice Core
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-bold text-xs uppercase tracking-wider text-slate-200">
+                  AI Voice Agent
+                </span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 font-mono hidden sm:inline border border-slate-700/60">
+                  {AVAILABLE_CATEGORIES.find((c) => c.id === selectedPersona)?.label.split(" ")[0] || "Live"}
                 </span>
               </div>
 
