@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SutraHybridEngine } from "@/src/engine/sutradb";
+import { SutraHybridEngine, KnowledgeDocument } from "@/src/engine/sutradb";
 
 // Shared in-memory engine singleton for Next.js edge/server runtime
 const engine = new SutraHybridEngine([
@@ -38,16 +38,76 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required 'query' field" }, { status: 400 });
     }
 
+    const start = performance.now();
     const results = engine.query(query, {
       category,
       filter,
       topK: topK ?? 3,
       minScore: minScore ?? 0,
     });
+    const latencyMs = +(performance.now() - start).toFixed(2);
 
-    return NextResponse.json({ query, count: results.length, results });
+    return NextResponse.json({
+      query,
+      count: results.length,
+      latencyMs,
+      results,
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: message }, { status: 500 });
   }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = (await request.json()) as {
+      id?: string;
+      title: string;
+      content: string;
+      category?: string;
+      metadata?: Record<string, string | number | boolean>;
+    };
+
+    if (!body.title || !body.content) {
+      return NextResponse.json(
+        { error: "Missing required 'title' or 'content' field" },
+        { status: 400 }
+      );
+    }
+
+    const docId = body.id || `doc-${Date.now()}`;
+    const doc: KnowledgeDocument = {
+      id: docId,
+      title: body.title,
+      content: body.content,
+      category: body.category || "general",
+      metadata: body.metadata,
+    };
+
+    const start = performance.now();
+    engine.insert(doc);
+    const latencyMs = +(performance.now() - start).toFixed(2);
+
+    return NextResponse.json(
+      {
+        success: true,
+        document: doc,
+        totalDocuments: engine.size(),
+        latencyMs,
+      },
+      { status: 201 }
+    );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  const documents = engine.exportSnapshot();
+  return NextResponse.json({
+    totalDocuments: documents.length,
+    documents,
+  });
 }
