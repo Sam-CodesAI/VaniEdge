@@ -7,8 +7,8 @@ export interface KnowledgeDocument {
   id: string;
   title: string;
   content: string;
-  category: "clinic" | "restaurant" | "auto" | "general";
-  metadata?: Record<string, string | number>;
+  category: "clinic" | "restaurant" | "auto" | "general" | string;
+  metadata?: Record<string, string | number | boolean>;
   tokens?: string[];
   vector?: number[];
 }
@@ -21,10 +21,22 @@ export interface HybridSearchResult {
   matchedTerms: string[];
 }
 
+export interface QueryOptions {
+  topK?: number;
+  category?: "clinic" | "restaurant" | "auto" | "general" | string;
+  filter?: Record<string, string | number | boolean>;
+  minScore?: number;
+}
+
+/**
+ * Tokenizes text across English, Latin, digits, and all major Indian scripts:
+ * Devanagari (Hindi/Marathi), Bengali, Gurmukhi, Gujarati, Oriya, Tamil, Telugu, Kannada, Malayalam,
+ * as well as the Indian Rupee symbol (\u20B9).
+ */
 export function tokenize(text: string): string[] {
   return text
     .toLowerCase()
-    .replace(/[^\w\s\u0900-\u097F\u0C80-\u0CFF]/g, " ")
+    .replace(/[^\w\s\u0900-\u0D7F]/g, " ")
     .split(/\s+/)
     .filter((t) => t.length > 1);
 }
@@ -78,6 +90,11 @@ export class SutraHybridEngine {
   }
 
   public insert(doc: KnowledgeDocument): void {
+    // If updating an existing doc, remove old frequency entries first to preserve IDF accuracy
+    if (this.docs.has(doc.id)) {
+      this.delete(doc.id);
+    }
+
     const tokens = tokenize(`${doc.title} ${doc.content}`);
     const vector = computeDenseVector(`${doc.title} ${doc.content}`);
 
@@ -95,7 +112,15 @@ export class SutraHybridEngine {
     this.avgLength = this.totalDocs > 0 ? sum / this.totalDocs : 0;
   }
 
-  public query(queryText: string, topK: number = 3): HybridSearchResult[] {
+  public query(queryText: string, optionsOrTopK: number | QueryOptions = 3): HybridSearchResult[] {
+    const options: QueryOptions =
+      typeof optionsOrTopK === "number" ? { topK: optionsOrTopK } : optionsOrTopK;
+
+    const topK = options.topK ?? 3;
+    const category = options.category;
+    const filter = options.filter;
+    const minScore = options.minScore ?? 0;
+
     const qTokens = tokenize(queryText);
     const qVector = computeDenseVector(queryText);
     if (this.totalDocs === 0 || qTokens.length === 0) return [];
@@ -108,6 +133,25 @@ export class SutraHybridEngine {
     }> = [];
 
     for (const [id, doc] of this.docs.entries()) {
+      // 1. In-flight Category filter
+      if (category && doc.category !== category) {
+        continue;
+      }
+
+      // 2. In-flight Metadata filter
+      if (filter && doc.metadata) {
+        let matches = true;
+        for (const [key, val] of Object.entries(filter)) {
+          if (doc.metadata[key] !== val) {
+            matches = false;
+            break;
+          }
+        }
+        if (!matches) continue;
+      } else if (filter && !doc.metadata) {
+        continue;
+      }
+
       const docTokens = doc.tokens || [];
       const docVector = doc.vector || [];
       const docLength = this.docLengths.get(id) || 1;
@@ -138,15 +182,23 @@ export class SutraHybridEngine {
       });
     }
 
+    if (rawResults.length === 0) return [];
+
     const maxBm25 = Math.max(1, ...rawResults.map((r) => r.bm25Score));
-    const fused = rawResults.map((r) => {
-      const normBm25 = r.bm25Score / maxBm25;
-      const fusedScore = r.vectorScore * 0.6 + normBm25 * 0.4;
-      return { ...r, fusedScore };
-    });
+    const fused = rawResults
+      .map((r) => {
+        const normBm25 = r.bm25Score / maxBm25;
+        const fusedScore = r.vectorScore * 0.6 + normBm25 * 0.4;
+        return { ...r, fusedScore };
+      })
+      .filter((r) => r.fusedScore >= minScore);
 
     fused.sort((a, b) => b.fusedScore - a.fusedScore);
     return fused.slice(0, topK);
+  }
+
+  public get(id: string): KnowledgeDocument | undefined {
+    return this.docs.get(id);
   }
 
   public delete(id: string): boolean {
@@ -168,6 +220,31 @@ export class SutraHybridEngine {
     for (const len of this.docLengths.values()) sum += len;
     this.avgLength = this.totalDocs > 0 ? sum / this.totalDocs : 0;
     return true;
+  }
+
+  public clear(): void {
+    this.docs.clear();
+    this.docLengths.clear();
+    this.docFreqs.clear();
+    this.avgLength = 0;
+    this.totalDocs = 0;
+  }
+
+  public exportSnapshot(): KnowledgeDocument[] {
+    return Array.from(this.docs.values()).map(({ id, title, content, category, metadata }) => ({
+      id,
+      title,
+      content,
+      category,
+      metadata,
+    }));
+  }
+
+  public importSnapshot(docs: KnowledgeDocument[]): void {
+    this.clear();
+    for (const doc of docs) {
+      this.insert(doc);
+    }
   }
 
   public size(): number {

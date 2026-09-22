@@ -110,4 +110,103 @@ describe("SutraDB Edge Hybrid Engine", () => {
     const deleteNonExistent = engine.delete("doc-999");
     expect(deleteNonExistent).toBe(false);
   });
+
+  it("filters search results strictly by category", () => {
+    const clinicResults = engine.query("What are the timings?", {
+      category: "clinic",
+      topK: 5,
+    });
+    expect(clinicResults.length).toBeGreaterThan(0);
+    expect(clinicResults.every((r) => r.document.category === "clinic")).toBe(true);
+
+    const autoResults = engine.query("What are the timings?", {
+      category: "auto",
+      topK: 5,
+    });
+    expect(autoResults.every((r) => r.document.category === "auto")).toBe(true);
+  });
+
+  it("filters search results using arbitrary metadata key-value pairs", () => {
+    engine.insert({
+      id: "doc-meta-1",
+      title: "Pediatric Emergency Ward",
+      content: "Pediatric intensive care available 24/7.",
+      category: "clinic",
+      metadata: { department: "pediatrics", tier: "emergency" },
+    });
+
+    engine.insert({
+      id: "doc-meta-2",
+      title: "Dental OPD",
+      content: "General dental outpatient department open 9 AM to 5 PM.",
+      category: "clinic",
+      metadata: { department: "dental", tier: "routine" },
+    });
+
+    const emergencyResults = engine.query("care available", {
+      filter: { department: "pediatrics" },
+    });
+    expect(emergencyResults.length).toBe(1);
+    expect(emergencyResults[0].document.id).toBe("doc-meta-1");
+
+    const dentalResults = engine.query("department open", {
+      filter: { department: "dental" },
+    });
+    expect(dentalResults.length).toBe(1);
+    expect(dentalResults[0].document.id).toBe("doc-meta-2");
+  });
+
+  it("tokenizes Pan-Indian Indic scripts including Tamil, Telugu, and Bengali", () => {
+    // Tamil: பல் மருத்துவமனை (Dental Clinic)
+    const tamilTokens = tokenize("பல் மருத்துவமனை நேரங்கள் ₹300 கட்டணம்");
+    expect(tamilTokens).toContain("மருத்துவமனை");
+
+    // Telugu: దంత వైద్యశాల (Dental Hospital)
+    const teluguTokens = tokenize("దంత వైద్యశాల వేళలు ₹400 ఫీజు");
+    expect(teluguTokens).toContain("వైద్యశాల");
+
+    // Bengali: ডেন্টাল ক্লিনিক
+    const bengaliTokens = tokenize("ডেন্টাল ক্লিনিক সময়সূচী");
+    expect(bengaliTokens).toContain("ক্লিনিক");
+  });
+
+  it("handles document upserts cleanly without corrupting totalDocs or frequencies", () => {
+    const initialSize = engine.size();
+    engine.insert({
+      id: "doc-1",
+      title: "Updated Clinic Timings",
+      content: "Dr. Sharma clinic is now open from 8 AM to 3 PM with fee 600 rupees.",
+      category: "clinic",
+    });
+
+    expect(engine.size()).toBe(initialSize); // Same size after update
+    const updated = engine.get("doc-1");
+    expect(updated?.title).toBe("Updated Clinic Timings");
+    expect(updated?.content).toContain("8 AM to 3 PM");
+
+    const results = engine.query("8 AM to 3 PM", 1);
+    expect(results[0].document.id).toBe("doc-1");
+  });
+
+  it("exports and imports snapshots faithfully", () => {
+    const snapshot = engine.exportSnapshot();
+    expect(snapshot.length).toBe(engine.size());
+
+    const newEngine = new SutraHybridEngine();
+    expect(newEngine.size()).toBe(0);
+
+    newEngine.importSnapshot(snapshot);
+    expect(newEngine.size()).toBe(snapshot.length);
+
+    const queryResults = newEngine.query("Dr Sharma fee", 1);
+    expect(queryResults.length).toBe(1);
+    expect(queryResults[0].document.id).toBe("doc-1");
+  });
+
+  it("filters results below minScore threshold", () => {
+    const allResults = engine.query("clinic", { topK: 10, minScore: 0 });
+    const filteredResults = engine.query("clinic", { topK: 10, minScore: 0.5 });
+    expect(filteredResults.length).toBeLessThanOrEqual(allResults.length);
+    expect(filteredResults.every((r) => r.fusedScore >= 0.5)).toBe(true);
+  });
 });
