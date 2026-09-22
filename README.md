@@ -1,5 +1,11 @@
-# 🎙️⚡ VaniEdge Voice Platform (वाणी Edge)
-### The Complete Enterprise Edge Telephony & Multi-Lingual Voice AI Platform with Sub-Second Failover (Zero Dropped Calls) & SutraDB RAG
+<p align="center">
+  <img src="public/vaniedge-logo.png" width="160" height="160" alt="VaniEdge Voice Platform Logo" style="border-radius: 24px;" />
+</p>
+
+<h1 align="center">🎙️⚡ VaniEdge Voice Platform (वाणी Edge)</h1>
+<p align="center">
+  <strong>The Complete Enterprise Edge Telephony &amp; Multi-Lingual Voice AI Platform with Sub-Second Failover (Zero Dropped Calls) &amp; SutraDB RAG</strong>
+</p>
 
 [![Vitest Tests](https://img.shields.io/badge/Vitest-79%2F79%20Passing-brightgreen?style=flat-square&logo=vitest)](tests/)
 [![Test Suites](https://img.shields.io/badge/Test%20Suites-10%20Passing-brightgreen?style=flat-square&logo=vitest)](tests/)

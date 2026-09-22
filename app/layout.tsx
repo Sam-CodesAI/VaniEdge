@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VaniEdge AI — Sub-Second Edge Voice AI for Local Businesses",
+  metadataBase: new URL("https://vaniedge.vercel.app"),
+  title: "VaniEdge Voice Platform — Sub-Second Edge Voice AI & Telephony",
   description:
     "Autonomous 24/7 multi-lingual AI phone answering and voice dispatch for clinics, restaurants, and local businesses.",
   keywords: [
@@ -15,12 +16,25 @@ export const metadata: Metadata = {
     "ElevenLabs",
   ],
   authors: [{ name: "Samarth Nimangre", url: "https://sam-codes.vercel.app" }],
+  icons: {
+    icon: "/vaniedge-logo.png",
+    shortcut: "/vaniedge-logo.png",
+    apple: "/vaniedge-logo.png",
+  },
   openGraph: {
-    title: "VaniEdge AI — Autonomous Phone Answering for Local Businesses",
+    title: "VaniEdge Voice Platform — Enterprise Voice AI & Telephony",
     description:
       "Instant multi-lingual customer answering with sub-second latency, zero dropped calls, and direct carrier phone support.",
     url: "https://vaniedge.vercel.app",
-    siteName: "VaniEdge AI",
+    siteName: "VaniEdge Voice Platform",
+    images: [
+      {
+        url: "/vaniedge-logo.png",
+        width: 1024,
+        height: 1024,
+        alt: "VaniEdge Voice Platform Logo",
+      },
+    ],
     type: "website",
   },
   twitter: {

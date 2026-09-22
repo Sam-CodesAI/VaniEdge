@@ -364,17 +364,24 @@ export default function VaniEdgePage() {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             {/* Left Brand */}
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-cyan-400 p-0.5 shadow-md">
-                <div className="h-full w-full bg-[#070b12] rounded-[6px] flex items-center justify-center">
-                  <Flame className="w-4 h-4 text-emerald-400" />
-                </div>
+              <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(6,182,212,0.35)] border border-cyan-500/40 group hover:border-cyan-400 transition-all shrink-0">
+                <img
+                  src="/vaniedge-logo.png"
+                  alt="VaniEdge Voice Platform Logo"
+                  className="h-full w-full object-cover transform group-hover:scale-105 transition-transform"
+                />
               </div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-base sm:text-lg tracking-tight text-white">
-                  VaniEdge AI
-                </span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                  Voice Studio
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-cyan-100 to-emerald-400 bg-clip-text text-transparent">
+                    VaniEdge
+                  </span>
+                  <span className="text-[9px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold tracking-wider">
+                    VOICE PLATFORM
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-400 font-mono -mt-0.5 hidden sm:block">
+                  Sub-Second Telephony &amp; SutraDB RAG
                 </span>
               </div>
             </div>

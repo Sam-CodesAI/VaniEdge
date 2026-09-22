@@ -42,8 +42,12 @@ export function TelephonyMissionControl() {
     <div className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-2xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-            <ShieldCheck className="w-5 h-5" />
+          <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)] shrink-0">
+            <img
+              src="/vaniedge-logo.png"
+              alt="VaniEdge Voice Platform"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
             <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
