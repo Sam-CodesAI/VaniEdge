@@ -79,17 +79,17 @@ export default function PricingSection() {
           <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
             Transparent Pricing. Zero Hidden Fees.
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-400">
+          <p className="mt-3 text-base sm:text-lg text-slate-200 font-medium">
             Every plan includes our sub-second telephony runtime, embedded SutraDB vector memory, and multi-lingual dispatch.
           </p>
 
           {/* Billing Switcher Toggle */}
-          <div className="mt-6 inline-flex items-center gap-3 p-1 rounded-xl bg-slate-900 border border-slate-800">
+          <div className="mt-6 inline-flex items-center gap-3 p-1 rounded-xl bg-slate-900 border border-slate-700">
             <button
               type="button"
               onClick={() => setIsAnnual(false)}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                !isAnnual ? "bg-slate-800 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"
+                !isAnnual ? "bg-slate-800 text-white shadow-sm" : "text-slate-300 hover:text-white"
               }`}
             >
               Monthly Billing
@@ -100,7 +100,7 @@ export default function PricingSection() {
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                 isAnnual
                   ? "bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 shadow-md font-bold"
-                  : "text-slate-400 hover:text-slate-200"
+                  : "text-slate-300 hover:text-white"
               }`}
             >
               <span>Annual Billing</span>
@@ -120,12 +120,12 @@ export default function PricingSection() {
                 key={idx}
                 className={`rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-200 relative ${
                   plan.highlight
-                    ? "bg-gradient-to-b from-slate-900/90 via-[#0b1322] to-slate-950 border-2 border-emerald-500/60 shadow-[0_0_40px_rgba(16,185,129,0.2)] lg:-translate-y-2"
-                    : "bg-slate-900/60 border border-slate-800 hover:border-slate-700 shadow-lg"
+                    ? "bg-gradient-to-b from-slate-900 via-[#0b1322] to-slate-950 border-2 border-emerald-500 shadow-[0_0_35px_rgba(16,185,129,0.25)] ring-1 ring-emerald-400/40"
+                    : "bg-slate-900 border border-slate-700/80 shadow-lg"
                 }`}
               >
                 {plan.highlight && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-emerald-500 text-slate-950 text-[11px] font-black uppercase tracking-wider shadow-md">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-emerald-500 text-slate-950 text-xs font-black uppercase tracking-wider shadow-md">
                     {plan.badge}
                   </div>
                 )}
@@ -134,12 +134,12 @@ export default function PricingSection() {
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="text-xl font-bold text-white">{plan.name}</h3>
                     {!plan.highlight && (
-                      <span className="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded bg-slate-800">
+                      <span className="text-xs font-mono text-slate-200 px-2 py-0.5 rounded bg-slate-800 border border-slate-700">
                         {plan.badge}
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-xs text-slate-400 leading-relaxed min-h-[36px]">
+                  <p className="mt-2 text-sm text-slate-200 leading-relaxed min-h-[38px] font-normal">
                     {plan.description}
                   </p>
 
@@ -148,19 +148,19 @@ export default function PricingSection() {
                       <span className="text-4xl sm:text-5xl font-black text-white font-mono">
                         ${price}
                       </span>
-                      <span className="text-slate-400 text-xs font-medium">/ month</span>
+                      <span className="text-slate-300 text-xs font-medium">/ month</span>
                     </div>
-                    <span className="text-[11px] text-slate-500 block mt-1">
+                    <span className="text-xs text-slate-300 block mt-1">
                       {isAnnual ? "Billed annually ($" + price * 12 + "/yr)" : "Billed monthly"}
                     </span>
                   </div>
 
                   <div className="space-y-3 mb-8">
-                    <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold block">
+                    <span className="text-xs font-mono text-cyan-300 uppercase tracking-wider font-semibold block">
                       Everything included:
                     </span>
                     {plan.features.map((feature, fIdx) => (
-                      <div key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-300">
+                      <div key={fIdx} className="flex items-start gap-2.5 text-xs text-slate-200 font-normal">
                         <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                         <span>{feature}</span>
                       </div>
@@ -172,10 +172,10 @@ export default function PricingSection() {
                   href={plan.ctaLink}
                   target="_blank"
                   rel="noreferrer"
-                  className={`w-full py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
+                  className={`w-full py-3.5 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
                     plan.highlight
                       ? "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20 hover:brightness-110 active:scale-98"
-                      : "bg-slate-800 hover:bg-slate-700 text-white hover:border-slate-600 border border-slate-700 active:scale-98"
+                      : "bg-slate-800 hover:bg-slate-700 text-white hover:border-slate-500 border border-slate-700 active:scale-98"
                   }`}
                 >
                   <span>{plan.ctaText}</span>
@@ -187,7 +187,7 @@ export default function PricingSection() {
         </div>
 
         {/* Footnote Assurance */}
-        <div className="mt-12 text-center text-xs text-slate-400 flex flex-wrap items-center justify-center gap-6">
+        <div className="mt-12 text-center text-xs text-slate-300 flex flex-wrap items-center justify-center gap-6 font-medium">
           <span className="flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             24-Hour Deployment Guarantee

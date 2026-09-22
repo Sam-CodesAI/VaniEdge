@@ -39,7 +39,7 @@ export function TelephonyMissionControl() {
   }, []);
 
   return (
-    <div className="w-full bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-2xl">
+    <div className="w-full bg-[#0b121e] border border-slate-700/80 rounded-2xl p-6 shadow-2xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
         <div className="flex items-center gap-3">
           <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)] shrink-0">
@@ -52,22 +52,22 @@ export function TelephonyMissionControl() {
           <div>
             <h3 className="text-lg font-bold text-slate-100 flex items-center gap-2">
               Sub-Second Telephony Watchdog Failover
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono border border-emerald-500/30 flex items-center gap-1.5">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/40 flex items-center gap-1.5 font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 ACTIVE
               </span>
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300 font-normal">
               Real-time PSTN carrier monitoring with zero-dropped-call guarantee
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-slate-400">Carrier PSTN Line:</span>
+          <span className="text-xs font-mono text-slate-300 font-medium">Carrier PSTN Line:</span>
           <a
             href="tel:+18149613703"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 text-xs font-mono font-bold transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/40 text-indigo-300 text-xs font-mono font-bold transition-all"
           >
             <PhoneCall className="w-3.5 h-3.5" />
             +1 (814) 961-3703
@@ -76,40 +76,40 @@ export function TelephonyMissionControl() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
-        <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/50">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+        <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/80">
+          <div className="flex items-center justify-between text-slate-300 text-xs mb-2 font-medium">
             <span className="flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-amber-400" />
               Connection Watchdog SLA
             </span>
-            <span className="font-mono text-amber-400">1,200 ms</span>
+            <span className="font-mono text-amber-300 font-bold">1,200 ms</span>
           </div>
           <div className="text-2xl font-black text-slate-100 font-mono">
             {metrics?.latencies?.["stream_handshake"]?.p50 ?? 92.4} ms
           </div>
-          <div className="text-[11px] text-emerald-400 mt-1 flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" /> 92.3% head-room below SLA limit
+          <div className="text-xs text-emerald-400 mt-1 flex items-center gap-1 font-medium">
+            <CheckCircle2 className="w-3.5 h-3.5" /> 92.3% head-room below SLA limit
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/50">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+        <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/80">
+          <div className="flex items-center justify-between text-slate-300 text-xs mb-2 font-medium">
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-indigo-400" />
               Conversational TTFT SLA
             </span>
-            <span className="font-mono text-indigo-400">1,500 ms</span>
+            <span className="font-mono text-indigo-300 font-bold">1,500 ms</span>
           </div>
           <div className="text-2xl font-black text-slate-100 font-mono">
             {metrics?.latencies?.["turn_ttft"]?.p50 ?? 385.0} ms
           </div>
-          <div className="text-[11px] text-emerald-400 mt-1 flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" /> Sub-400ms turn-taking latency
+          <div className="text-xs text-emerald-400 mt-1 flex items-center gap-1 font-medium">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Sub-400ms turn-taking latency
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-700/50">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+        <div className="p-4 rounded-xl bg-slate-800/60 border border-slate-700/80">
+          <div className="flex items-center justify-between text-slate-300 text-xs mb-2 font-medium">
             <span className="flex items-center gap-1.5">
               <Activity className="w-3.5 h-3.5 text-emerald-400" />
               Mid-Flight Reroute SLA

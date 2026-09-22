@@ -258,7 +258,7 @@ export default function VaniStudioView({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-6xl mx-auto items-stretch">
         {/* Left Column: AI Voice Agent & Call Action */}
         <div className="lg:col-span-5 flex flex-col">
-          <div className="bg-[#0b121e]/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col justify-between text-center space-y-3 h-full shadow-xl backdrop-blur-md">
+          <div className="bg-[#0b121e] border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between text-center space-y-3 h-full shadow-xl">
             <div className="w-full flex items-center justify-between pb-3 border-b border-slate-800/80">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -364,7 +364,7 @@ export default function VaniStudioView({
 
         {/* Right Column: Live Transcript & Simulated Query */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="bg-[#0b121e]/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col justify-between h-full min-h-[440px] shadow-xl backdrop-blur-md">
+          <div className="bg-[#0b121e] border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between h-full min-h-[440px] shadow-xl">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800/80 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-xs uppercase tracking-wider text-slate-300">

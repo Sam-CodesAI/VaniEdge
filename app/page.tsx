@@ -418,14 +418,14 @@ export default function VaniEdgePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 selection:bg-emerald-500 selection:text-black font-sans antialiased scroll-smooth">
+    <div className="min-h-screen bg-[#070b12] text-slate-100 selection:bg-emerald-500 selection:text-black scroll-smooth">
       {/* Hidden Audio Player for ElevenLabs Streaming */}
       <audio ref={audioPlayerRef} className="hidden" />
 
       {/* Main Content Area */}
       <div className="flex flex-col min-h-screen w-full">
-        {/* Top Sticky Navigation Bar */}
-        <header className="border-b border-slate-800/80 bg-[#090e17]/95 backdrop-blur-xl sticky top-0 z-50">
+        {/* Top Sticky Navigation Bar (Solid Background - No Backdrop Blur Subpixel Degradation) */}
+        <header className="border-b border-slate-800 bg-[#090e17] sticky top-0 z-50 shadow-md">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             {/* Left Brand */}
             <a
@@ -448,29 +448,29 @@ export default function VaniEdgePage() {
                   <span className="font-black text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-cyan-100 to-emerald-400 bg-clip-text text-transparent">
                     VaniEdge
                   </span>
-                  <span className="text-[9px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold tracking-wider">
+                  <span className="text-[9px] uppercase font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold tracking-wider">
                     VOICE PLATFORM
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-400 font-mono -mt-0.5 hidden sm:block">
+                <span className="text-[10px] text-slate-300 font-mono -mt-0.5 hidden sm:block">
                   Sub-Second Telephony &amp; SutraDB RAG
                 </span>
               </div>
             </a>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300">
+            <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-200">
               <button
                 type="button"
                 onClick={() => scrollToSection("overview")}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 Overview
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("studio")}
-                className="hover:text-cyan-400 transition-colors cursor-pointer flex items-center gap-1.5"
+                className="hover:text-cyan-300 transition-colors cursor-pointer flex items-center gap-1.5"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Live Studio
@@ -478,35 +478,35 @@ export default function VaniEdgePage() {
               <button
                 type="button"
                 onClick={() => scrollToSection("industries")}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 8 Industries
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("architecture")}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 Architecture
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("mission-control")}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 Failover Watchdog
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("pricing")}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 Pricing
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection("faq")}
-                className="hover:text-cyan-400 transition-colors cursor-pointer"
+                className="hover:text-cyan-300 transition-colors cursor-pointer"
               >
                 FAQ
               </button>

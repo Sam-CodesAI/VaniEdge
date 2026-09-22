@@ -17,8 +17,10 @@ export default function LandingFooter() {
     <footer className="bg-[#05080e] border-t border-slate-800/80 pt-16 pb-12 text-slate-400 text-xs">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Call to Action Banner */}
-        <div className="rounded-2xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-cyan-950/60 border border-emerald-500/30 p-8 sm:p-12 mb-16 text-center relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 blur-[90px] pointer-events-none rounded-full" />
+        <div
+          className="rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-cyan-950/80 border border-emerald-500/40 p-8 sm:p-12 mb-16 text-center relative overflow-hidden shadow-2xl"
+          style={{ backgroundImage: "radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.15) 0%, transparent 60%)" }}
+        >
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/50 border border-emerald-500/40 text-emerald-300 text-xs font-mono font-semibold">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
@@ -27,7 +29,7 @@ export default function LandingFooter() {
             <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
               Ready to automate your business calls with sub-second AI?
             </h2>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-normal">
               Eliminate missed calls and scale customer intake across 8 industry verticals. Speak directly with the architect to claim your dedicated phone line today.
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
@@ -64,10 +66,10 @@ export default function LandingFooter() {
                 VaniEdge Voice Platform
               </span>
             </div>
-            <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
+            <p className="text-slate-300 text-xs leading-relaxed max-w-sm">
               The sovereign multi-lingual telephony &amp; voice agent platform. Built with Next.js 16 Turbopack, Cloudflare edge streaming, sub-1,200ms failover watchdogs, and embedded SutraDB vector memory.
             </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-500">
+            <div className="pt-1 text-[11px] font-mono text-slate-400">
               MIT License • Built by Samarth Nimangre
             </div>
           </div>

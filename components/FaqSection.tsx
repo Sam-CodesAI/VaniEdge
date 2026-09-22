@@ -48,14 +48,14 @@ export default function FaqSection() {
     <section id="faq" className="py-16 sm:py-24 border-b border-slate-800/80 bg-[#070b12] relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 text-xs font-mono font-medium mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-700 text-slate-200 text-xs font-mono font-semibold mb-3">
             <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
             <span>FREQUENTLY ASKED QUESTIONS</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
             Everything You Need to Know
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-400">
+          <p className="mt-3 text-base sm:text-lg text-slate-200 font-medium">
             Got questions about edge failover, regional languages, or deployment? We've got answers.
           </p>
         </div>
@@ -66,23 +66,23 @@ export default function FaqSection() {
             return (
               <div
                 key={idx}
-                className="rounded-xl bg-slate-900/60 border border-slate-800/90 overflow-hidden transition-colors"
+                className="rounded-xl bg-slate-900 border border-slate-700/80 overflow-hidden transition-colors"
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-white hover:text-cyan-300 transition-colors cursor-pointer"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-white hover:text-cyan-300 transition-colors cursor-pointer"
                 >
                   <span>{faq.question}</span>
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+                    className={`w-4 h-4 text-slate-300 shrink-0 transition-transform duration-200 ${
                       isOpen ? "rotate-180 text-cyan-400" : ""
                     }`}
                   />
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/50 pt-3">
+                  <div className="px-5 pb-5 text-sm text-slate-200 leading-relaxed border-t border-slate-800 pt-3.5 font-normal">
                     {faq.answer}
                   </div>
                 )}
