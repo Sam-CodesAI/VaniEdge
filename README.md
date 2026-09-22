@@ -1,15 +1,16 @@
 # 🎙️ VaniEdge AI (वाणी Edge)
-### Sub-Second Edge-Native Voice AI Telephony & Multi-Lingual Dispatcher for Small Businesses with SutraDB RAG
+### Sub-Second Edge-Native Voice AI Telephony & Multi-Lingual Assistant for Small Businesses with SutraDB RAG
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSam-CodesAI%2FVaniEdge)
 [![Vitest Tests](https://img.shields.io/badge/Vitest-45%2F45%20Passing-brightgreen?style=flat-square&logo=vitest)](tests/)
 [![TypeScript Strict](https://img.shields.io/badge/TypeScript-Strict%20v5.7-blue?style=flat-square&logo=typescript)](tsconfig.json)
 [![Edge Runtime](https://img.shields.io/badge/Edge%20Runtime-Cloudflare%20Workers%20%7C%20Node.js-orange?style=flat-square&logo=cloudflare)](https://workers.cloudflare.com)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.3%20Turbopack-black?style=flat-square&logo=next.js)](https://nextjs.org)
-[![Live Demo](https://img.shields.io/badge/Live%20Mission%20Control-Online-emerald?style=flat-square)](https://sam-codes.vercel.app/vaniedge)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4.0-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com)
 
-> **Built for Hack Devengers 2.0 (Unstop Open Innovation)**  
+> **Live Production Website:** [vaniedge.vercel.app](https://vaniedge.vercel.app)  
 > **Live Dialable Telephony Line:** `+1 (814) 961-3703`  
-> **Mission Control UI:** [sam-codes.vercel.app/vaniedge](https://sam-codes.vercel.app/vaniedge)
+> **GitHub Repository:** [github.com/Sam-CodesAI/VaniEdge](https://github.com/Sam-CodesAI/VaniEdge)
 
 ---
 
@@ -17,13 +18,14 @@
 
 Small businesses across India and emerging markets lose over **35% of inbound customers** due to missed calls, busy signals, and language friction during peak hours. Traditional cloud-based voice agents suffer from **2.5 to 5+ second latency** and expensive vector database subscription fees ($70+/month for Pinecone/Weaviate).
 
-**VaniEdge AI** is a zero-downtime, edge-native telephony and multi-lingual voice agent that:
-1. **Answers incoming PSTN phone calls within 350ms** via bidirectional 8kHz μ-law WebSocket streaming on Cloudflare Workers edge nodes and Node.js runtimes.
-2. **Speaks and understands Pan-Indian languages** (English, Hindi हिंदी, Kannada ಕನ್ನಡ, Tamil தமிழ், Telugu తెలుగు, and Bengali বাংলা).
-3. **Embeds SutraDB In-Memory RAG**: A zero-dependency hybrid vector database (BM25 lexical + dense character n-gram embeddings) that executes local semantic document queries in **under 10ms with zero SaaS subscription fees**. Supports category filtering, metadata matching, and atomic snapshots.
-4. **Autonomous Booking & Ticket Dispatch**: Automatically extracts caller intent, schedules clinic appointments, restaurant food orders, or roadside recovery, generates cryptographic checksum ticket IDs, and dispatches localized SMS confirmations.
-5. **Turn-Based Sub-Second Watchdog**: Protects live conversations with a strict **1,200ms connection and 1,500ms TTFT deadline** both at initial connect and per conversational turn. If upstream AI providers degrade, calls are mid-call redirected to backup queues via Twilio REST API with **zero dropped calls**.
-6. **Universal Edge HTTP Server Handler**: Complete zero-dependency web request handler (`createVaniEdgeHandler`) compatible with Cloudflare Workers, Node.js HTTP servers, Next.js API routes, and Bun.
+**VaniEdge AI** is a complete, self-contained Next.js & Edge-Native voice platform that delivers:
+1. **Interactive In-Browser Voice Studio**: Real-time microphone listening, ElevenLabs edge streaming audio synthesis, and responsive breathing orb audio physics at [vaniedge.vercel.app](https://vaniedge.vercel.app).
+2. **Answers incoming PSTN phone calls within 350ms** via bidirectional 8kHz μ-law WebSocket streaming on Cloudflare Workers edge nodes and Node.js runtimes.
+3. **Multi-Lingual Voice Support**: Fluent customer conversations in **English, Hindi (हिंदी), Kannada (ಕನ್ನಡ), Marathi (मराठी), Tamil (தமிழ்), Telugu (తెలుగు), and Bengali (বাংলা)**.
+4. **Embedded SutraDB Hybrid RAG**: Zero-dependency in-memory vector database (BM25 lexical + dense character n-gram embeddings) running local semantic queries in **under 10ms with zero monthly SaaS fees**. Supports category filtering, arbitrary metadata matching, and atomic snapshots.
+5. **Autonomous Booking & Ticket Dispatch**: Automatically extracts caller intent, schedules clinic appointments, restaurant orders, or roadside rescues with cryptographic verification signatures and localized SMS confirmations.
+6. **Turn-Based Sub-Second Watchdog**: Protects live conversations with a strict **1,200ms connection and 1,500ms TTFT deadline** both at initial connect and per conversational turn. If upstream AI providers degrade, calls are mid-call redirected to backup queues via Twilio REST API with **zero dropped calls**.
+7. **Universal Edge HTTP Server Handler**: Complete zero-dependency web request handler (`createVaniEdgeHandler`) compatible with Cloudflare Workers, Node.js HTTP servers, Next.js API routes, and Bun.
 
 ---
 
@@ -32,49 +34,43 @@ Small businesses across India and emerging markets lose over **35% of inbound cu
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Caller as 📞 Customer Phone
-    participant Twilio as 🌐 Twilio Voice Gateway
-    participant Edge as ⚡ Cloudflare Worker / Node (VaniEdge)
+    actor Caller as 📞 Customer Phone / Browser
+    participant Gateway as 🌐 Twilio / Next.js Edge (VaniEdge)
     participant Sutra as 🧠 SutraDB In-Memory RAG
-    participant ConvAI as 🎙️ ElevenLabs / Speech API
+    participant ConvAI as 🎙️ ElevenLabs Streaming TTS
     participant Watchdog as 🛡️ Sub-Second Turn Watchdog
-    participant Dispatch as 📋 Booking & Ticket Dispatch
+    participant Dispatch as 📋 Booking & Confirmation Dispatch
 
-    Caller->>Twilio: Inbound Phone Call (+1 814 961-3703)
-    Twilio->>Edge: HTTP POST Webhook (/voice/incoming)
-    Edge-->>Twilio: TwiML 200 OK (<Connect><Stream>)
-    Twilio->>Edge: Bidirectional 8kHz μ-law WebSocket
-
+    Caller->>Gateway: Inbound Call / Voice Audio Stream
     par Telephony Streaming & Watchdog
-        Edge->>Watchdog: Arm 1,200ms Connection Deadline
-        Edge->>ConvAI: WebSocket Media Stream Handshake
-        ConvAI-->>Edge: Handshake Confirmed
-        Edge->>Watchdog: Disarm Connect Timer, Arm 1,500ms TTFT
+        Gateway->>Watchdog: Arm 1,200ms Connection Deadline
+        Gateway->>ConvAI: Edge Audio Stream Handshake
+        ConvAI-->>Gateway: Handshake Confirmed
+        Gateway->>Watchdog: Disarm Connect Timer, Arm 1,500ms TTFT
     and RAG Semantic Retrieval
-        Edge->>Sutra: Query Context (BM25 + Vector Fusion)
-        Sutra-->>Edge: Top-K Facts Retrieved (<10ms)
+        Gateway->>Sutra: Query Context (BM25 + Dense Vector Fusion)
+        Sutra-->>Gateway: Top-K Facts Retrieved (<10ms)
     end
 
-    ConvAI-->>Edge: Audio Chunk (First Packet in 340ms)
-    Edge->>Watchdog: Disarm TTFT Timer (Health Confirmed)
-    Edge->>Twilio: 8kHz μ-law Audio Frames
-    Twilio->>Caller: Natural Multi-Lingual Speech Response
+    ConvAI-->>Gateway: Audio Chunk (First Packet in 340ms)
+    Gateway->>Watchdog: Disarm TTFT Timer (Health Confirmed)
+    Gateway->>Caller: Natural Multi-Lingual Speech Response
 
     loop Conversational Turn Loop
-        Caller->>Edge: User Speech Finished
-        Edge->>Watchdog: onUserTurnCompleted() (Arm 1,500ms Turn TTFT)
-        ConvAI-->>Edge: Agent Synthesized Audio
-        Edge->>Watchdog: onAgentSpeechStarted() (Disarm Turn TTFT)
+        Caller->>Gateway: User Speech Finished
+        Gateway->>Watchdog: onUserTurnCompleted() (Arm 1,500ms Turn TTFT)
+        ConvAI-->>Gateway: Agent Synthesized Audio
+        Gateway->>Watchdog: onAgentSpeechStarted() (Disarm Turn TTFT)
     end
 
-    opt Intent Detected (Appointment / Order / Recovery)
-        Edge->>Dispatch: Extract Name, Phone, Service & Slot
-        Dispatch-->>Caller: Instant Multi-Lingual SMS Confirmation + Checksum Ticket ID
+    opt Intent Detected (Appointment / Order / Dispatch)
+        Gateway->>Dispatch: Extract Caller Name, Phone, Service & Slot
+        Dispatch-->>Caller: Instant Multi-Lingual SMS Confirmation + Cryptographic Ticket ID
     end
 
     opt Upstream Glitch (>1,500ms)
-        Watchdog->>Twilio: Mid-Call REST Redirection (/voice/fallback)
-        Twilio->>Caller: Seamless Transfer to Human / Backup PSTN Queue
+        Watchdog->>Gateway: Mid-Call REST Redirection (/voice/fallback)
+        Gateway->>Caller: Seamless Transfer to Human / Backup PSTN Queue
     end
 ```
 
@@ -83,7 +79,7 @@ sequenceDiagram
 ## ⚡ Technical Highlights
 
 ### 1. SutraDB Hybrid Vector & Lexical Engine
-* **Pure TypeScript zero-dependency engine** ported from Python SutraDB.
+* **Pure TypeScript zero-dependency engine** (`src/engine/sutradb.ts` & `lib/sutradb-engine.ts`).
 * Combines **BM25 Okapi** ($k_1=1.5, b=0.75$) with normalized **64-dimensional character n-gram dense semantic hashing**.
 * Blended using **Reciprocal Rank Fusion (RRF)**:
   $$\text{Fused Score} = 0.60 \times \text{Dense Vector Score} + 0.40 \times \text{Normalized BM25 Score}$$
@@ -94,7 +90,7 @@ sequenceDiagram
 ### 2. Sub-Second Watchdog Failover (Zero Dropped Calls)
 * Standard phone users hang up if latency exceeds **2.0 seconds**.
 * VaniEdge runs an active edge watchdog:
-  * **1,200ms Connection Timeout**: If the speech WebSocket handshake exceeds 1,200ms, watchdog triggers mid-call Twilio REST redirection.
+  * **1,200ms Connection Timeout**: If the speech WebSocket handshake exceeds 1,200ms, watchdog triggers graceful failover.
   * **1,500ms TTFT Timeout**: If the first synthesized audio packet fails to arrive within 1,500ms, call is gracefully handed to backup queues.
   * **Turn-Based Watchdog**: `onUserTurnCompleted()` and `onAgentSpeechStarted()` continuously monitor latency across back-and-forth conversational turns.
   * **Idempotent Failover Protection**: Guard ensures failover actions only dispatch once, eliminating race condition double-calls.
@@ -140,43 +136,44 @@ $ pnpm test
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/Sam-CodesAI/VaniEdge-AI.git
-cd VaniEdge-AI
+git clone https://github.com/Sam-CodesAI/VaniEdge.git
+cd VaniEdge
 pnpm install
 ```
 
-### 2. Run Test Suite
+### 2. Run Locally (Next.js Studio)
+```bash
+pnpm dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 3. Run Test Suite
 ```bash
 pnpm test
 ```
 
-### 3. Typecheck & Build
+### 4. Build for Production
 ```bash
-pnpm typecheck
 pnpm build
 ```
 
-### 4. Running the Server
-```typescript
-import { createServer } from "node:http";
-import { createVaniEdgeHandler, SutraHybridEngine, TicketDispatcher } from "vaniedge-ai";
+---
 
-const engine = new SutraHybridEngine();
-const dispatcher = new TicketDispatcher();
+## ☁️ Deploying to Vercel
 
-const handler = createVaniEdgeHandler({
-  engine,
-  dispatcher,
-  fallbackNumber: "+18005550199",
-  twilioPhoneNumber: "+18149613703",
-});
+### Option 1: One-Click Deploy Button
+Click the button below to fork and deploy directly to your Vercel account:
 
-// Works seamlessly in Cloudflare Workers:
-// export default { fetch: handler };
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSam-CodesAI%2FVaniEdge)
 
-// Or in standard Node.js:
-// ...
-```
+### Option 2: Import via Vercel Dashboard
+1. Go to [vercel.com/new](https://vercel.com/new).
+2. Select repository **`Sam-CodesAI/VaniEdge`**.
+3. Framework Preset: **Next.js** (auto-detected).
+4. Root Directory: `./` (leave default).
+5. (Optional) Add Environment Variables:
+   * `ELEVENLABS_API_KEY`: Your ElevenLabs API key for edge voice streaming (graceful browser voice fallback is enabled automatically if omitted).
+6. Click **Deploy**.
 
 ---
 
@@ -185,5 +182,5 @@ const handler = createVaniEdgeHandler({
 * **Developer:** **Samarth Nimangre**
 * **Portfolio:** [sam-codes.vercel.app](https://sam-codes.vercel.app)
 * **Telegram:** [@Samarth1306](https://t.me/Samarth1306)
-* **GitHub:** [Sam-CodesAI](https://github.com/Sam-CodesAI) / [SamarthNimangre](https://github.com/SamarthNimangre)
+* **GitHub:** [@Sam-CodesAI](https://github.com/Sam-CodesAI) / [@samarthnimangre-dev](https://github.com/samarthnimangre-dev)
 * **License:** MIT

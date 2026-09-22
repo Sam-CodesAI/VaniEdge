@@ -1,20 +1,22 @@
 {
-  "name": "vaniedge-ai",
+  "name": "vaniedge",
   "version": "1.1.0",
-  "description": "Sub-Second Edge-Native Voice AI Telephony & Multi-Lingual Dispatcher for Small Businesses with SutraDB RAG",
+  "description": "Sub-Second Edge-Native Voice AI Telephony & Multi-Lingual Assistant for Small Businesses with SutraDB RAG",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:ts": "tsc",
+    "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [
     "voice-ai",
     "telephony",
-    "twilio",
-    "cloudflare-workers",
+    "nextjs",
     "rag",
     "vector-database",
     "sutradb",
@@ -22,8 +24,19 @@
   ],
   "author": "Samarth Nimangre <samarthknimangre@gmail.com>",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "lucide-react": "^1.41.0",
+    "next": "^16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.7.3",
     "vitest": "^3.0.7"
   }
