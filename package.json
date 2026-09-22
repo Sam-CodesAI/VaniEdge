@@ -1,0 +1,52 @@
+{
+  "name": "vaniedge-voice-platform",
+  "version": "1.2.0",
+  "description": "VaniEdge Voice Platform 🎙️⚡: Enterprise Edge Telephony, Carrier Media Streaming, Sub-Second Failover Watchdog, and Multi-Lingual Voice AI with SutraDB RAG",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "dev:worker": "wrangler dev",
+    "build": "next build",
+    "build:ts": "tsc -p tsconfig.build.json",
+    "deploy:worker": "wrangler deploy",
+    "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "voice-ai",
+    "telephony",
+    "twilio",
+    "cloudflare-workers",
+    "nextjs",
+    "rag",
+    "vector-database",
+    "sutradb",
+    "elevenlabs",
+    "failover",
+    "watchdog",
+    "websockets"
+  ],
+  "author": "Samarth Nimangre <samarthknimangre@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lucide-react": "^1.41.0",
+    "next": "^16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7",
+    "wrangler": "^3.111.0"
+  }
+}

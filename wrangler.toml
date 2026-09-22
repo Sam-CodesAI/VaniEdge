@@ -1,0 +1,19 @@
+name = "vaniedge-voice-platform"
+main = "src/worker.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Production and local environment variables
+[vars]
+ELEVENLABS_MODEL_ID = "eleven_turbo_v2"
+ELEVENLABS_VOICE_ID = "EXAVITQu4vr4xnSDxMaL"
+FAILOVER_CONNECT_TIMEOUT_MS = "1200"
+FAILOVER_TTFT_TIMEOUT_MS = "1500"
+FALLBACK_HUMAN_NUMBER = "+18005550199"
+TWILIO_PHONE_NUMBER = "+18149613703"
+
+# Secrets (configured via `wrangler secret put <KEY>` in production)
+# TWILIO_ACCOUNT_SID
+# TWILIO_AUTH_TOKEN
+# ELEVENLABS_API_KEY
+# ELEVENLABS_AGENT_ID
