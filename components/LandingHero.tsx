@@ -67,26 +67,25 @@ export default function LandingHero({
           <span className="text-cyan-700 font-bold font-oswald text-sm">Edge</span>: Sub-Second Telephony, Zero Cloud Hops
         </div>
 
-        {/* Clickable Bangalore Cloud Telephony Inbound Demo Banner */}
+        {/* Developer Instant Access & Google/Email Auth Badge (ElevenLabs & IBM Voice standard) */}
         <div className="mt-5 flex items-center justify-center">
-          <a
-            href="tel:+918047361284"
-            className="group inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white border-2 border-emerald-600 text-xs text-black font-mono shadow-md hover:shadow-lg transition-all cursor-pointer hover:scale-102"
-            title="Click to dial Bangalore SIP Inbound Demo line directly from your phone"
-          >
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white border-2 border-slate-300 text-xs text-black font-mono shadow-sm hover:border-black transition-all">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
             </span>
-            <PhoneCall className="w-4 h-4 text-emerald-600 group-hover:rotate-12 transition-transform" />
-            <span className="text-black font-semibold">Bangalore PSTN Inbound Demo:</span>
-            <strong className="text-black font-black font-oswald text-sm tracking-wider underline decoration-emerald-500 decoration-2">
-              +91 80 4736 1284
-            </strong>
+            <span className="text-black font-semibold">Get Started Free:</span>
+            <button
+              type="button"
+              onClick={() => onOpenAuth("signup")}
+              className="text-black font-black font-oswald text-xs uppercase tracking-wider underline decoration-emerald-500 decoration-2 hover:text-emerald-700 cursor-pointer"
+            >
+              Sign Up with Google or Email
+            </button>
             <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold uppercase font-oswald">
-              Live Indic Dialect
+              500 Free Minutes
             </span>
-          </a>
+          </div>
         </div>
 
         {/* Subtitle in Crisp Black Text */}

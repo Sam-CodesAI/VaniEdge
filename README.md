@@ -7,8 +7,8 @@
   <strong>The Complete Enterprise Edge Telephony &amp; Multi-Lingual Voice AI Platform with Sub-Second Failover (Zero Dropped Calls) &amp; SutraDB RAG</strong>
 </p>
 
-[![Vitest Tests](https://img.shields.io/badge/Vitest-79%2F79%20Passing-brightgreen?style=flat-square&logo=vitest)](tests/)
-[![Test Suites](https://img.shields.io/badge/Test%20Suites-10%20Passing-brightgreen?style=flat-square&logo=vitest)](tests/)
+[![Vitest Tests](https://img.shields.io/badge/Vitest-87%2F87%20Passing-brightgreen?style=flat-square&logo=vitest)](tests/)
+[![Test Suites](https://img.shields.io/badge/Test%20Suites-11%20Passing-brightgreen?style=flat-square&logo=vitest)](tests/)
 [![TypeScript Strict](https://img.shields.io/badge/TypeScript-Strict%20v5.7-blue?style=flat-square&logo=typescript)](tsconfig.json)
 [![Cloudflare Workers](https://img.shields.io/badge/Edge%20Runtime-Cloudflare%20Workers-orange?style=flat-square&logo=cloudflare)](https://workers.cloudflare.com)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.3%20Turbopack-black?style=flat-square&logo=next.js)](https://nextjs.org)
