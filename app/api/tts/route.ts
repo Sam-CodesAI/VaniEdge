@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { PollyClient, SynthesizeSpeechCommand } from "@aws-sdk/client-polly";
 
-const ELEVENLABS_API_KEY =
-  process.env.ELEVENLABS_API_KEY || "sk_2cb5ae54458e4de5bbc8e5f599643d8dde59a4f12d791e84";
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY || "";
+
+const AWS_REGION = process.env.AWS_REGION || "us-east-1";
 
 const VOICE_MAP: Record<string, string> = {
   sarah: "EXAVITQu4vr4xnSDxMaL", // Reassuring, Mature
@@ -10,16 +12,28 @@ const VOICE_MAP: Record<string, string> = {
   bella: "piTKgcLEGmPE4e6mEKli", // Warm, Friendly
 };
 
+const AWS_VOICE_MAP: Record<string, string> = {
+  sarah: "Joanna",
+  rachel: "Ruth",
+  adam: "Matthew",
+  bella: "Salli",
+};
+
 export async function POST(req: NextRequest) {
   try {
-    const { text, voiceId = "sarah", languageCode } = (await req.json()) as {
+    const { text, voiceId = "sarah", languageCode, engine = "elevenlabs" } = (await req.json()) as {
       text?: string;
       voiceId?: string;
       languageCode?: string;
+      engine?: "elevenlabs" | "polly";
     };
 
     if (!text || typeof text !== "string") {
       return NextResponse.json({ error: "Text is required" }, { status: 400 });
+    }
+
+    if (engine === "polly" || !ELEVENLABS_API_KEY) {
+      return await generatePollyTTS(text, voiceId);
     }
 
     const resolvedVoiceId = VOICE_MAP[voiceId.toLowerCase()] || voiceId;
@@ -64,10 +78,8 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       const errText = await response.text();
       console.warn("[WARN] ElevenLabs API error:", response.status, errText);
-      return NextResponse.json(
-        { error: "ElevenLabs API unavailable", fallback: true, details: errText },
-        { status: response.status }
-      );
+      console.log("[INFO] Falling back to AWS Polly...");
+      return await generatePollyTTS(text, voiceId);
     }
 
     const audioBuffer = await response.arrayBuffer();
@@ -83,6 +95,49 @@ export async function POST(req: NextRequest) {
     console.error("VaniEdge TTS Route Error:", msg);
     return NextResponse.json(
       { error: "TTS Generation failed", details: msg },
+      { status: 500 }
+    );
+  }
+}
+
+async function generatePollyTTS(text: string, voiceId: string): Promise<Response> {
+  const polly = new PollyClient({
+    region: AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "",
+    },
+  });
+
+  const resolvedVoiceId = AWS_VOICE_MAP[voiceId.toLowerCase()] || "Joanna";
+
+  const command = new SynthesizeSpeechCommand({
+    Text: text,
+    OutputFormat: "mp3",
+    VoiceId: resolvedVoiceId as any,
+    Engine: "neural",
+  });
+
+  try {
+    const data = await polly.send(command);
+    
+    if (data.AudioStream) {
+      // The AudioStream in v3 is a readable stream, but Next.js Response can handle it directly or via buffer
+      const response = new Response(data.AudioStream as any, {
+        headers: {
+          "Content-Type": "audio/mpeg",
+          "Cache-Control": "public, max-age=3600",
+        },
+      });
+      return response;
+    } else {
+      throw new Error("No AudioStream returned from AWS Polly");
+    }
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error("AWS Polly Generation Error:", msg);
+    return NextResponse.json(
+      { error: "AWS Polly Generation failed", details: msg },
       { status: 500 }
     );
   }
