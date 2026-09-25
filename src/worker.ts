@@ -179,7 +179,7 @@ export default {
               documents_indexed: sutraEngine.size(),
             },
             dispatcher: {
-              total_tickets: ticketDispatcher.count(),
+              total_tickets: await ticketDispatcher.count(),
             },
           },
           null,
@@ -460,7 +460,7 @@ export default {
       const category = url.searchParams.get('category') || undefined;
       const status = url.searchParams.get('status') || undefined;
 
-      const tickets = ticketDispatcher.findTickets({ phone, category, status });
+      const tickets = await ticketDispatcher.findTickets({ phone, category, status });
       return new Response(JSON.stringify({ count: tickets.length, tickets }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

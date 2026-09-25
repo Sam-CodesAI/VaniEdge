@@ -51,7 +51,7 @@ export function createVaniEdgeHandler(config: VaniEdgeServerConfig = {}) {
               documentsIndexed: engine.size(),
             },
             dispatcher: {
-              totalTickets: dispatcher.count(),
+              totalTickets: await dispatcher.count(),
             },
             telephony: {
               fallbackNumber,
@@ -200,7 +200,7 @@ export function createVaniEdgeHandler(config: VaniEdgeServerConfig = {}) {
       const status = url.searchParams.get("status") || undefined;
 
       const tickets = dispatcher.findTickets({ phone, category, status });
-      return new Response(JSON.stringify({ count: tickets.length, tickets }), {
+      return new Response(JSON.stringify({ count: (await tickets).length, tickets }), {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });

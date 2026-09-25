@@ -1,3 +1,5 @@
+import { supabase } from "./supabase-client";
+
 export interface Tenant {
   id: string;
   name: string;
@@ -13,67 +15,60 @@ export interface Tenant {
 }
 
 class TenantStore {
-  private tenants: Map<string, Tenant> = new Map();
-
-  constructor() {
-    this.seed();
+  async create(tenant: Omit<Tenant, "createdAt">): Promise<Tenant | null> {
+    const { data, error } = await supabase
+      .from("tenants")
+      .insert([tenant])
+      .select()
+      .single();
+    if (error) {
+      console.error("Error creating tenant:", error);
+      return null;
+    }
+    return data as Tenant;
   }
 
-  private seed() {
-    this.create({
-      id: "tnt_001",
-      name: "Sunrise Dental Care",
-      category: "clinic",
-      twilioPhone: "+1 (415) 555-0199",
-      twilioSid: "AC_live_a1b2c3",
-      webhookUrl: "https://vaniedge.vercel.app/api/webhooks/tnt_001",
-      monthlyCalls: 342,
-      status: "active",
-      brandColor: "#0ea5e9", // sky-500
-      logoUrl: "https://api.dicebear.com/7.x/shapes/svg?seed=Sunrise",
-    });
-    this.create({
-      id: "tnt_002",
-      name: "Mama's Italian Kitchen",
-      category: "restaurant",
-      twilioPhone: "+1 (814) 961-3703",
-      twilioSid: "AC_live_x8y9z0",
-      webhookUrl: "https://vaniedge.vercel.app/api/webhooks/tnt_002",
-      monthlyCalls: 89,
-      status: "active",
-      brandColor: "#ef4444", // red-500
-      logoUrl: "https://api.dicebear.com/7.x/shapes/svg?seed=Mamas",
-    });
-    this.create({
-      id: "tnt_003",
-      name: "Fastlane Towing",
-      category: "auto",
-      twilioPhone: "Pending Allocation",
-      twilioSid: "Pending",
-      webhookUrl: "Pending",
-      monthlyCalls: 0,
-      status: "provisioning",
-    });
+  async getAll(): Promise<Tenant[]> {
+    const { data, error } = await supabase
+      .from("tenants")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error("Error fetching tenants:", error);
+      return [];
+    }
+    return data as Tenant[];
   }
 
-  create(tenant: Omit<Tenant, "createdAt">): Tenant {
-    const t = { ...tenant, createdAt: new Date().toISOString() };
-    this.tenants.set(t.id, t);
-    return t;
+  async get(id: string): Promise<Tenant | null> {
+    const { data, error } = await supabase
+      .from("tenants")
+      .select("*")
+      .eq("id", id)
+      .single();
+    if (error) {
+      return null;
+    }
+    return data as Tenant;
   }
 
-  getAll(): Tenant[] {
-    return Array.from(this.tenants.values()).sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+  async update(id: string, updates: Partial<Tenant>): Promise<Tenant | null> {
+    const { data, error } = await supabase
+      .from("tenants")
+      .update(updates)
+      .eq("id", id)
+      .select()
+      .single();
+    if (error) {
+      console.error("Error updating tenant:", error);
+      return null;
+    }
+    return data as Tenant;
   }
 
-  get(id: string): Tenant | undefined {
-    return this.tenants.get(id);
-  }
-
-  delete(id: string) {
-    this.tenants.delete(id);
+  async delete(id: string): Promise<boolean> {
+    const { error } = await supabase.from("tenants").delete().eq("id", id);
+    return !error;
   }
 }
 

@@ -230,7 +230,7 @@ export function TelephonyMissionControl({
       .then((data) => setMetrics(data as React.SetStateAction<typeof metrics>))
       .catch(() => {});
 
-    fetch("/api/dispatch")
+    fetch(tenantId ? `/api/dispatch?tenantId=${tenantId}` : "/api/dispatch")
       .then((r) => r.json())
       .then((res) => {
         const data = res as { tickets?: DispatchTicket[] };
@@ -379,6 +379,7 @@ export function TelephonyMissionControl({
           details: "Automated test dispatch triggered via BridgeView Operations Console.",
           priority: "URGENT",
           language: "en",
+          tenantId: tenantId || null,
         }),
       });
 

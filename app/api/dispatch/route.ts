@@ -1,65 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TicketDispatcher, TicketRequest } from "@/src/dispatch/tickets";
+import { TicketDispatcher } from "@/src/dispatch/tickets";
 
-// Shared dispatcher singleton across API requests
 const dispatcher = new TicketDispatcher();
 
-// Seed initial production demo tickets for BridgeView portal
-if (dispatcher.count() === 0) {
-  dispatcher.createTicket({
-    callerName: "Rahul Verma",
-    callerPhone: "+91-98765-43210",
-    category: "clinic",
-    serviceType: "Urgent Pediatric Consultation",
-    details: "Severe fever since last night. Requested appointment with Dr. Sharma at 4:30 PM.",
-    priority: "URGENT",
-    language: "en",
-  });
-  dispatcher.createTicket({
-    callerName: "Priya Sundaram",
-    callerPhone: "+91-98450-11223",
-    category: "restaurant",
-    serviceType: "Dinner Table Reservation (4 Guests)",
-    details: "Window table requested for 8:00 PM tonight. North Indian thali and desserts.",
-    priority: "STANDARD",
-    language: "kn",
-  });
-  dispatcher.createTicket({
-    callerName: "Amitabh Sen",
-    callerPhone: "+1-814-555-0199",
-    category: "auto",
-    serviceType: "Highway Battery Jumpstart & Towing",
-    details: "Vehicle stalled near Indiranagar flyover. Flat battery assistance required.",
-    priority: "HIGH",
-    language: "en",
-  });
-}
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const filter = searchParams.get("filter") || "all";
+  const tenantId = searchParams.get("tenantId") || undefined;
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = (await request.json()) as TicketRequest;
-
-    if (!body.callerName || !body.callerPhone || !body.category || !body.serviceType) {
-      return NextResponse.json(
-        { error: "Missing required fields (callerName, callerPhone, category, serviceType)" },
-        { status: 400 }
-      );
-    }
-
-    const ticket = dispatcher.createTicket(body);
-    return NextResponse.json({ success: true, ticket }, { status: 201 });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json({ error: message }, { status: 500 });
+  let records = [];
+  if (filter === "all") {
+    records = await dispatcher.findTickets({ tenantId });
+  } else {
+    records = await dispatcher.findTickets({ category: filter, tenantId });
   }
+
+  return NextResponse.json({ tickets: records });
 }
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const phone = searchParams.get("phone") || undefined;
-  const category = searchParams.get("category") || undefined;
-  const status = searchParams.get("status") || undefined;
+export async function POST(req: NextRequest) {
+  try {
+    const body = (await req.json()) as any;
+    
+    const record = await dispatcher.createTicket({
+      callerName: body.callerName || "Unknown Caller",
+      callerPhone: body.callerPhone || "+1-000-000-0000",
+      category: body.category || "general",
+      serviceType: body.serviceType || "Inbound Query",
+      details: body.details || "",
+      priority: body.priority || "STANDARD",
+      language: body.language || "en",
+      tenantId: body.tenantId || null
+    });
 
-  const tickets = dispatcher.findTickets({ phone, category, status });
-  return NextResponse.json({ count: tickets.length, tickets });
+    if (!record) throw new Error("Failed to create ticket");
+
+    return NextResponse.json({ success: true, ticket: record }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json({ success: false, error: "Dispatch failed" }, { status: 500 });
+  }
 }

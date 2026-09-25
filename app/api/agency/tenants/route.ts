@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { tenantStore } from "@/lib/tenant-store";
 
 export async function GET(req: NextRequest) {
-  return NextResponse.json({ tenants: tenantStore.getAll() });
+  const tenants = await tenantStore.getAll();
+  return NextResponse.json({ tenants });
 }
 
 export async function POST(req: NextRequest) {
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
     const newId = `tnt_${Math.random().toString(36).substring(2, 9)}`;
     const phone = `+1 (${Math.floor(200 + Math.random() * 800)}) ${Math.floor(200 + Math.random() * 800)}-${Math.floor(1000 + Math.random() * 9000)}`;
     
-    const tenant = tenantStore.create({
+    const tenant = await tenantStore.create({
       id: newId,
       name: name || "New Client",
       category: category || "general",
