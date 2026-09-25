@@ -58,40 +58,6 @@ export default function AuthModal({
 
   if (!isOpen) return null;
 
-  // Handle Google OAuth authentication
-  const handleGoogleAuth = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email.trim() || "developer@google.com",
-          name: name.trim() || "Google Cloud Developer",
-          avatarUrl: "https://lh3.googleusercontent.com/a/default-user=s96-c",
-        }),
-      });
-
-      const data = await res.json() as AuthApiResponse;
-      if (res.ok && data.user) {
-        localStorage.setItem("vaniedge_auth_user", JSON.stringify(data.user));
-        if (data.token) {
-          localStorage.setItem("vaniedge_session_token", data.token);
-        }
-        onAuthSuccess(data.user, data.token);
-        onClose();
-      } else {
-        setError(data.error || "Google authentication failed.");
-      }
-    } catch {
-      setError("Network error connecting to authentication server.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // Quick 1-Click Demo Account Loader
   const loadDemoAccount = (demoEmail: string, demoPass: string) => {
     setEmail(demoEmail);
@@ -255,46 +221,6 @@ export default function AuthModal({
           <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-medium flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
             <span>{successMessage}</span>
-          </div>
-        )}
-
-        {/* Google OAuth Button */}
-        {mode !== "forgot" && (
-          <div className="space-y-3 mb-5">
-            <button
-              type="button"
-              onClick={handleGoogleAuth}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-white border-2 border-slate-300 hover:border-black text-black font-oswald font-bold text-xs uppercase tracking-wider transition-all shadow-sm active:scale-98 cursor-pointer"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"
-                />
-              </svg>
-              <span>Continue with Google</span>
-            </button>
-
-            <div className="relative flex items-center justify-center my-3">
-              <div className="border-t border-slate-300 w-full" />
-              <span className="bg-white px-3 text-[11px] font-oswald uppercase tracking-wider text-slate-600 font-bold">
-                OR CONTINUE WITH EMAIL
-              </span>
-              <div className="border-t border-slate-300 w-full" />
-            </div>
           </div>
         )}
 

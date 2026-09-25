@@ -16,7 +16,7 @@ export interface UserRecord {
   salt: string;
   name: string;
   company: string;
-  provider: "email" | "google";
+  provider: "email";
   avatarUrl?: string;
   tier: "Free Trial" | "Starter" | "Growth" | "Enterprise";
   credentials: UserCredentials;
@@ -117,7 +117,7 @@ class AuthDatabase {
     email: string,
     password?: string,
     company: string = "Independent Developer",
-    provider: "email" | "google" = "email",
+    provider: "email" = "email",
     avatarUrl?: string
   ): { user: UserRecord; token: string } {
     const normalizedEmail = email.trim().toLowerCase();
@@ -167,10 +167,6 @@ class AuthDatabase {
       throw new Error("User record not found.");
     }
 
-    if (user.provider === "google" && !user.passwordHash) {
-      throw new Error("This account is linked to Google OAuth. Please sign in with Google.");
-    }
-
     const computedHash = this.hashPassword(password, user.salt);
     if (computedHash !== user.passwordHash) {
       throw new Error("Invalid password. Please verify your credentials.");
@@ -181,26 +177,7 @@ class AuthDatabase {
     return { user, token };
   }
 
-  public authenticateGoogle(
-    email: string,
-    name: string,
-    avatarUrl?: string
-  ): { user: UserRecord; token: string } {
-    const normalizedEmail = email.trim().toLowerCase();
-    const existingId = this.usersByEmail.get(normalizedEmail);
 
-    if (existingId) {
-      const user = this.users.get(existingId);
-      if (!user) throw new Error("User record not found.");
-      user.lastLoginAt = new Date().toISOString();
-      if (avatarUrl && !user.avatarUrl) user.avatarUrl = avatarUrl;
-      const token = this.createSession(user.id);
-      return { user, token };
-    }
-
-    // Auto-provision Google user
-    return this.register(name, normalizedEmail, undefined, "Google Workspace", "google", avatarUrl);
-  }
 
   public createSession(userId: string): string {
     const token = `vsk_${crypto.randomBytes(32).toString("hex")}`;

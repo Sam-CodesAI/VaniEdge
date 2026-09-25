@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       email,
       password,
       company || "Independent Developer",
-      (provider === "google" ? "google" : "email")
+      "email"
     );
 
     const safeUser = authDb.safeUser(user);

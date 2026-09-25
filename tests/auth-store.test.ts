@@ -54,23 +54,7 @@ describe("AuthDatabase & Credentials Vault", () => {
     }).toThrow("An account with this email address already exists.");
   });
 
-  it("handles Google OAuth auto-provisioning and linking", () => {
-    const googleEmail = `google_${Date.now()}@gmail.com`;
-    const { user, token } = authDb.authenticateGoogle(
-      googleEmail,
-      "Google User",
-      "https://example.com/avatar.jpg"
-    );
 
-    expect(user.email).toBe(googleEmail);
-    expect(user.provider).toBe("google");
-    expect(user.avatarUrl).toBe("https://example.com/avatar.jpg");
-    expect(token).toMatch(/^vsk_[a-f0-9]{64}$/);
-
-    // Authenticating again with same Google email should return same user
-    const secondLogin = authDb.authenticateGoogle(googleEmail, "Google User");
-    expect(secondLogin.user.id).toBe(user.id);
-  });
 
   it("rotates API key and updates lookup index", () => {
     const email = `rotate_${Date.now()}@vaniedge.ai`;

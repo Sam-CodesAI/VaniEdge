@@ -53,7 +53,7 @@ export default function LandingHero({
           <span>Sub-Second Telephony</span>
         </div>
 
-        {/* Developer Instant Access & Google/Email Auth Badge */}
+        {/* Developer Instant Access & Email Auth Badge */}
         <div className="mt-8 flex items-center justify-center">
           <button 
             type="button"
@@ -67,7 +67,7 @@ export default function LandingHero({
             </span>
             <span className="relative z-10 text-gray-300 font-medium text-sm">Get Started Free:</span>
             <span className="relative z-10 text-white font-bold font-oswald text-sm uppercase tracking-wider underline decoration-emerald-500/50 decoration-2 group-hover:decoration-emerald-400 transition-all">
-              Sign Up with Google
+              Create Free Account
             </span>
             <span className="relative z-10 text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold uppercase font-oswald border border-emerald-500/30">
               500 Free Minutes

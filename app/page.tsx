@@ -969,7 +969,7 @@ export default function VaniEdgePage() {
         <LandingFooter onOpenAuth={handleOpenAuth} />
       </div>
 
-      {/* Modern Authentication Modal (Google OAuth & Email/Password) */}
+      {/* Modern Authentication Modal (Email/Password) */}
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
