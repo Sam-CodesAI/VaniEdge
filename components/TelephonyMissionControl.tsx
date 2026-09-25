@@ -173,7 +173,17 @@ const AUDITED_STAGES: LatencyStage[] = [
   },
 ];
 
-export function TelephonyMissionControl() {
+export function TelephonyMissionControl({ 
+  tenantId, 
+  tenantName, 
+  brandColor, 
+  logoUrl 
+}: { 
+  tenantId?: string; 
+  tenantName?: string; 
+  brandColor?: string; 
+  logoUrl?: string; 
+} = {}) {
   const [activeTab, setActiveTab] = useState<"watchdog" | "recording" | "bridgeview">("watchdog");
 
   // Health & Live Metrics
@@ -952,12 +962,22 @@ export function TelephonyMissionControl() {
       {activeTab === "bridgeview" && (
         <div className="space-y-6">
           {/* BridgeView Overview Banner */}
-          <div className="bg-indigo-50/70 border-2 border-indigo-200 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div 
+            className="border-2 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+            style={{ 
+              backgroundColor: brandColor ? `${brandColor}15` : "#eef2ff", // indigo-50 approx
+              borderColor: brandColor ? `${brandColor}40` : "#c7d2fe" // indigo-200 approx
+            }}
+          >
             <div>
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-indigo-600" />
+              <div className="flex items-center gap-3">
+                {logoUrl ? (
+                  <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded" />
+                ) : (
+                  <Sparkles className="w-5 h-5" style={{ color: brandColor || "#4f46e5" }} />
+                )}
                 <h4 className="text-base sm:text-lg font-bold text-black font-oswald uppercase">
-                  BridgeView Client Operations &amp; Lead Dispatch
+                  {tenantName ? `${tenantName} - Client Operations` : "BridgeView Client Operations & Lead Dispatch"}
                 </h4>
               </div>
               <p className="text-xs text-black font-medium mt-1">
@@ -975,9 +995,10 @@ export function TelephonyMissionControl() {
                   onClick={() => setSelectedCategoryFilter(cat)}
                   className={`px-2 py-0.5 rounded cursor-pointer uppercase text-xs ${
                     selectedCategoryFilter === cat
-                      ? "bg-black text-white"
+                      ? "text-white"
                       : "text-slate-700 hover:bg-slate-100"
                   }`}
+                  style={selectedCategoryFilter === cat ? { backgroundColor: brandColor || "#000000" } : {}}
                 >
                   {cat}
                 </button>

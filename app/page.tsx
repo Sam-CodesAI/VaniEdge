@@ -542,6 +542,12 @@ export default function VaniEdgePage() {
 
             {/* Desktop Navigation Links */}
             <nav className="hidden lg:flex items-center gap-6 text-xs font-bold font-oswald uppercase text-black">
+              <a
+                href="/agency"
+                className="hover:text-emerald-700 transition-colors cursor-pointer flex items-center gap-1"
+              >
+                Agency Portal
+              </a>
               <button
                 type="button"
                 onClick={() => scrollToSection("overview")}
