@@ -18,7 +18,7 @@ export async function GET() {
         configured: hasElevenLabs,
       },
       sutradb: {
-        status: "in-memory-ready",
+        status: "postgres-vector-ready",
         embeddingDim: 64,
         indicSupport: true,
       },

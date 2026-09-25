@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase-client";
 /**
  * SutraDB Edge: High-Performance Hybrid Vector + BM25 Lexical Engine
  * Zero external SaaS dependencies, sub-5ms query latency for edge autonomous agents.
@@ -204,6 +205,7 @@ export class SutraEdgeIndex {
 }
 
 // Default Presets for Voice Platform Live Demo & Real-Time RAG
+// @deprecated
 export const DEFAULT_KNOWLEDGE_PRESETS: DocumentEntry[] = [
   {
     id: "clinic-1",

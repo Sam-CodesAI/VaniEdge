@@ -1,41 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SutraHybridEngine, KnowledgeDocument } from "@/src/engine/sutradb";
-
-// Shared in-memory engine singleton for Next.js edge/server runtime
-const engine = new SutraHybridEngine([
-  {
-    id: "clinic-1",
-    title: "Dr. Sharma Pediatric & Family Clinic",
-    content: "Timings: Mon-Sat 9:00 AM - 7:00 PM. General consultation: ₹500. Address: 12th Main Indiranagar, Bengaluru. Phone: +91-98765-43210.",
-    category: "clinic",
-  },
-  {
-    id: "restaurant-1",
-    title: "Bhojanalaya Kitchen Indiranagar",
-    content: "Special North & South Indian Thali, Paneer Butter Masala, Butter Naan, Biryani. Delivery time: 25-35 mins. Min order ₹250.",
-    category: "restaurant",
-  },
-  {
-    id: "auto-1",
-    title: "Apex Highway Emergency Towing & Recovery",
-    content: "24/7 Roadside breakdown assistance, flat tyre fix, engine battery jumpstart. Emergency dispatch ETA: 15-20 mins. Helpline: 1800-APEX-NOW.",
-    category: "auto",
-  },
-]);
+import { supabase } from "@/lib/supabase-client";
 
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as {
       query?: string;
       category?: string;
+      tenantId?: string;
       filter?: Record<string, string | number | boolean>;
       topK?: number;
       minScore?: number;
     };
-    const { query, category, filter, topK, minScore } = body;
+    const { query, category, filter, topK, minScore, tenantId } = body;
 
     if (!query || typeof query !== "string") {
       return NextResponse.json({ error: "Missing required 'query' field" }, { status: 400 });
+    }
+
+    // Connect to Supabase and pull live knowledge rows
+    let queryBuilder = supabase.from("sutradb_knowledge").select("*");
+    if (tenantId) queryBuilder = queryBuilder.eq("tenant_id", tenantId);
+    
+    const { data: dbDocs, error } = await queryBuilder;
+    if (error) throw new Error("Failed to sync knowledge from database");
+
+    const engine = new SutraHybridEngine();
+    
+    // Load live rows into the lightning-fast Edge memory engine
+    if (dbDocs) {
+      for (const row of dbDocs) {
+        engine.insert({
+          id: row.id,
+          title: row.title,
+          content: row.content,
+          category: row.category,
+          metadata: row.metadata,
+        });
+      }
     }
 
     const start = performance.now();
@@ -61,13 +63,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = (await request.json()) as {
-      id?: string;
-      title: string;
-      content: string;
-      category?: string;
-      metadata?: Record<string, string | number | boolean>;
-    };
+    const body = (await request.json()) as any;
 
     if (!body.title || !body.content) {
       return NextResponse.json(
@@ -76,9 +72,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const docId = body.id || `doc-${Date.now()}`;
-    const doc: KnowledgeDocument = {
-      id: docId,
+    const doc = {
+      tenant_id: body.tenantId || null,
       title: body.title,
       content: body.content,
       category: body.category || "general",
@@ -86,14 +81,14 @@ export async function PUT(request: NextRequest) {
     };
 
     const start = performance.now();
-    engine.insert(doc);
+    const { data, error } = await supabase.from("sutradb_knowledge").insert([doc]).select().single();
+    if (error) throw new Error(error.message);
     const latencyMs = +(performance.now() - start).toFixed(2);
 
     return NextResponse.json(
       {
         success: true,
-        document: doc,
-        totalDocuments: engine.size(),
+        document: data,
         latencyMs,
       },
       { status: 201 }
@@ -104,10 +99,18 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-export async function GET() {
-  const documents = engine.exportSnapshot();
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const tenantId = searchParams.get("tenantId") || undefined;
+  
+  let queryBuilder = supabase.from("sutradb_knowledge").select("*").order("created_at", { ascending: false });
+  if (tenantId) queryBuilder = queryBuilder.eq("tenant_id", tenantId);
+  
+  const { data, error } = await queryBuilder;
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
   return NextResponse.json({
-    totalDocuments: documents.length,
-    documents,
+    totalDocuments: data.length,
+    documents: data,
   });
 }
